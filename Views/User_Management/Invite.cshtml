@@ -1,0 +1,52 @@
+﻿@model FixedModules.Models.UserViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<body>
+    <div class="content-i">
+        <div class="content-box">
+            <div class="element-wrapper">
+                <h6 class="element-header">
+                    Invite User
+                </h6>
+                <div class="element-box">
+                    <div class="row">
+
+                        <input class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" onclick="location.href='@Url.Action("Index", "User_Management")'" />
+                    </div>
+                    <div class="card-body z-depth-1">
+                        <div class="detailContainer" style="max-width: 600px;margin: 0 auto;padding: 0 20px;margin-bottom: 10px;">
+                            <form asp-action="InviteUser">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                @*<input type="hidden" asp-for="Id" class="form-control" />*@
+                                <div class="form-group">
+                                    <label class="control-label">Email</label>
+                                    <input asp-for="Email" class="form-control"/>
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <ul style="list-style-type: none;">
+                                        @for (var i = 0; i < Model.Roles.Length; i++)
+                                        {
+                                            <li>
+                                                <input type="checkbox" asp-for="@Model.Roles[i].Selected" />
+                                                <label style="margin-left:10px;" asp-for="@Model.Roles[i].Selected">@Model.Roles[i].Name</label>
+                                                <input type="hidden" asp-for="@Model.Roles[i].Id" />
+                                                <input type="hidden" asp-for="@Model.Roles[i].Name" />
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Save" class="btn btn-primary" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

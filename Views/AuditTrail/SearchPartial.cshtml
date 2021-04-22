@@ -1,0 +1,72 @@
+﻿@model IEnumerable<FixedModules.Models.AuditTrail>
+
+    <div id="table" class="table-responsive">
+
+        <table id="zero_config" class="table table-bordered table-lg table-v2 table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        Date Time
+                    </th>
+                    <th>
+                        User
+                    </th>
+                    <th>
+                        Module
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tableItems">
+                @if (Model != null)
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr id="@item.Id">
+                            <td id="codeData">@item.CreatedDatetime</td>
+                            <td id="nameData">@item.UserId</td>
+                            <td id="moduleData">@item.ActionModuleId</td>
+                            <td id="actionData">@item.ActionTypeId</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                @item.Identifier
+
+                                <div class="row delta-header">
+                                    <div class="col-sm-4">
+                                        <b>Field</b>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <b>Old Value</b>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <b>New Value</b>
+                                    </div>
+                                </div>
+                                @foreach (var delta in item.AuditDeltas)
+                                {
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            @delta.FieldName
+                                        </div>
+                                        <div class="col-sm-4">
+                                            @delta.OldValue
+                                        </div>
+                                        <div class="col-sm-4">
+                                            @delta.NewValue
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="p-t-10"></div>
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+
+        </table>
+    </div>

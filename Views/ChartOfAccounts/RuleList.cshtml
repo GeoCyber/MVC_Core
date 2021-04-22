@@ -1,0 +1,280 @@
+﻿@model IList<FixedModules.Models.ChartOfAccountRuleList>
+
+@{
+    ViewData["Title"] = "Rule List";
+}
+
+@{
+    //var firstItem = Model.FirstOrDefault();
+    var readOnly = false;
+    //if (firstItem != null && firstItem.ReadOnly.HasValue && firstItem.ReadOnly.Value)
+    //{
+    //    readOnly = true;
+    //}
+
+    int SetId = 0;
+}
+
+<body>
+    <div class="element-box">
+        <div class="table-responsive">
+            <table id="zero_config" class="table table-bordered table-lg table-v2 table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Analysis Number
+                        </th>
+                        <th>
+                            Analysis Code From
+                        </th>
+                        <th>
+                            Analysis Code To
+                        </th>
+                        <th>
+                            Active
+                        </th>
+                        @if (!readOnly)
+                        {
+                            <th style="width:100px;"></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody id="tableItemsRule">
+                    @if (Model.Count() > 0)
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr id="@item.Id" data-toggle="modal" data-id="@item.Id" data-target="#EditSettingModel">
+                                <td>@item.AnalysisNumber</td>
+                                <td>@item.FromAnalysisCode</td>
+                                <td>@item.ToAnalysisCode</td>
+                                <td>@(item.Enabled ? "Active" : "Inactive")</td>
+                                <td style="width:1%;white-space:nowrap">
+                                    @*<a class="btn btn-primary btn-sm" id="EditButton">
+                                    <span class="fa fa-edit"></span> Edit
+                                </a>*@
+                                    <a class="btn btn-danger btn-sm" asp-action="DeleteSetting" asp-route-id="@item.Id">
+                                        <span class="fa fa-trash-alt"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="EditSettingModel" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="form1" asp-action="EditSetting" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Add Rule
+                        </h5>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <label class="control-label col-form-label">Analysis Code</label>
+                            </div>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="SelectedAnalysisNumberEdit" name="SelectedAnalysisNumber">
+                                    <option value="-1">- Please Select -</option>
+                                    <option value="1">A1</option>
+                                    <option value="2">A2</option>
+                                    <option value="3">A3</option>
+                                    <option value="4">A4</option>
+                                    <option value="5">A5</option>
+                                    <option value="6">A6</option>
+                                    <option value="7">A7</option>
+                                    <option value="8">A8</option>
+                                    <option value="9">A9</option>
+                                    <option value="10">A10</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-check" id="mapfull-containerEdit" style="display:block">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" id="MapFullEdit" name="MapFull" checked="checked" value="true">Map Full?
+                            </label>
+                        </div>
+                        <div id="analysis-code-selectionEdit" style="display:none">
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <label class="control-label col-form-label">Analysis Code From</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="AnalysisCodeFromEdit" name="AnalysisCodeFrom"></select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <label class="control-label col-form-label">Analysis Code To</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="AnalysisCodeToEdit" name="AnalysisCodeTo"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                            <button class="btn btn-primary" type="submit" value="Create" id="btnSaveRule"> Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+    /****************************************
+         *       Basic Table                   *
+         ****************************************/
+
+    $('#zero_config').dataTable({
+        "bAutoWidth": false,
+        "searching": false
+    });
+
+    var table = $('#zero_config').dataTable();
+    var tableD = $('#zero_config').DataTable();
+
+    $(document).ready(function () {
+        $('#btnSaveRule').on('click', function (e) {
+            debugger
+           
+            @*@Html.ViewData.ModelState.Clear();*@
+        
+
+        })
+        
+
+
+        $('#tableItemsRule').on('click', 'tr', function () {
+            debugger
+            var id = (tableD.row(this).node()).id;
+            let url = "/ChartOfAccounts/EditRuleSetting?id=" + id;
+
+            $.ajax({
+                async: false,
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    $.get('@Url.Action("GetAnalysisCodeSelectList", "ChartOfAccounts")?analysisNumber=' + data['selectedAnalysisNumber'], function (data1) {
+
+                        $('#AnalysisCodeFromEdit')
+                                .find('option')
+                                .remove()
+                                .end()
+                                .append('<option value="-1">- Please Select -</option>')
+                                .val('whatever');
+
+                        $('#AnalysisCodeToEdit')
+                                .find('option')
+                                .remove()
+                                .end()
+                                .append('<option value="-1">- Please Select -</option>')
+                                .val('whatever');
+
+                        $.each(data1, function (i, v) {
+                            var fromOption = new Option(v.text, v.value, false, false);
+                            $('#AnalysisCodeFromEdit').append(fromOption);
+                            var toOption = new Option(v.text, v.value, false, false);
+                            $('#AnalysisCodeToEdit').append(toOption);
+                        });
+
+                        $('#AnalysisCodeFromEdit').val(data['analysisCodeFrom']);
+                        $('#AnalysisCodeToEdit').val(data['analysisCodeTo']);
+                    });
+
+                    $('#SelectedAnalysisNumberEdit').val(data['selectedAnalysisNumber']);
+
+                    if (data['mapFull'] == true) {
+                        $('#MapFullEdit').attr('checked', true);
+                        $('#analysis-code-selectionEdit').css('display', 'none');
+                    }
+                    else {
+                        $('#MapFullEdit').attr('checked', false);
+                        $('#analysis-code-selectionEdit').css('display', 'block');
+                    }
+
+                    $('#EditSettingModel').find('form').attr('action', '@Url.Action("EditSetting","ChartOfAccounts")/' + id);
+                },
+                error: function () {
+                    alert("Server error. Please contact your adminisrator!");
+                }
+            });
+        });
+
+    });
+
+    $(function () {
+
+        var $mapFull = $('#MapFullEdit');
+        var $mapFullContainer = $('#mapfull-containerEdit');
+        var $selectedAnalysisNumber = $('#SelectedAnalysisNumberEdit');
+        var $selectedTo = $('#AnalysisCodeToEdit');
+        var $selectedFrom = $('#AnalysisCodeFromEdit');
+
+        //update analysis codes selection
+        $selectedAnalysisNumber.on('change', function (e) {
+            var analysisNumber = $(this).val();
+                    if (analysisNumber == '-1') {
+                        //clear all fields
+                        $mapFull.prop('checked', true);
+                        $mapFull.trigger('change');
+                        $mapFullContainer.css('display', 'none');
+                    }
+                    else {
+                        $mapFullContainer.css('display', 'block');
+                        $.get('@Url.Action("GetAnalysisCodeSelectList", "ChartOfAccounts")?analysisNumber=' + analysisNumber, function (data) {
+
+                            $selectedFrom
+                                .find('option')
+                                .remove()
+                                .end()
+                                .append('<option value="">- Please Select -</option>')
+                                .val('whatever');
+
+                            $selectedTo
+                                .find('option')
+                                .remove()
+                                .end()
+                                .append('<option value="">- Please Select -</option>')
+                                .val('whatever');
+
+                            $.each(data, function (i, v) {
+                                var fromOption = new Option(v.text, v.value, false, false);
+                                $selectedFrom.append(fromOption);
+                                var toOption = new Option(v.text, v.value, false, false);
+                                $selectedTo.append(toOption);
+                            });
+                            //BindSelect($selectedTo);
+                            //BindSelect($selectedFrom);
+
+                            ////re-select
+                            //$selectedFrom.val(fromSelectedId).trigger('change.select');
+                            //$selectedTo.val(toSelectedId).trigger('change.select');
+                        });
+                    }
+                })
+
+        $mapFull.on('change', function (e) {
+            var $selection = $('#analysis-code-selectionEdit');
+            if ($(this).prop('checked')) {
+                $selection.css('display', 'none');
+            }
+            else {
+                $selection.css('display', 'block');
+            }
+        });
+    })
+
+</script>
+

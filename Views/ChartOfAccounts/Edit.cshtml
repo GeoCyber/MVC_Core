@@ -1,0 +1,263 @@
+﻿@model FixedModules.Models.ChartOfAccounts
+
+@{
+    ViewData["Title"] = "ChartOfAccounts-Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //var readOnly = false;
+    //if (Model.ReadOnly.HasValue && Model.ReadOnly.Value)
+    //{
+    //    readOnly = true;
+    //}
+}
+
+<body>
+    <div class="content-i">
+        <div class="content-box">
+            <div class="element-wrapper">
+                <h6 class="element-header">
+                    Chart Of Accounts
+                </h6>
+                <div class="element-box">
+                    <div class="row">
+
+                        <input class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" onclick="location.href='@Url.Action("Index", "ChartOfAccounts")'" />
+                    </div>
+                    <div class="card-body z-depth-1">
+                        <div class="detailContainer" style="max-width: 600px;margin: 0 auto;padding: 0 20px;margin-bottom: 10px;">
+                            @if (!Html.ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert alert-danger" role="alert" asp-validation-summary="All"></div>
+                            }
+                            <form asp-action="Edit" method="POST">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Code<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="Code" autocomplete="off" class="form-control" id="Code" maxlength="30" name="Code" type="text" value="@Model.Code" />
+                                                <input value="@Model.Id" type="hidden" class="form-control" name="Id">
+                                                <span asp-validation-for="Code" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row"><label class="col-sm-12 control-label col-form-label">Name<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label><div class="col-sm-12"><input autocomplete="off" class="form-control" data-val="true" data-val-length="The field Name must be a string with a maximum length of 100." data-val-length-max="100" data-val-required="The Name field is required." id="Name" maxlength="100" name="Name" type="text" value="@Model.Name" required></div></div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <div class="form-group row"><label class="col-sm-12 control-label col-form-label">Remark</label><div class="col-sm-12"><input autocomplete="off" class="form-control" id="Remark" name="Remark" type="text" maxlength="300" value="@Model.Remark"></div></div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 text-right control-label col-form-label">Active</label>
+                                            <div class="col-sm-8">
+                                                <input class="form-check-input" asp-for="Status">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="btn-container text-center">
+                                    <button type="submit" id="submitEditCOA" value="Create" class="btn btn-primary btn-fix-width">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="element-header">
+                    Rules
+                </h6>
+                <div class="element-box">
+                    @if (Model.Id > 0)
+                    {
+                        <a id="pop-add-setting" data-target="#AddSettingModel" data-toggle="modal" class="btn btn-primary mdi mdi-plus-outline"> Add Rule</a>
+                        <div class="p-t-20 clearfix"></div>
+                        <div id="chartofaccount-settings">
+                            @{Html.ActionLink("GetSettings", "ChartOfAccounts", new { id = Model.Id });}
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="AddSettingModel" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form asp-action="AddSetting" asp-route-id="@Model.Id" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Add Rule
+                        </h5>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <label class="control-label col-form-label">Analysis Code</label>
+                            </div>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="SelectedAnalysisNumber" name="SelectedAnalysisNumber">
+                                    <option value="-1">- Please Select -</option>
+                                    <option value="1">A1</option>
+                                    <option value="2">A2</option>
+                                    <option value="3">A3</option>
+                                    <option value="4">A4</option>
+                                    <option value="5">A5</option>
+                                    <option value="6">A6</option>
+                                    <option value="7">A7</option>
+                                    <option value="8">A8</option>
+                                    <option value="9">A9</option>
+                                    <option value="10">A10</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-check" id="mapfull-container" style="display:none">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" id="MapFull" name="MapFull" checked="checked" value="true">Map Full?
+                            </label>
+                        </div>
+                        <div id="analysis-code-selection" style="display:none">
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <label class="control-label col-form-label">Analysis Code From</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="AnalysisCodeFrom" name="AnalysisCodeFrom" asp-items="ViewBag.COAList"></select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <label class="control-label col-form-label">Analysis Code To</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="AnalysisCodeTo" name="AnalysisCodeTo" asp-items="ViewBag.COAList"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                            <button class="btn btn-primary" type="submit" value="Create"> Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+
+    $('.text-danger').on('DOMSubtreeModified', function () {
+        var span_Text = document.getElementById("Code-error").innerText;
+        if (span_Text == "Code Already Exist!") {
+            $("#submitEditCOA").attr("disabled", true)
+            $("#submitEditCOA").removeClass("btn btn-primary btn-fix-width");
+            $("#submitEditCOA").addClass("btn btn-secondary btn-fix-width");
+        } else {
+            $("#submitEditCOA").attr("disabled", false)
+            $("#submitEditCOA").removeClass("btn btn-secondary btn-fix-width");
+            $("#submitEditCOA").addClass("btn btn-primary btn-fix-width");
+        }
+    })
+
+</script>
+<script>
+    $('#Active').change(function () {
+        if (this.checked) {
+            $('#status').val(true);
+        } else {
+            $('#status').val(false);
+        }
+    });
+</script>
+
+<script>
+
+    $.get('@Url.Action("GetSettings", "ChartOfAccounts")', { id:@Model.Id }, function(content){
+        $('#chartofaccount-settings').html(content);
+    });
+
+    $(function () {
+        @*var $modal = $('#add-setting-modal');
+        $('#pop-add-setting').on('click', function (e) {
+            $modal.modal('show');
+
+            //set values
+            $modal.find('.modal-title').html('Add Rule');
+            $modal.find('form').attr('action', '@Url.Action("AddSetting","ChartOfAccount", new { id = Model.Id })');
+            $modal.find('button[type="submit"]').html('Add');
+            $mapFull.prop('checked', true);
+            $mapFull.trigger('change');
+            $selectedAnalysisNumber.val('').trigger('change');
+
+            fromSelectedId = '';
+            toSelectedId = '';
+
+            return false;
+        });*@
+
+        var $mapFull = $('#MapFull');
+        var $mapFullContainer = $('#mapfull-container');
+        var $selectedAnalysisNumber = $('#SelectedAnalysisNumber');
+        var $selectedTo = $('#AnalysisCodeTo');
+        var $selectedFrom = $('#AnalysisCodeFrom');
+
+        //update analysis codes selection
+        $selectedAnalysisNumber.on('change', function (e) {
+            var analysisNumber = $(this).val();
+                    if (analysisNumber == '-1') {
+                        //clear all fields
+                        $mapFull.prop('checked', true);
+                        $mapFull.trigger('change');
+                        $mapFullContainer.css('display', 'none');
+                    }
+                    else {
+                        $mapFullContainer.css('display', 'block');
+                        $.get('@Url.Action("GetAnalysisCodeSelectList", "ChartOfAccounts")?analysisNumber=' + analysisNumber, function (data) {
+
+                            $selectedFrom
+                                .find('option')
+                                .remove()
+                                .end()
+                                .append('<option value="">- Please Select -</option>')
+                                .val('whatever');
+
+                            $selectedTo
+                                .find('option')
+                                .remove()
+                                .end()
+                                .append('<option value="">- Please Select -</option>')
+                                .val('whatever');
+
+                            $.each(data, function (i, v) {
+                                var fromOption = new Option(v.text, v.value, false, false);
+                                $selectedFrom.append(fromOption);
+                                var toOption = new Option(v.text, v.value, false, false);
+                                $selectedTo.append(toOption);
+                            });
+                            //BindSelect($selectedTo);
+                            //BindSelect($selectedFrom);
+
+                            ////re-select
+                            //$selectedFrom.val(fromSelectedId).trigger('change.select');
+                            //$selectedTo.val(toSelectedId).trigger('change.select');
+                        });
+                    }
+                })
+
+        $mapFull.on('change', function (e) {
+            debugger
+            var $selection = $('#analysis-code-selection');
+            if ($(this).prop('checked')) {
+                $selection.css('display', 'none');
+            }
+            else {
+                $selection.css('display', 'block');
+            }
+        });
+    })
+</script>
+}

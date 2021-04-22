@@ -1,0 +1,362 @@
+﻿@model IEnumerable<FixedModules.Models.TaxCodeVM>
+
+@{
+    ViewData["Title"] = "Tax_Code";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #searchData .rotated {
+        width: 100%;
+        color: white;
+        margin: 0 auto;
+        background: #398fea;
+        text-align: center;
+    }
+
+    tbody tr:hover {
+        cursor: pointer;
+    }
+</style>
+
+<style type="text/css" media="only screen and (min-width: 1050px)">
+    #searchData .triangle-topleft {
+        width: 0;
+        height: 0;
+        border-top: 90px solid #398fea;
+        border-right: 90px solid transparent;
+        position: absolute;
+    }
+
+    #searchData .rotated {
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        width: 120px;
+        color: white;
+        font-weight: bold;
+        background-color: #398fea;
+        text-align: center;
+        position: absolute;
+        margin-top: 26px;
+        margin-left: -30px;
+        background: transparent;
+    }
+</style>
+
+<div class="content-i">
+    <div class="content-box">
+        <div class="element-wrapper">
+            <h6 class="element-header">
+                Tax Code
+            </h6>
+            <div class="element-box" id="searchData" style="display: none; padding: 3px; margin: 5px">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div>
+
+                            <div class="triangle-topleft"></div>
+                            <div class="rotated">Filters</div>
+
+                            <div class="card-body">
+
+                                <div class="row" style=" max-width: 600px; margin: 0 auto;">
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Code</label>
+                                            <div class="col-sm-12">
+                                                <input autocomplete="off" class="form-control" id="searchCode" name="Code" type="text" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Name</label>
+                                            <div class="col-sm-12">
+                                                <input autocomplete="off" class="form-control" id="searchName" name="Name" type="text" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Chart Of Account</label>
+                                            <div class="col-sm-12">
+                                                <select id="searchCoa" class="form-control" asp-items="ViewBag.COAList"></select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" data-select2-id="76">
+                                            <label class="col-sm-12 control-label col-form-label">Active</label><div class="col-sm-12" data-select2-id="75">
+                                                <select class="form-control" id="searchStatus" name="SelectedActiveId">
+                                                    <option value="-1" selected>- ALL -</option>
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="btn-container text-center" style="padding-bottom: 10px;">
+                                <button onclick="searchItem()" type="submit" class="btn btn-primary btn-fix-width" id="btn-search">Search</button>
+                                <button onclick="toggleSearch()" class="btn btn-outline-primary btn-fix-width close-filter" id="btn-close">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="element-box">
+                <div class="row">
+                    @*@{
+                        var test = Model.Select(x => x.StatusId).ToList();
+                    }
+
+                    @foreach (var x in test.FirstOrDefault())
+                    {
+                        if (x == 1 || x == 5 || x == 6 || x == 7 || x == 8 || x == 12 || x == 13 || x == 14)
+                        {
+                            <input class="box btn-primary card-hover card-sm" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Create" onclick="location.href='@Url.Action("Create", "Tax_Code")'" />
+                        }
+                    }*@
+                    <input class="box btn-primary card-hover card-sm" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Create" onclick="location.href='@Url.Action("Create", "Tax_Code")'" />
+                            <button class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Exportmodal" data-toggle="modal"> Export</button>
+                            <button class="box btn-outline-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Importmodal" data-toggle="modal"> Import</button>
+                            <button id="searchButton" onclick="toggleSearch()" class="box search-filter btn-outline-primary" style="border-radius:5px; cursor:pointer; margin-left:1%">
+                                <i class="mdi mdi-file-find"></i><span class="">Search</span>
+                            </button>
+                        </div>
+                <br>
+
+                <div class="table-responsive">
+                    @if (ViewBag.error == "Code exists")
+                    {
+                        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                    }
+                    @if (ViewBag.error == "File Error")
+                    {
+                        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Some record contain incomplete data, kinldy double check!</div>");
+                    }
+                    <table id="zero_config" class="table table-bordered table-lg table-v2 table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Code)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ChartOfAccount)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Status)
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="tableItems">
+                            @foreach (var item in Model)
+                            {
+                            <tr id="@item.Id">
+                                <td>@item.Code.Trim()</td>
+                                <td>@item.Name.Trim()</td>
+                                <td>@item.ChartOfAccount</td>
+                                <td>@(item.Status ? "Active" : "Inactive")</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <br /><br />
+            </div>
+
+
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="bd-example-modal-lg" role="dialog" tabindex="-1">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form action="Tax_Code/Create" method="POST">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    Create New
+                                </h5>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true" style="margin-left:8px"> &times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> Code</label><input oninput="isCodeExists()" class="form-control" placeholder="Code" type="text" id="code" name="Code" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Name</label><input class="form-control" placeholder="Name" name="Name" type="text" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label> Remarks</label><input class="form-control" placeholder="Remarks" name="Remark" type="text">
+                                    </div>
+
+                                    <div class="col-sm-6" style="vertical-align:middle">
+                                        <label for="" style="word-wrap:break-word">
+                                            <input class="form-control" type="checkbox" value="Status" disabled id="isActive" />Active
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" type="submit" value="Create"> Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Exportmodal" role="dialog" tabindex="-1">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                                Export
+                            </h5>
+                            <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                        </div>
+                        <div class="modal-body">
+
+                                        <p>
+                                            Please click on Export to download Tax Code<br>
+
+                                        </p>
+                        </div>
+                        <div class="modal-footer">
+                            @using (Html.BeginForm("Export", "Tax_Code", FormMethod.Post))
+                            {
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button><button class="btn btn-primary" type="submit" value="Export"> Export</button>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal" role="dialog" tabindex="-1">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form asp-action="Import" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    Import
+                                </h5>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Please select your updated csv file and click on import.<br>If you do not have the csv format, you may download it from here.
+                                    <a href="~/files/TaxCode.csv" class="btn btn-dark btn-sm">Download</a>
+                                </p>
+                                <div class="form-group row">
+                                    <label class="col-sm-1 text-left control-label col-form-label">File</label>
+                                    <div class="col-sm-11">
+                                        <input type="file" id="importfilesetting" name="importfilesetting" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" type="submit" value="Create"> Import</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+@section Scripts {
+
+    <script>
+        /****************************************
+         *       Basic Table                   *
+         ****************************************/
+
+        $('#zero_config').dataTable({
+            "bAutoWidth": false,
+            "searching": false
+        });
+
+        var table = $('#zero_config').dataTable();
+        var tableD = $('#zero_config').DataTable();
+
+          @*var jsData = @Html.Raw(Json.Serialize(test.FirstOrDefault()));
+
+        console.log(jsData);
+
+        jsData.forEach(function (item) {
+            if (item == 2 || item == 5 || item == 6 || item == 9 || item == 10 || item == 12 || item == 13 || item == 15) {
+
+                $(document).ready(function () {
+                    $('#tableItems').on('click', 'tr', function () {
+                        var id = (tableD.row(this).node()).id;
+                        window.location.href += "/Edit/" + id;
+                    });
+                });
+            }
+        });*@
+
+        $(document).ready(function () {
+            $('#tableItems').on('click', 'tr', function () {
+                var id = (tableD.row(this).node()).id;
+                window.location.href += "/Edit/" + id;
+            });
+        });
+
+        function searchItem() {
+            let code = $('#searchData #searchCode').val();
+            let name = $('#searchData #searchName').val();
+            let coa = $('#searchData #searchCoa').val();
+            let status = $('#searchData #searchStatus').val();
+            let url = "Tax_Code/Search?code=" + code + "&name=" + name + "&coa=" + coa + "&active=" + status;
+            table.fnClearTable();
+            $.ajax({
+                async: false,
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        let status = "Inactive";
+                        if (data[i]['status']) {
+                            status = "Active";
+                        }
+
+                        let item = [data[i]['code'], data[i]['name'], data[i]['chartOfAccount'], status];
+                        tableD.row.add(item).node().id = data[i]['id'];
+                    }
+                },
+                error: function () {
+                    alert("Server error. Please contact your adminisrator!");
+                }
+            });
+
+            tableD.draw();
+        }
+
+        function toggleSearch() {
+            var search = document.getElementById("searchData");
+            var searchBtn = document.getElementById("searchButton");
+            if (search.style.display === "none") {
+                search.style.display = "block";
+                searchBtn.style.display = "none";
+            } else {
+                search.style.display = "none";
+                searchBtn.style.display = "block";
+            }
+        }
+
+
+    </script>
+}

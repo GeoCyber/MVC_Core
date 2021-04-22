@@ -1,0 +1,203 @@
+﻿@model FixedAssets.Models.FixedAssetWriteOff
+
+@{ ViewData["Title"] = "Department-Create";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="~/css/DropButton.css" rel="stylesheet" />
+
+
+<body>
+    <div class="content-i">
+        <div class="content-box">
+            <div class="element-wrapper">
+                <h6 class="element-header">
+                    Fixed Asset Write Off
+                </h6>
+                <div class="element-box">
+                    <div class="row">
+                        <input class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" onclick="location.href='@Url.Action("Index", "FixedAssetWriteOff")'" />
+                    </div>
+                    @if (ViewBag.error == "Code exists")
+                    {
+                        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                    }
+                    <div class="card-body z-depth-1">
+                        <div class="detailContainer">
+                            <form asp-action="Create" method="post" enctype='multipart/form-data'>
+
+                                @*@Html.AntiForgeryToken()
+                                    <input type="hidden" asp-for="CreationStatus" />
+                                    <input type="hidden" asp-for="Id" />*@
+
+
+                                <ul id="accordion" class="accordion">
+                                    <li>
+                                        <div class="link"><span>HEADER INFO</span><i class="fa fa-chevron-down"></i></div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.TransDate)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                    <div class="col-sm-12">
+                                                        <input asp-for="TransDate" autocomplete="off" class="form-control" required />
+                                                        <span asp-validation-for="TransDate" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Remark)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                    <div class="col-sm-12">
+                                                        <input asp-for="Remark" autocomplete="off" class="form-control" required />
+                                                        <span asp-validation-for="Remark" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="link"><span>FILTER</span><i class="fa fa-chevron-down"></i></div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Category)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                    <input asp-for="Category" autocomplete="off" class="form-control" />
+                                                    <span asp-validation-for="Category" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+
+                                                <div class="form-group">
+
+                                                    <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetSubCode)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                    <input asp-for="AssetSubCode" autocomplete="off" class="form-control" />
+                                                    <span asp-validation-for="AssetSubCode" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="btn-container text-center">
+
+                                                <div class="dropdown btn btn-primary btn-fix-width">
+                                                    <button class="dropbtn">Extract</button>
+                                                    
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="link"><span>DETAILED INFO</span><i class="fa fa-chevron-down"></i></div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetSubCode)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                                    <input asp-for="AssetSubCode" autocomplete="off" class="form-control" readonly />
+                                                    <span asp-validation-for="AssetSubCode" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label col-form-label">@Html.DisplayNameFor(a => a.DocumentCode)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                    <input asp-for="AssetSubCode" autocomplete="off" class="form-control" readonly />
+                                                    <span asp-validation-for="AssetSubCode" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label col-form-label">@Html.DisplayNameFor(a => a.Remark)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                    <input asp-for="Remark" autocomplete="off" class="form-control" />
+                                                    <span asp-validation-for="Remark" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="col-sm-12 control-label col-form-label">Unit Amount<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                    <div class="col-sm-12">
+                                                        <input asp-for="AssetSubCode" autocomplete="off" class="form-control" readonly />
+                                                        <span asp-validation-for="AssetSubCode" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="col-sm-12 control-label col-form-label">Accumulated Depreciation<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                    <div class="col-sm-12">
+                                                        <input asp-for="AssetSubCode" autocomplete="off" class="form-control" readonly />
+                                                        <span asp-validation-for="AssetSubCode" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="col-sm-12 control-label col-form-label">Net Book Value<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                    <div class="col-sm-12">
+                                                        <input asp-for="AssetSubCode" autocomplete="off" class="form-control" readonly />
+                                                        <span asp-validation-for="AssetSubCode" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                       
+
+                    <div class="clearfix"></div>
+
+                    <div class="btn-container text-center">
+
+                        <div class="dropdown btn btn-primary btn-fix-width">
+                            <button class="dropbtn" disabled>Save <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                            <div class="dropdown-content">
+                                <ul>
+                                    <li style="margin-top:2px"><input type="submit" onclick="Submit(1)" value="Draft" class="btn btn-primary" style="width: 100%;" /></li>
+                                    <li style="margin-top:2px"><input type="submit" onclick="Submit(2)" value="Save" class="btn btn-primary" style="width: 100%;" /></li>
+                                    <li style="margin-top:2px"><input type="submit" onclick="Submit(3)" value="Save & Post" class="btn btn-primary" style="width: 100%;" /></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script>
+
+
+
+        function Submit(id) {
+            debugger;
+            $("#CreationStatus").val(id);
+            if (id == 1) $('input[type=text]').removeAttr('required');
+
+        }
+
+        $("input[type=text]").on("keypress", function (e) {
+            if (e.which === 32 && !this.value.length)
+                e.preventDefault();
+        });
+
+        $('.text-danger').on('DOMSubtreeModified', function () {
+            var span_Text = document.getElementById("Code-error").innerText;
+            if (span_Text == "Code Already Exist!") {
+                $("#submit").attr("disabled", true)
+                $("#submit").removeClass("btn btn-primary btn-fix-width");
+                $("#submit").addClass("btn btn-secondary btn-fix-width");
+            } else {
+                $("#submit").attr("disabled", false)
+                $("#submit").removeClass("btn btn-secondary btn-fix-width");
+                $("#submit").addClass("btn btn-primary btn-fix-width");
+            }
+        })
+    </script>
+}

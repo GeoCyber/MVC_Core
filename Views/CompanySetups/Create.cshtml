@@ -1,0 +1,165 @@
+﻿@model FixedModules.Models.Setup
+
+@{
+    ViewData["Title"] = "Company_Setup-Create";
+}
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Create</h1>
+
+    <h4>Setup</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group form-check">
+                    <table>
+                        <tr>
+                            <td><input id="checkbox_1" type="checkbox" name="selected" value="1"></td>
+                            <td>
+                                <select name="myselect" id="drop_1" disabled>
+                                    <option selected disabled>-- Please Select --</option>
+                                    <option>Years</option>
+                                    <option>Months</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input id="checkbox_2" type="checkbox" name="selected" value="2"></td>
+                            <td>
+                                <select name="myselect" id="drop_2" disabled>
+                                    <option selected disabled>-- Please Select --</option>
+                                    <option>Years</option>
+                                    <option>Months</option>
+                                    <option>Days</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input id="checkbox_3" type="checkbox" name="selected" value="3"></td>
+                            <td>
+                                <select name="myselect" id="drop_3" disabled>
+                                    <option selected disabled>-- Please Select --</option>
+                                    <option>Years</option>
+                                    <option>Months</option>
+                                    <option>Days</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="Reducing_Balance_UL" /> @Html.DisplayNameFor(model => model.Reducing_Balance_UL)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Value" class="control-label"></label>
+                    <input asp-for="Value" class="form-control" />
+                    <span asp-validation-for="Value" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CompanyId" class="control-label"></label>
+                    <input asp-for="CompanyId" class="form-control" />
+                    <span asp-validation-for="CompanyId" class="text-danger"></span>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsUsed" /> @Html.DisplayNameFor(model => model.IsUsed)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CreatedBy" class="control-label"></label>
+                    <input asp-for="CreatedBy" class="form-control" />
+                    <span asp-validation-for="CreatedBy" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CreatedDatetime" class="control-label"></label>
+                    <select asp-for="CreatedDatetime" class="form-control"></select>
+                    <span asp-validation-for="CreatedDatetime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+    <script>
+        $(function () {
+
+            $('#checkbox_1').click(function () {
+                if ($(this).is(':checked')) {
+                    $(this).closest("tr").find("select[name=myselect]").prop("disabled", !this.checked)
+                    $('input[type=checkbox]').attr('disabled', true);
+                    $('#checkbox_1').attr('disabled', false);
+                }
+                else {
+                    $("#drop_1").prop('disabled', true);
+                    $("#drop_1").prop("selectedIndex", 0);
+                    $('input[type=checkbox]').attr('disabled', false);
+                }
+            });
+
+            $('#checkbox_2').click(function () {
+                if ($(this).is(':checked')) {
+                    $(this).closest("tr").find("select[name=myselect]").prop("disabled", !this.checked)
+                    $('input[type=checkbox]').attr('disabled', true);
+                    $('#checkbox_2').attr('disabled', false);
+                }
+                else {
+                    $("#drop_2").prop('disabled', true);
+                    $("#drop_2").prop("selectedIndex", 0);
+                    $('input[type=checkbox]').attr('disabled', false);
+                }
+            });
+
+            $('#checkbox_3').click(function () {
+                if ($(this).is(':checked')) {
+                    $(this).closest("tr").find("select[name=myselect]").prop("disabled", !this.checked)
+                    $('input[type=checkbox]').attr('disabled', true);
+                    $('#checkbox_3').attr('disabled', false);
+                }
+                else {
+                    $("#drop_3").prop('disabled', true);
+                    $("#drop_3").prop("selectedIndex", 0);
+                    $('input[type=checkbox]').attr('disabled', false);
+                }
+            });
+
+            //$("input[type='checkbox']").on('change', function () {
+            //    if ($(this).is(':checked')) {
+            //        var x = $(this).attr('id');
+                    
+            //        $('input[type=checkbox]').attr('disabled', true);
+            //        $(this).closest("tr").find("inputname=[selected]").prop("disabled", !this.checked)
+            //    }
+            //});
+        });
+    </script>
+    @*<script>
+            $('input[type=checkbox]').change(function () {
+                if ($(this).is(':checked')) {
+                    
+                    $('input[type=checkbox]').attr('disabled', true);
+                    $(this).attr('disabled', '');
+                }
+                else {
+                    $('input[type=checkbox]').attr('disabled', '');
+                }
+            });
+        </script>*@
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</body>
+</html>

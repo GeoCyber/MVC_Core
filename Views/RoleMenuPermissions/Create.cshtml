@@ -1,0 +1,162 @@
+﻿@model FixedModules.Data.RoleMenuPermission
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@*<h1>Create</h1>
+
+    <h4>RoleMenuPermission</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="RoleId"></label>
+                    <select asp-for="RoleId" class="form-control" asp-items="ViewBag.roles"></select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NavigationMenuId" class="control-label"></label>
+                    <select asp-for="NavigationMenuId" class ="form-control" asp-items="ViewBag.NavigationMenuId"></select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>*@
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="~/assets/images/favicon.png">
+    <title>Alexis Pro</title>
+    <!-- Custom CSS -->
+    <link href="~/dist/css/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/libs/select2/dist/css/select2.min.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="page-breadcrumb">
+        <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+                <h4 class="page-title">Roles Permissions</h4>
+                <div class="ml-auto text-right">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Roles</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Roles Permissions</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid" style="height:100%">
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form class="form-horizontal" asp-action="Create">
+                        <div class="card-body">
+                            <h4 class="card-title">Create Roles Permission</h4>
+                            <div class="form-group row">
+                                <label for="parentMenu" class="col-md-2 m-t-15">Roles</label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-control custom-select" style="width: 100%; height:36px;" asp-for="RoleId" asp-items="ViewBag.roles" id="roles">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="parentMenu" class="col-md-2 m-t-15">Module</label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-control custom-select" style="width: 100%; height:36px;" asp-for="NavigationMenuId" asp-items="ViewBag.NavigationMenuId" id="module">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="border-top">
+                                <div class="card-body">
+                                    <input type="submit" class="btn btn-success" value="Create">
+                                    <input type="submit" class="btn btn-primary mdi mdi-subdirectory-arrow-left" value="Back to List" asp-controller="Roles" asp-action="Index">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End PAge Content -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- this page js -->
+    @*<script src="~/assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>*@
+    @*<script src="~/dist/js/pages/mask/mask.init.js"></script>*@
+    <script src="~/assets/libs/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/assets/libs/select2/dist/js/select2.min.js"></script>
+    @*<script src="~/assets/libs/jquery-asColor/dist/jquery-asColor.min.js"></script>*@
+    @*<script src="~/assets/libs/jquery-asGradient/dist/jquery-asGradient.js"></script>*@
+    @*<script src="~/assets/libs/jquery-asColorPicker/dist/jquery-asColorPicker.min.js"></script>*@
+    @*<script src="~/assets/libs/jquery-minicolors/jquery.minicolors.min.js"></script>*@
+    @*<script src="~/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>*@
+    @*<script src="~/assets/libs/quill/dist/quill.min.js"></script>*@
+    <script>
+        //***********************************//
+        // For select 2
+        //***********************************//
+        $(".select2").select2();
+
+    </script>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <script type="text/javascript">
+            $(function () {
+                alert('@ViewData.ModelState["Create"].Errors.First().ErrorMessage');
+                window.location = "/RoleMenuPermissions/Edit/@ViewBag.Id";
+            });
+        </script>
+    }
+
+</body>
+
+</html>
+

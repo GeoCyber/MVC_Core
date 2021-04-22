@@ -1,0 +1,431 @@
+﻿@model FixedModules.Models.Fixed_Asset_Register
+
+@{ ViewData["Title"] = "";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<body>
+    <div class="content-i">
+        <div class="content-box">
+            <div class="element-wrapper">
+
+
+
+                <div class="element-box">
+
+                    @if (ViewBag.error == "Code exists")
+                    {
+        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+    }
+                    <div class="card-body z-depth-1" id="editform">
+                        <a href="/Master_AllModule/Index" class="btn btn-primary" style="margin-left:95%">
+                            <span><span>Close</span></span>
+                        </a>
+                        <div class="detailContainer">
+
+                            <form asp-action="Edit" id="pdfgenerate" method="post" enctype='multipart/form-data'>
+
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="CreationStatus" />
+                                <input type="hidden" asp-for="Id" />
+                                <input type="hidden" asp-for="CreatedBy" />
+                                <input type="hidden" asp-for="CreationTimeStamp" />
+
+
+
+                                <div class="row" id="divDb">
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetName)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="AssetName" autocomplete="off" class="form-control" readonly />
+                                                <span asp-validation-for="AssetName" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetType)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="AssetType" onchange="ChooseNondepreciation(this)" class="form-control" disabled asp-items="@Model.asset_type">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetCategory)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="AssetCategory" class="form-control" disabled>
+                                                    @foreach (var item in Model.asset_Category)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetModel)</label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="AssetModel" class="form-control" disabled>
+                                                    @foreach (var item in Model.asset_model)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetBrand)</label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="AssetBrand" class="form-control" disabled>
+                                                    @foreach (var item in Model.asset_brand)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Remarks)</label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="Remarks" class="form-control" autocomplete="off" type="text" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.SupplierID)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="SupplierID" class="form-control" disabled>
+                                                    @foreach (var item in Model.supplier)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>}
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.InvoiceNumber)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="InvoiceNumber" autocomplete="off" class="form-control" readonly />
+                                                <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.TotalUnit)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="TotalUnit" autocomplete="off" class="form-control" readonly />
+                                                <span asp-validation-for="TotalUnit" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.UnitPrice)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="UnitPrice" autocomplete="off" class="form-control" readonly />
+                                                <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.ResidualAmount)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="ResidualAmount" autocomplete="off" class="form-control" readonly />
+                                                <span asp-validation-for="ResidualAmount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.UtilizeLife)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="UtilizeLife" autocomplete="off" class="form-control" readonly />
+                                                <span asp-validation-for="UtilizeLife" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DepreciationpercentagePer)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="DepreciationpercentagePer" autocomplete="off" class="form-control" readonly />
+                                                <span asp-validation-for="DepreciationpercentagePer" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DepreciationEndDate)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="DepreciationEndDate" autocomplete="off" class="form-control" readonly />
+                                                <span asp-validation-for="DepreciationEndDate" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.FixedAssetAccountID)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="FixedAssetAccountID" class="form-control" disabled>
+                                                    @foreach (var item in Model.fixed_asset_account)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.PL_DepreciationAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="PL_DepreciationAccount" class="form-control" disabled>
+                                                    @foreach (var item in Model.pl_description_account)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>
+}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.PS_DepreciationAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="PS_DepreciationAccount" class="form-control" disabled>
+                                                    @foreach (var item in Model.bs_description_account)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DisposalGainAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="DisposalGainAccount" class="form-control" disabled>
+                                                    @foreach (var item in Model.disposal_gain_account)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DisposalLossAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="DisposalLossAccount" class="form-control" disabled>
+                                                    @foreach (var item in Model.disposal_loss_account)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.writeOfAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select asp-for="writeOfAccount" class="form-control" disabled>
+                                                    @foreach (var item in Model.write_off_account)
+                                                    {
+                                        <option value="@item.Id">@item.Code-@item.Name</option>}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                @*<div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group row">
+                                                <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Adjustment_CapitalizeAmount)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                <div class="col-sm-12">
+                                                    <input asp-for="Adjustment_CapitalizeAmount" autocomplete="off" class="form-control" readonly />
+                                                    <span asp-validation-for="Adjustment_CapitalizeAmount" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group row">
+                                                <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Adjustment_ResidualAmount)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                <div class="col-sm-12">
+                                                    <input asp-for="Adjustment_ResidualAmount" autocomplete="off" class="form-control" readonly />
+                                                    <span asp-validation-for="Adjustment_ResidualAmount" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group row">
+                                                <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Adjustment_UtilizeLifeInMonths)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                <div class="col-sm-12">
+                                                    <input asp-for="Adjustment_UtilizeLifeInMonths" autocomplete="off" class="form-control" readonly />
+                                                    <span asp-validation-for="Adjustment_UtilizeLifeInMonths" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>*@
+
+
+                            </form>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script>
+      
+        function deletebutton() {
+            location.reload();
+
+        }
+        function calculation() {
+
+            var unit = $("#TotalUnit").val();
+            var price = $("#UnitPrice").val();
+            var capitalizeamt = parseInt(unit * price);
+            $("#CapitalizeAmount").val(capitalizeamt);
+            $("#Adjustment_CapitalizeAmount").val(capitalizeamt);
+            var capitalizeAmot = $("#CapitalizeAmount").val();
+            var residualamt = $("#ResidualAmount").val();
+            $("#Adjustment_ResidualAmount").val(residualamt);
+            var netval = capitalizeAmot - residualamt;
+            $("#NetBookValue").val(netval);
+
+            var unitprice = capitalizeamt / unit;
+            $("#priceunit").val(unitprice);
+            var allocationvalue = netval / unit;
+            $("#AllocationValue").val(allocationvalue);
+
+            var assetcode = $("#AssetCode").val();
+            var assetsubcode = "";
+            for (var i = 1; i <= unit; i++) {
+                assetsubcode += assetcode + "-" + i + ",";
+            }
+            $("#AssetSubCode").val(assetsubcode);
+
+
+        }
+
+
+        function hidedata() {
+            $("#headerinfo").toggle();
+
+        }
+        function hidedata1() {
+            $("#purchaseinfo").toggle();
+        }
+        function hidedata2() {
+            $("#depreinfo").toggle();
+        }
+        function hidedata3() {
+            $("#depremethod").toggle();
+        }
+        function hidedata4() {
+            $("#accntinfo").toggle();
+        }
+        function hidedata5() {
+            $("#adjustmnt").toggle();
+        }
+        function hidedata6() {
+            $("#attachmnt").toggle();
+        }
+        function hidedata7() {
+            $("#assetanalysis").toggle();
+        }
+
+
+        function ChooseNondepreciation(e) {
+            debugger;
+
+            var asserttype = $("#AssetType").val();
+
+            if (asserttype == '0') {
+                $("#depreInfo").hide();
+                $("#accountInfo").hide();
+            }
+            else {
+                $("#depreInfo").show();
+                $("#accountInfo").show();
+            }
+        }
+        $("#mydate").datepicker().datepicker("setDate", new Date());
+        $("#startDate").datepicker().datepicker("setDate", new Date());
+        $("#endDate").datepicker().datepicker("setDate", new Date());
+
+        function Submit(id) {
+            debugger;
+            $("#CreationStatus").val(id);
+            if (id == 1) $('input[type=text]').removeAttr('required');
+
+        }
+
+        $("input[type=text]").on("keypress", function (e) {
+            if (e.which === 32 && !this.value.length)
+                e.preventDefault();
+        });
+
+        $('.text-danger').on('DOMSubtreeModified', function () {
+            var span_Text = document.getElementById("Code-error").innerText;
+            if (span_Text == "Code Already Exist!") {
+                $("#submit").attr("disabled", true)
+                $("#submit").removeClass("btn btn-primary btn-fix-width");
+                $("#submit").addClass("btn btn-secondary btn-fix-width");
+            } else {
+                $("#submit").attr("disabled", false)
+                $("#submit").removeClass("btn btn-secondary btn-fix-width");
+                $("#submit").addClass("btn btn-primary btn-fix-width");
+            }
+        })
+
+
+
+    </script>
+}

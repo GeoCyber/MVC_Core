@@ -1,0 +1,299 @@
+﻿@model FixedModules.Models.MasterAssetCategory
+
+@{
+    ViewData["Title"] = "Asset_Category-Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@*<script>
+    $(document).ready(function () {
+
+    });
+
+    function isCodeExists() {
+        let code = $('#Code').val();
+
+        $.get("/Asset_Location_Master/IsCodeExists?code=" + code, function (data, status) {
+            if (status === 'success') {
+                if (data) {
+                    $('#Active').prop('checked', false);
+                    $('#status').val(false);
+                } else {
+                    $('#Active').prop('checked', true);
+                    $('#status').val(true);
+                }
+            } else {
+                console.log("SERVER ERROR!")
+            }
+        });
+    }
+</script>*@
+<body>
+    <div class="content-i">
+        <div class="content-box">
+            <div class="element-wrapper">
+                <h6 class="element-header">
+                    Asset Category Master
+                </h6>
+                <div class="element-box">
+                    <div class="row">
+
+                        <input class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" onclick="location.href='@Url.Action("Index", "Asset_Category_Master")'" />
+                    </div>
+                    @*@if (ViewBag.error == "Code exists")
+                        {
+                            @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                        }*@
+                    <div class="card-body z-depth-1">
+                        <div class="detailContainer" style="max-width: 600px;margin: 0 auto;padding: 0 20px;margin-bottom: 10px;">
+                            @if (!Html.ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert alert-danger" role="alert" asp-validation-summary="All"></div>
+                            }
+                            <form asp-action="Create" method="post">
+                                <div class="row">
+                                    <div id="errorMessage" class="col-sm-12 alert alert-danger" role="alert" style="display: none;">
+                                        Please, configure utilize life in company setup!
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Code<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="Code" autocomplete="off" class="form-control" id="Code" maxlength="30" name="Code" type="text" value="" />
+                                                <span asp-validation-for="Code" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Name<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                @*<input autocomplete="off" class="form-control" data-val="true" data-val-length="The field Name must be a string with a maximum length of 100." data-val-length-max="100" data-val-required="The Name field is required." id="Name" maxlength="100" name="Name" type="text" value="" required>*@
+                                                <input asp-for="Name" autocomplete="off" class="form-control" id="Name" maxlength="100" name="Name" type="text" value="" />
+                                                <span asp-validation-for="Name" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            @*<label class="col-sm-12 control-label col-form-label">Utilize Life<span class="value-mandatory"><i class="mdi mdi-value"></i></span> <small>[Years/Months/Days]</small></label><label for="lblUtilize"></label>*@
+                                            <label class="col-sm-12 control-label col-form-label">Utilize Life<span class="value-mandatory"><i class="mdi mdi-value"></i></span> <small id="lblUtilize"></small></label>
+                                                <div class="col-sm-12">
+                                                    <input autocomplete="off" class="form-control" id="utilizel" name="UtilizeL" type="number" value="">
+                                                    @*<select disabled id="utilizel" class="form-control" name="UtilizeL">
+                                                        <option value="Years">Years</option>
+                                                        <option value="Months">Months</option>
+                                                        <option value="Days">Days</option>
+                                                    </select>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Asset Code Format<span class="value-mandatory"><i class="mdi mdi-value"></i></span> <small><a href="#" onclick="showInfo()">more info</a></small></label>
+                                            <div class="col-sm-12">
+                                                <input autocomplete="off" class="form-control" data-val-length="The field Code Format must be a string with a maximum length of 30." data-val-length-max="30" data-val-required="The Code Format field is required." maxlength="30" name="CodeFormat" type="text" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <div class="form-group row"><label class="col-sm-12 control-label col-form-label">Remark</label><div class="col-sm-12"><input autocomplete="off" class="form-control" id="Remark" name="Remark" type="text" maxlength="300" value=""></div></div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 text-right control-label col-form-label">Active</label>
+                                            <div class="col-sm-8">
+                                                <input checked="checked" data-val="true" data-val-required="The Active field is required." id="Active" type="checkbox">
+                                                <input id="status" name="Status" type="hidden" value="true">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="btn-container text-center">
+                                    <button id="submitCreateCat" type="submit" value="Create" class="btn btn-primary btn-fix-width">Create</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">*@
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Document Format Samples</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Code Available To Use</strong></p>
+                    <table class="table table-listing">
+                        <tbody>
+                            <tr>
+                                <th>Code</th>
+                                <th>Explanation</th>
+                            </tr>
+                            <tr>
+                                <td>FF</td>
+                                <td>Financial Year with two characters only. EG : 18</td>
+                            </tr>
+                            <tr>
+                                <td>FFFF</td>
+                                <td>Full Financial Year. EG : 2018</td>
+                            </tr>
+                            <tr>
+                                <td>PP</td>
+                                <td>Financial Period. EG : 01</td>
+                            </tr>
+                            <tr>
+                                <td>YY</td>
+                                <td>Server Year with two characters only. EG : 18</td>
+                            </tr>
+                            <tr>
+                                <td>YYYY</td>
+                                <td>Server Financial Year. EG : 2018</td>
+                            </tr>
+                            <tr>
+                                <td>MM</td>
+                                <td>Server Month with two characters only. EG : 01</td>
+                            </tr>
+                            <tr>
+                                <td>DD</td>
+                                <td>Server Day. EG : 15</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="p-t-20"></div>
+                    <p><strong>Samples</strong></p>
+                    <table class="table table-listing">
+                        <tbody>
+                            <tr>
+                                <th>Format</th>
+                                <th>Result</th>
+                                <th>Explanation</th>
+                            </tr>
+                            <tr>
+                                <td>C{[00000]}</td>
+                                <td>C00001</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td> SRc-{[00000]}</td>
+                                <td>SRc-00001</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>{[SRc-00000]}</td>
+                                <td>Invalid</td>
+                                <td>Cannot find settings for SRc-</td>
+                            </tr>
+                            <tr>
+                                <td>SRC-YYPP{[000]}</td>
+                                <td>SRC-YYPP001</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>SRC-{[YYPP000]}</td>
+                                <td>SRC-1611001</td>
+                                <td>YY from FY2016, PP from period 11</td>
+                            </tr>
+                            <tr>
+                                <td>SRC-{[YYYYMM000]}</td>
+                                <td>SRC-201607001</td>
+                                <td>YY from FY2016, MM from month July</td>
+                            </tr>
+                            <tr>
+                                <td>SRC-{[YYYYPPP000]}</td>
+                                <td>Invalid</td>
+                                <td>Cannot find settings for PPP</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+
+    $('.text-danger').on('DOMSubtreeModified', function () {
+        var span_Text = document.getElementById("Code-error").innerText;
+        if (span_Text == "Code Already Exist!") {
+            $("#submitCreateCat").attr("disabled", true)
+            $("#submitCreateCat").removeClass("btn btn-primary btn-fix-width");
+            $("#submitCreateCat").addClass("btn btn-secondary btn-fix-width");
+        } else {
+            $("#submitCreateCat").attr("disabled", false)
+            $("#submitCreateCat").removeClass("btn btn-secondary btn-fix-width");
+            $("#submitCreateCat").addClass("btn btn-primary btn-fix-width");
+            $("#submitCreateCat").addClass("btn btn-primary btn-fix-width");
+        }
+    })
+
+</script>
+<script>
+    /****************************************
+         *       Basic Table                   *
+         ****************************************/
+    //$('#zero_config').dataTable({
+    //    "bAutoWidth": false
+    //});
+    function isCodeExists() {
+        let code = $('#Code').val();
+
+        $.get("/Asset_Category_Master/IsCodeExists?code=" + code, function (data, status) {
+            if (status === 'success') {
+                if (data) {
+                    $('#Active').prop('checked', false);
+                    $('#status').val(false);
+                } else {
+                    $('#Active').prop('checked', true);
+                    $('#status').val(true);
+                }
+            } else {
+                console.log("SERVER ERROR!")
+            }
+        });
+    }    
+
+    $(document).ready(function () {
+        $.get("../CompanySetups/GetUtilizeVal", function (data) {
+            //if (data == "Days" || data == "Months" || data == "Years") {
+            if (data != "" || data != null) {
+                //$('#submitBtn').prop('disabled', false);
+                //$('#utilizel').prop('disabled', false);
+                //document.getElementById("utilizel").value = data;
+                $("small[id='lblUtilize']").text("[" + data + "]");
+            } else {
+                $('#submitCreateCat').css('cursor', 'not-allowed');
+                $('#errorMessage').show();
+                console.log("Server error!");
+            }
+        });
+    });
+
+    $('#Active').change(function () {
+        if (this.checked) {
+            $('#status').val(true);
+        } else {
+            $('#status').val(false);
+        }
+    });    
+    
+    function showInfo() {
+        $('#exampleModalCenter').modal('show');
+        }
+
+</script>
+}

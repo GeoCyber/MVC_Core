@@ -1,0 +1,256 @@
+﻿@model FixedModules.Models.UserRoles
+
+@{
+    ViewData["Title"] = "User_Roles-Create";
+}
+
+<script>
+    $(document).ready(function () {
+
+    });
+
+    function isCodeExists() {
+        let code = $('#Code').val();
+
+        $.get("/Department_Master/IsCodeExists?code=" + code, function (data, status) {
+            if (status === 'success') {
+                if (data) {
+                    $('#Active').prop('checked', false);
+                    $('#status').val(false);
+                } else {
+                    $('#Active').prop('checked', true);
+                    $('#status').val(true);
+                }
+            } else {
+                console.log("SERVER ERROR!")
+            }
+        });
+    }
+</script>
+<body>
+    <div class="content-i">
+        <div class="content-box">
+            <div class="element-wrapper">
+                <h6 class="element-header">
+                    Create Role
+                </h6>
+                <div class="element-box">
+                    <div class="row">
+
+                        <input class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" onclick="location.href='@Url.Action("Index", "User_Roles")'" />
+                    </div>
+                    <div class="card-body z-depth-1">
+                        <div class="detailContainer" style="max-width: 600px;margin: 0 auto;padding: 0 20px;margin-bottom: 10px;">
+
+                            <form asp-action="Create" method="post">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Name<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input autocomplete="off" class="form-control" data-val="true" data-val-required="The Name field is required." id="Email" name="Name" type="text" value="" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 text-right control-label col-form-label">Active</label>
+                                            <div class="col-sm-8">
+                                                <input checked="checked" data-val="true" data-val-required="The Active field is required." id="Active" type="checkbox">
+                                                <input id="status" name="Status" type="hidden" value="true">
+                                            </div>
+                                        </div>
+                                    </div>
+                          
+                                </div>
+                                <div class="clearfix"></div>
+                               
+
+                                <div class="card">
+
+                                        <!-- Card header -->
+                                        <div class="card-header p-0 z-depth-1" role="tab" id="heading31">
+                                            <a data-toggle="collapse" data-parent="#accordion775" href="#collapse71" aria-expanded="true" aria-controls="collapse71" class="">
+                                                <i class="fas fa-angle-down rotate-icon fa-1_5x p-1 mr-3 float-right black-text" aria-hidden="true"></i>
+                                                <h6 class="text-uppercase white-text mb-0 py-1 pl-2 mt-1">
+                                                    Permissions
+                                                </h6>
+                                            </a>
+                                        </div>
+
+                                        <!-- Card body -->
+                                        <div id="collapse71" class="collapse show" role="tabpanel" aria-labelledby="heading31" data-parent="#accordion775" style="">
+                                            <div class="card-body z-depth-1">
+
+                                                <div class="p-t-10"></div>
+                                                <!-- Tabs -->
+                                                <div class="card">
+                                                    <!-- Nav tabs -->
+                                                    <ul class="nav nav-tabs" role="tablist">
+                                                        
+                                                        <li class="nav-item"> <a class="nav-link active show" data-toggle="tab" href="#masters" role="tab" aria-selected="true"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Masters</span></a> </li>
+                                                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#securities" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Securities</span></a> </li>
+                                                      
+                                                    </ul>
+                                                    <!-- Tab panes -->
+                                                    <div class="tab-content tabcontent-border">
+                                                        
+                                                        <div class="tab-pane active show" id="masters" role="tabpanel">
+                                                            <div class="p-20">
+                                                                <table class="table">
+                                                                    <tbody><tr>
+                                                                        <th style="width:200px;">
+                                                                            <div class="row">
+                                                                                <label class="col-sm-8 text-right control-label col-form-label">All Masters</label>
+                                                                                <div class="col-sm-4"><input type="checkbox" class="select-all"></div>
+                                                                            </div>
+                                                                        </th>
+                                                                        <th>Create</th>
+                                                                        <th>Update</th>
+                                                                        <th>Print</th>
+                                                                        <th>View</th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Department Master</td>
+                                                                        <td><input data-val="true" data-val-required="The Create field is required." id="CreateCustomer" name="CreateCustomer" type="checkbox" value="true"><input name="CreateCustomer" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Update field is required." id="UpdateCustomer" name="UpdateCustomer" type="checkbox" value="true"><input name="UpdateCustomer" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Print field is required." id="PrintCustomer" name="PrintCustomer" type="checkbox" value="true"><input name="PrintCustomer" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The View field is required." id="ViewCustomer" name="ViewCustomer" type="checkbox" value="true"><input name="ViewCustomer" type="hidden" value="false"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Asset Category Master</td>
+                                                                        <td><input data-val="true" data-val-required="The Create field is required." id="CreateSupplier" name="CreateSupplier" type="checkbox" value="true"><input name="CreateSupplier" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Update field is required." id="UpdateSupplier" name="UpdateSupplier" type="checkbox" value="true"><input name="UpdateSupplier" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Print field is required." id="PrintSupplier" name="PrintSupplier" type="checkbox" value="true"><input name="PrintSupplier" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The View field is required." id="ViewSupplier" name="ViewSupplier" type="checkbox" value="true"><input name="ViewSupplier" type="hidden" value="false"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Asset Location Master</td>
+                                                                        <td><input data-val="true" data-val-required="The Create field is required." id="CreatePaymentTerm" name="CreatePaymentTerm" type="checkbox" value="true"><input name="CreatePaymentTerm" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Update field is required." id="UpdatePaymentTerm" name="UpdatePaymentTerm" type="checkbox" value="true"><input name="UpdatePaymentTerm" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Print field is required." id="PrintPaymentTerm" name="PrintPaymentTerm" type="checkbox" value="true"><input name="PrintPaymentTerm" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The View field is required." id="ViewPaymentTerm" name="ViewPaymentTerm" type="checkbox" value="true"><input name="ViewPaymentTerm" type="hidden" value="false"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Asset Model Master</td>
+                                                                        <td><input data-val="true" data-val-required="The Create field is required." id="CreateCreditTerm" name="CreateCreditTerm" type="checkbox" value="true"><input name="CreateCreditTerm" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Update field is required." id="UpdateCreditTerm" name="UpdateCreditTerm" type="checkbox" value="true"><input name="UpdateCreditTerm" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Print field is required." id="PrintCreditTerm" name="PrintCreditTerm" type="checkbox" value="true"><input name="PrintCreditTerm" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The View field is required." id="ViewCreditTerm" name="ViewCreditTerm" type="checkbox" value="true"><input name="ViewCreditTerm" type="hidden" value="false"></td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td>Asset Brand Master</td>
+                                                                        <td><input data-val="true" data-val-required="The Create field is required." id="CreateAccountType" name="CreateAccountType" type="checkbox" value="true"><input name="CreateAccountType" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Update field is required." id="UpdateAccountType" name="UpdateAccountType" type="checkbox" value="true"><input name="UpdateAccountType" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The Print field is required." id="PrintAccountType" name="PrintAccountType" type="checkbox" value="true"><input name="PrintAccountType" type="hidden" value="false"></td>
+                                                                        <td><input data-val="true" data-val-required="The View field is required." id="ViewAccountType" name="ViewAccountType" type="checkbox" value="true"><input name="ViewAccountType" type="hidden" value="false"></td>
+                                                                    </tr>
+                                                                    
+                                                                </tbody></table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-pane p-20" id="securities" role="tabpanel">
+                                                            <div class="p-20">
+                                                                <table class="table">
+                                                                    <tbody><tr>
+                                                                        <th style="width:200px;">
+                                                                            <div class="row">
+                                                                                <label class="col-sm-8 text-right control-label col-form-label">All Securities</label>
+                                                                                <div class="col-sm-4"><input type="checkbox" class="select-all"></div>
+                                                                            </div>
+                                                                        </th>
+                                                                        <th>Create</th>
+                                                                        <th>Update</th>
+                                                                        <th>Post</th>
+                                                                        <th>Void</th>
+                                                                        <th>Print</th>
+                                                                        <th>View</th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Role</td>
+                                                                        <td style="border-right:none;"><input data-val="true" data-val-required="The Manage field is required." id="ManageRole" name="ManageRole" type="checkbox" value="true"><input name="ManageRole" type="hidden" value="false"></td>
+                                                                        <td colspan="5"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>User</td>
+                                                                        <td style="border-right:none;"><input data-val="true" data-val-required="The Manage field is required." id="ManageUser" name="ManageUser" type="checkbox" value="true"><input name="ManageUser" type="hidden" value="false"></td>
+                                                                        <td colspan="5"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>User &amp; Role Report</td>
+                                                                        <td style="border-right:none;"><input data-val="true" data-val-required="The User &amp; Role Repot field is required." id="ManageUserAndRoleReport" name="ManageUserAndRoleReport" type="checkbox" value="true"><input name="ManageUserAndRoleReport" type="hidden" value="false"></td>
+                                                                        <td colspan="5"></td>
+                                                                    </tr>
+                                                                </tbody></table>
+                                                            </div>
+                                                        </div>
+                                                       
+                                                        
+                                                    </div>
+                                                </div>
+
+                                                <div class="btn-container text-center">
+                                                    <button type="submit" class="btn btn-primary btn-fix-width">Create</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Accordion card - end item 2 -->
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        /****************************************
+         *       Basic Table                   *
+         ****************************************/
+        $('#zero_config').dataTable({
+            "bAutoWidth": false
+        });
+
+        $(document).ready(function () {
+
+        });
+
+        $('#Active').change(function () {
+            if (this.checked) {
+                $('#status').val(true);
+            } else {
+                $('#status').val(false);
+            }
+        });
+
+        $(document).ready(function () {
+        $(".js-example-basic-multiple").select2({
+            placeholder: "Role",
+            theme: "classic",
+            ajax: {
+                url: "/User_Management/GetRoleList",
+                dataType: "json",
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data, params) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+        });
+
+        $(document).ready(function() {
+    $('.').select2();
+        });
+
+    </script>
+}

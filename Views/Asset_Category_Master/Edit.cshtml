@@ -1,0 +1,133 @@
+﻿@model FixedModules.Models.MasterAssetCategory
+
+@{
+    ViewData["Title"] = "Asset_Category-Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+    <body>
+        <div class="content-i">
+            <div class="content-box">
+                <div class="element-wrapper">
+                    <h6 class="element-header">
+                        Asset Category Master
+                    </h6>
+                    <div class="element-box">
+                        <div class="row">
+
+                            <input class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" onclick="location.href='@Url.Action("Index", "Asset_Category_Master")'" />
+                        </div>
+                        <div class="card-body z-depth-1">
+                            <div class="detailContainer" style="max-width: 600px;margin: 0 auto;padding: 0 20px;margin-bottom: 10px;">
+                                @if (!Html.ViewData.ModelState.IsValid)
+                                {
+                                    <div class="alert alert-danger" role="alert" asp-validation-summary="All"></div>
+                                }
+                                <form asp-action="Edit" method="POST">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-12 control-label col-form-label">Code<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                <div class="col-sm-12">
+                                                    <input asp-for="Code" autocomplete="off" class="form-control" id="Code" maxlength="30" name="Code" type="text" value="@Model.Code" />
+                                                    <input value="@Model.Id" type="hidden" class="form-control" name="Id">
+                                                    <span asp-validation-for="Code" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row"><label class="col-sm-12 control-label col-form-label">Name<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label><div class="col-sm-12"><input autocomplete="off" class="form-control" data-val="true" data-val-length="The field Name must be a string with a maximum length of 100." data-val-length-max="100" data-val-required="The Name field is required." id="Name" maxlength="100" name="Name" type="text" value="@Model.Name" required></div></div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                @*<label class="col-sm-12 control-label col-form-label">Utilize Life<span class="value-mandatory"><i class="mdi mdi-value"></i></span> <small>[Years/Months/Days]</small></label>*@
+                                                <label class="col-sm-12 control-label col-form-label">Utilize Life<span class="value-mandatory"><i class="mdi mdi-value"></i></span> <small id="lblUtilize"></small></label>
+                                                <div class="col-sm-12">
+                                                    <input autocomplete="off" class="form-control" id="utilizel" name="UtilizeL" type="number" value="@Model.UtilizeL">
+                                                    @*<select disabled id="utilizel" class="form-control" name="UtilizeL">
+                                                        <option value="Years">Years</option>
+                                                        <option value="Months">Months</option>
+                                                        <option value="Days">Days</option>
+                                                    </select>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-12 control-label col-form-label">Asset Code Format<span class="value-mandatory"><i class="mdi mdi-value"></i></span> <small><a href="#" onclick="showInfo()">more info</a></small></label>
+                                                <div class="col-sm-12">
+                                                    <input autocomplete="off" class="form-control" data-val-length="The field Code Format must be a string with a maximum length of 30." data-val-length-max="30" data-val-required="The Code Format field is required." maxlength="30" name="CodeFormat" type="text" value="@Model.CodeFormat" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-12">
+                                            <div class="form-group row"><label class="col-sm-12 control-label col-form-label">Remark</label><div class="col-sm-12"><input autocomplete="off" class="form-control" id="Remark" name="Remark" type="text" maxlength="300" value="@Model.Remark"></div></div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 text-right control-label col-form-label">Active</label>
+                                                <div class="col-sm-8">
+                                                    <input class="form-check-input" asp-for="Status">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="btn-container text-center">
+                                        <button type="submit" id="submitEditCat" value="Edit" class="btn btn-primary btn-fix-width">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+
+    $('.text-danger').on('DOMSubtreeModified', function () {
+        var span_Text = document.getElementById("Code-error").innerText;
+        if (span_Text == "Code Already Exist!") {
+            $("#submitEditCat").attr("disabled", true)
+            $("#submitEditCat").removeClass("btn btn-primary btn-fix-width");
+            $("#submitEditCat").addClass("btn btn-secondary btn-fix-width");
+        } else {
+            $("#submitEditCat").attr("disabled", false)
+            $("#submitEditCat").removeClass("btn btn-secondary btn-fix-width");
+            $("#submitEditCat").addClass("btn btn-primary btn-fix-width");
+        }  
+    })
+
+</script>
+<script>
+    $('#Active').change(function () {
+        if (this.checked) {
+            $('#status').val(true);
+        } else {
+            $('#status').val(false);
+        }
+    });
+
+    $(document).ready(function () {
+        $.get("../../CompanySetups/GetUtilizeVal", function (data) {
+            if (data != "" || data != null) {
+                $("small[id='lblUtilize']").text("[" + data + "]");
+            } else {
+                $('#submitEditCat').css('cursor', 'not-allowed');
+                $('#errorMessage').show();
+                console.log("Server error!");
+            }
+        });
+
+    });
+
+    function showInfo() {
+        $('#exampleModalCenter').modal('show');
+    }
+</script>
+}

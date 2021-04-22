@@ -1,0 +1,277 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Localization
+@model List<FixedModules.Models.NavigationMenuViewModel>
+@inject SignInManager<IdentityUser> SignInManager
+@{
+    ViewData["Title"] = "NavigationMenu";
+    var chk = 1;
+}
+
+<!--------------------
+    START - Mobile Menu
+    -------------------->
+<div class="menu-mobile menu-activated-on-click color-scheme-dark">
+    <div class="mm-logo-buttons-w">
+        <a class="mm-logo" href="index.html"><img src="img/Alexix_White.png"><span>Alexis Pro</span></a>
+        <div class="mm-buttons">
+            <div class="content-panel-open">
+                <div class="os-icon os-icon-grid-circles"></div>
+            </div>
+            <div class="mobile-menu-trigger">
+                <div class="os-icon os-icon-hamburger-menu-1"></div>
+            </div>
+        </div>
+    </div>
+    <div class="menu-and-user">
+        <div class="logged-user-w">
+                <div class="avatar-w">
+                    <img alt="" src="img/avatar1.jpg">
+                </div>
+                <div class="logged-user-info-w">
+                    <div class="logged-user-name">
+                        Kelvin Lee
+                    </div>
+                    <div class="logged-user-role">
+                        Administrator
+                    </div>
+                </div>
+            </div>
+        <!--------------------
+        START - Mobile Menu List
+        -------------------->
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <ul class="main-menu">
+
+                @foreach (var item in Model)
+                {
+
+                    @if (item.ParentMenuId == null) //Level one items will have null parent id
+                    {
+                        if (!string.IsNullOrWhiteSpace(item.ControllerName))
+                        { }
+
+                        var children = Model.Where(x => x.ParentMenuId == item.Id).ToList();
+
+                        //@if (item.Where(x => x.ActionName == null && x.ControllerName == null).ToList().Count > 0)
+                        @if (item.ControllerName == null && item.ActionName == null)
+                        {
+                            <li class="has-sub-menu">
+                                <a href="#">
+                                    <div class="icon-w">
+                                        <div class="os-icon os-icon-layout"></div>
+                                    </div>
+                                    <span>@item.Name</span>
+                                </a>
+                                @*<ul class="sub-menu">
+                                        @foreach (var itm in children)
+                                        {
+                                            <li>
+                                                <a asp-controller="@itm.ControllerName" asp-action="@itm.ActionName">@itm.Name</a>
+                                            </li>
+                                        }
+                                    </ul>*@
+                                @{chk = chk + 1;}
+                                @if (chk > 5)
+                                {
+                                    <ul class="sub-menu">
+                                        @foreach (var itm in children)
+                                        {
+                                            <li>
+                                                <a asp-controller="@itm.ControllerName" asp-action="@itm.ActionName">@itm.Name</a>
+                                            </li>
+                                            if (children.Count > 5)
+                                            {
+                                                <li>
+                                                    <a asp-controller="@itm.ControllerName" asp-action="@itm.ActionName">@itm.Name</a>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <ul class="sub-menu">
+                                        @foreach (var itm in children)
+                                        {
+                                            <li>
+                                                <a asp-controller="@itm.ControllerName" asp-action="@itm.ActionName">@itm.Name</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+
+
+
+
+
+                        }
+                        @*else
+                        {
+                            <li>
+                                <a asp-controller="Home" asp-action="Index">
+                                    <div class="icon-w">
+                                        <div class="os-icon os-icon-layout"></div>
+                                    </div>
+                                    <span>@localizer.Get("Home")</span>
+                                </a>
+                            </li>
+
+                        }*@
+                    }
+                }
+            </ul>
+        }
+        <!--------------------
+        END - Mobile Menu List
+        -------------------->
+        @*<div class="mobile-menu-magic">
+                <h4>
+                    Light Admin
+                </h4>
+                <p>
+                    Clean Bootstrap 4 Template
+                </p>
+                <div class="btn-w">
+                    <a class="btn btn-white btn-rounded" href="https://themeforest.net/item/light-admin-clean-bootstrap-dashboard-html-template/19760124?ref=Osetin" target="_blank">Purchase Now</a>
+                </div>
+            </div>*@
+    </div>
+</div>
+<!--------------------
+END - Mobile Menu
+-------------------->
+
+<div class="menu-w color-scheme-dark color-style-bright menu-position-top menu-layout-compact sub-menu-style-over sub-menu-color-bright selected-menu-color-light menu-activated-on-hover menu-with-image menu-has-selected-link">
+    <div class="logo-w">
+        <a class="logo" asp-controller="Home" asp-action="Index">
+            @*<div style="background-image: url(img/Alexix_White.png);width: 26px;height: 26px;border-radius: 15px;position: relative;background-color: #98c9fd;"></div>*@
+            <div class="logo-label">
+                <img src="~/img/Alexix_Black.png" />&nbsp;&nbsp; Fixed Modules
+            </div>
+        </a>
+    </div>
+    @*<div class="logo-w">*@
+        @*<vc:culture-switcher />*@
+
+        @*<select class="form-control" onchange="location = this.options[this.selectedIndex].value;">
+
+                <option>
+                    -- Select Language --
+                </option>
+                <option value="?culture=en">
+                    English
+                </option>
+                <option value="?culture=ar">
+                    Arabic
+                </option>
+            </select>*@
+    @*</div>*@
+    @*<div class="element-search autosuggest-search-activator">
+            <input placeholder="Start typing to search..." type="text">
+        </div>*@
+    <h1 class="menu-page-header">
+        Fixed Modules
+    </h1>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <ul class="main-menu">
+
+            @foreach (var item in Model)
+            {
+
+                @if (item.ParentMenuId == null) //Level one items will have null parent id
+                {
+                    if (!string.IsNullOrWhiteSpace(item.ControllerName))
+                    { }
+
+                    var children = Model.Where(x => x.ParentMenuId == item.Id).ToList();
+
+                    //@if (item.Where(x => x.ActionName == null && x.ControllerName == null).ToList().Count > 0)
+                    @if (item.ControllerName == null && item.ActionName == null)
+                    {
+
+                        <li class="has-sub-menu">
+                            <a href="#">
+                                <div class="icon-w">
+                                    <div class="os-icon os-icon-layout"></div>
+                                </div>
+                                <span>@item.Name</span>
+                            </a>
+
+                            <div class="sub-menu-w">
+                                <div class="sub-menu-header">
+                                    @item.Name
+                                </div>
+                                <div class="sub-menu-icon">
+                                    <i class="os-icon os-icon-layout"></i>
+                                </div>
+
+                                <div class="sub-menu-i">
+                                    <ul class="sub-menu">
+
+                                        @foreach (var itm in children)
+                                        {
+                                            <li>
+                                                <a asp-controller="@itm.ControllerName" asp-action="@itm.ActionName">@itm.Name</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </li>
+                    }
+                    else
+                    {
+
+                        <li>
+                            <a asp-controller="Home" asp-action="Index">
+                                <div class="icon-w">
+                                    <div class="os-icon os-icon-layers"></div>
+                                </div>
+                                <span>@item.Name</span>
+                            </a>
+                            <div class="sub-menu-w">
+                                <div class="sub-menu-header">
+                                    @item.Name
+                                </div>
+                                <div class="sub-menu-icon">
+                                    <i class="os-icon os-icon-layers"></i>
+                                </div>
+                            </div>
+                        </li>
+
+                    }
+                }
+
+            }
+
+            <li>
+                @*<form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Account/Login", new { area = "" })">*@
+                <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Account/Login", new { area = "" })">
+                    <div class="icon-w">
+                        <div class="os-icon os-icon-layers"></div>
+                    </div>
+                    <span>Logout</span>
+                </a>
+                @*</form>*@
+                <div class="sub-menu-w">
+                    <div class="sub-menu-header">
+                        Logout
+                    </div>
+                    <div class="sub-menu-icon">
+                        <i class="os-icon os-icon-layers"></i>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+    }
+</div>
+
+@section Scripts{
+}
+
+

@@ -1,0 +1,151 @@
+﻿@model FixedModules.Models.TaxCodeVM
+
+@{
+    ViewData["Title"] = "Tax_Code-Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<script>
+    $(document).ready(function () {
+
+    });
+
+    function isCodeExists() {
+        let code = $('#Code').val();
+
+        $.get("/Tax_Code/IsCodeExists?code=" + code, function (data, status) {
+            if (status === 'success') {
+                if (data) {
+                    $('#Active').prop('checked', false);
+                    $('#status').val(false);
+                } else {
+                    $('#Active').prop('checked', true);
+                    $('#status').val(true);
+                }
+            } else {
+                console.log("SERVER ERROR!")
+            }
+        });
+    }
+</script>
+<body>
+    <div class="content-i">
+        <div class="content-box">
+            <div class="element-wrapper">
+                <h6 class="element-header">
+                    Tax Code
+                </h6>
+                    <div class="element-box">
+                    <div class="row">
+                        <input class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" onclick="location.href='@Url.Action("Index", "Tax_Code")'" />
+                    </div>
+                    <div class="card-body z-depth-1">
+                        <div class="detailContainer" style="max-width: 600px;margin: 0 auto;padding: 0 20px;margin-bottom: 10px;">
+                            @if (!Html.ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert alert-danger" role="alert" asp-validation-summary="All"></div>
+                            }
+                            <form asp-action="Create" method="post">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Code<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                @*<input autocomplete="off" class="form-control" data-val="true" data-val-length="The field Code must be a string with a maximum length of 15." data-val-length-max="15" data-val-required="The Code field is required." id="Code" maxlength="15" name="Code" type="text" value="" required>*@
+                                                <input asp-for="Code" autocomplete="off" class="form-control" id="Code" maxlength="30" name="Code" type="text" value="" />
+                                                <span asp-validation-for="Code" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Name<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                @*<input autocomplete="off" class="form-control" data-val="true" data-val-length="The field Name must be a string with a maximum length of 100." data-val-length-max="100" data-val-required="The Name field is required." id="Name" maxlength="100" name="Name" type="text" value="" required>*@
+                                                <input asp-for="Name" autocomplete="off" class="form-control" id="Name" maxlength="100" name="Name" type="text" value="" />
+                                                <span asp-validation-for="Name" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Chart Of Account<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select class="form-control" id="ChartOfAccount" asp-for="ChartOfAccount" asp-items="ViewBag.COAList"></select>
+                                                <span asp-validation-for="ChartOfAccount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Tax Rate<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="Rate" autocomplete="off" class="form-control" id="Rate" maxlength="100" name="Rate" type="text" value="" />
+                                                <span asp-validation-for="Rate" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group row"><label class="col-sm-12 control-label col-form-label">Remark</label><div class="col-sm-12"><input autocomplete="off" class="form-control" id="Remark" name="Remark" type="text" maxlength="300" value=""></div></div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 text-right control-label col-form-label">Active</label>
+                                            <div class="col-sm-8">
+                                                <input checked="checked" data-val="true" data-val-required="The Active field is required." id="Active" type="checkbox">
+                                                <input id="status" name="Status" type="hidden" value="true">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="btn-container text-center">
+                                    <button type="submit" id="submitCreateTax" value="Create" class="btn btn-primary btn-fix-width">Create</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+
+    $('.text-danger').on('DOMSubtreeModified', function () {
+        var span_Text = document.getElementById("Code-error").innerText;
+        if (span_Text == "Code Already Exist!") {
+            $("#submitCreateTax").attr("disabled", true)
+            $("#submitCreateTax").removeClass("btn btn-primary btn-fix-width");
+            $("#submitCreateTax").addClass("btn btn-secondary btn-fix-width");
+        } else {
+            $("#submitCreateTax").attr("disabled", false)
+            $("#submitCreateTax").removeClass("btn btn-secondary btn-fix-width");
+            $("#submitCreateTax").addClass("btn btn-primary btn-fix-width");
+        }
+    })
+
+</script>
+    <script>
+        /****************************************
+         *       Basic Table                   *
+         ****************************************/
+        $('#zero_config').dataTable({
+            "bAutoWidth": false
+        });
+
+        $(document).ready(function () {
+
+        });
+
+        $('#Active').change(function () {
+            if (this.checked) {
+                $('#status').val(true);
+            } else {
+                $('#status').val(false);
+            }
+        });
+    </script>
+}

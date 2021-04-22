@@ -1,0 +1,212 @@
+﻿@model FixedAssets.Models.Customer
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="content-i" onload="exampleFunction()">
+    <div class="content-box">
+        <div class="element-wrapper">
+            <h6 class="element-header">
+               Edit Customer
+            </h6>
+            <div class="element-box">
+                <div class="row">
+                    <a asp-action="Index"><input class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" /></a>
+                </div>
+                <div class="card-body z-depth-1">
+                    <div class="detailContainer" style="margin: 0 auto;padding: 0 20px;margin-bottom: 10px;">
+
+                        <form asp-action="Edit" method="post">
+                            <div class="row">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                                <legend><span>Info</span></legend>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Code<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                    <input asp-for="Code" class="form-control" value="@Model.Code" readonly />
+                                    <span asp-validation-for="Code" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label col-form-label">Name<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                        <input asp-for="Name" class="form-control" value="@Model.Name" required />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Chart Of Account<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                    <select class="fstdropdown-select" id="ChartOfAccount" asp-for="ChartOfAccount" asp-items="ViewBag.coa">
+                                    </select>
+                                    <span asp-validation-for="ChartOfAccount" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label col-form-label">Remark<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                        <input asp-for="Remark" class="form-control" value="@Model.Remark" />
+                                        <span asp-validation-for="Remark" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <center>
+                                        <label>Active</label>
+                                        <input checked="checked" data-val="true" data-val-required="The Active field is required." id="Active" type="checkbox">
+                                        <input id="status" name="Status" type="hidden" value="@Model.Status">
+                                    </center>
+
+                                </div>
+
+                                <legend><span>Contact</span></legend>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Registration Number<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                    <input asp-for="RegistrationNo" class="form-control" value="@Model.RegistrationNo" />
+                                    <span asp-validation-for="RegistrationNo" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Contact Person<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                    <input asp-for="ContactPerson" class="form-control" value="@Model.ContactPerson" />
+                                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-12 control-label col-form-label">Address<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                    <input asp-for="Address" class="form-control" style="margin-bottom:5px" value="@Model.Address" required />
+
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">City<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                    <input asp-for="City" class="form-control" value="@Model.City" required />
+                                    <span asp-validation-for="City" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Postcode<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                    <input asp-for="PostCode" class="form-control" value="@Model.PostCode" required />
+                                    <span asp-validation-for="PostCode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Country<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                    <select class="fstdropdown-select" id="Country" asp-for="Country" asp-items="ViewBag.countryList">
+                                    </select>
+                                    <span asp-validation-for="Country" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">State<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                    <select class="fstdropdown-select" id="State" asp-for="State" asp-items="ViewBag.stateList">
+                                    </select>
+                                    <span asp-validation-for="State" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label asp-for="PhoneNumber" class="control-label"></label>
+                                    <input asp-for="PhoneNumber" class="form-control" value="@Model.PhoneNumber" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label asp-for="Fax" class="control-label"></label>
+                                    <input asp-for="Fax" class="form-control" value="@Model.Fax" />
+                                    <span asp-validation-for="Fax" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-12 control-label col-form-label">Email<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                <input asp-for="Email" type="email" class="form-control" value="@Model.Email" required />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-12 control-label col-form-label">Website<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                <input asp-for="Website" type="text" class="form-control" value="@Model.Website" required />
+                                <span asp-validation-for="Website" class="text-danger"></span>
+                            </div>
+
+                            <legend><span>Tax</span></legend>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-12 control-label col-form-label">Tax Code<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                <select class="fstdropdown-select" id="TaxCode" asp-for="TaxCode" asp-items="ViewBag.TaxCode">
+                                </select>
+                                <span asp-validation-for="TaxCode" class="text-danger"></span>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Tax Number<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+
+                                    <input asp-for="TaxNumber" type="text" class="form-control" value="@Model.TaxNumber" required />
+                                    <span asp-validation-for="TaxNumber" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Tax Expiry<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                    <div class="date-input">
+                                        <input class="form-control" placeholder="Tax Expiry" type="datetime-local" value="">
+                                    </div>
+                                    <span asp-validation-for="TaxExpiry" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="btn-container text-center">
+                                <div class="form-group">
+                                    <input type="submit" value="Save" class="btn btn-primary btn-fix-width" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    $(".select2").select2();
+  function exampleFunction() { 
+            if(ControlName.value == "Malaysia") 
+             {
+                 document.getElementById('tinNo').style.display = 'none';
+                 document.getElementById('gst').style.display = 'block';
+
+              
+             }
+             else
+             {
+                  document.getElementById('tinNo').style.display = 'block';
+                 document.getElementById('gst').style.display = 'none';
+               
+             }
+    }; 
+     function HideTextBox(ddlId)
+        {
+             var ControlName = document.getElementById("Country");
+           
+             if(ControlName.value == "Malaysia") 
+             {
+                 document.getElementById('tinNo').style.display = 'none';
+                 document.getElementById('gst').style.display = 'block';
+
+              
+             }
+             else
+             {
+                  document.getElementById('tinNo').style.display = 'block';
+                 document.getElementById('gst').style.display = 'none';
+               
+             }
+        }
+    </script>
+}

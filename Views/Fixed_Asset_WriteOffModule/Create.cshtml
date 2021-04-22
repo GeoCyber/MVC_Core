@@ -1,0 +1,186 @@
+﻿@model FixedModules.Models.Fixed_Asset_Register
+
+@{ ViewData["Title"] = "Department-Create";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="~/css/DropButton.css" rel="stylesheet" />
+<!-- Select2 CSS -->
+
+<style>
+    table th {
+        background: #0073ff;
+        color: #fff;
+    }
+
+    .wt-th {
+        width: 160px;
+    }
+
+        .wt-th .dropbtn {
+            min-width: 105px;
+            color: white;
+        }
+
+    .pd_0 {
+        padding: 0px;
+    }
+
+    .mbt {
+        margin-bottom: 15px;
+        margin-top: 15px;
+    }
+
+    .link {
+        background: #007bff;
+        text-align: right;
+        padding-right: 8px;
+        margin-bottom: 5px;
+    }
+
+        .link i {
+            background: #60a9f7;
+            width: 20px;
+            text-align: center;
+            color: #fff;
+            font-size: 12px;
+            height: 20px;
+            top: 0px;
+            line-height: 20px;
+            margin-bottom: 4px;
+        }
+
+        .link span {
+            color: #fff;
+            text-align: left;
+            float: left;
+            padding-left: 10px;
+        }
+
+            .link span a {
+            }
+
+    .select2 {
+        font-weight: 300;
+        width: 100% !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 40px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        line-height: 38px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 40px;
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        width: 20px;
+    }
+
+    .col-form-label {
+        padding-top: calc(.375rem + 1px);
+        padding-bottom: calc(.375rem + 1px);
+        margin-bottom: 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
+
+
+<body>
+    <div class="content-i">
+        <div class="content-box">
+
+
+
+
+
+            <div class="element-wrapper">
+                <h6 class="element-header">
+                    Fixed Asset Write Off Module
+                </h6>
+
+
+                @*<button class="box btn-outline-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Importmodal" data-toggle="modal"> Import</button>*@
+
+                <div class="element-box">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body text-right">
+                                <input class="btn btn-primary" type="button" value="Back" onclick="location.href='@Url.Action("Index", "Master_AllModule")'" />
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (ViewBag.error == "Code exists")
+                    {
+                        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                    }
+                    <div class="card-body z-depth-1">
+                        <div class="detailContainer">
+                            <form method="post" enctype='multipart/form-data' id="myform" onsubmit="FormSubmit(this)">
+
+                                @*@Html.AntiForgeryToken()*@
+                                <input type="hidden" asp-for="CreationStatus" />
+                                <input type="hidden" asp-for="Id" />
+
+                                <ul id="accordion" class="accordion">
+                                    <li>
+                                        <div class="link"><span>HEADER INFO</span><i onclick="hidedata()" class="fa fa-chevron-down"></i></div>
+                                        <ul id="headerinfo" class="submenu">
+                                           
+                                        </ul>
+                                    </li>
+
+                                </ul>
+
+
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <center class="mbt">
+                                            <label>Active</label>
+                                            <input asp-for="Status" class="m-1" />
+                                        </center>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <div class="btn-container text-center">
+
+                                    <div class="dropdown btn btn-primary btn-fix-width wt-th">
+                                        <button class="dropbtn" disabled>Save <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                                        <div class="dropdown-content wt-th">
+                                            <ul>
+                                                <li style="margin-top:2px"><input type="button" onclick="Submit(1)" value="Draft" class="btn btn-secondary" style="width: 100%;" /></li>
+                                                <li style="margin-top:2px"><input type="button" onclick="Submit(2)" value="Save" class="btn btn-success" style="width: 100%;" /></li>
+                                                <li style="margin-top:2px"><input type="button" onclick="Submit(3)" value="Save & Post" class="btn btn-primary" style="width: 100%;" /></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <button onclick="deletebutton()" class="mr-2 mb-0 btn btn-danger wt-th" type="button">Delete</button>
+
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+
+

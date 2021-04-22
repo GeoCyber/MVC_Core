@@ -1,0 +1,174 @@
+﻿@model FixedModules.Models.Supplier
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-i" onload="exampleFunction()">
+    <div class="content-box">
+        <div class="element-wrapper">
+            <h6 class="element-header">
+               Edit Supplier
+            </h6>
+            <div class="element-box">
+                <div class="row">
+                    <a asp-action="Index"><input class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" /></a>
+                </div>
+                <div class="card-body z-depth-1">
+                    <div class="detailContainer" style="margin: 0 auto;padding: 0 20px;margin-bottom: 10px;">
+                        @if (!Html.ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger" role="alert" asp-validation-summary="All"></div>
+                        }
+                        <form asp-action="Edit" method="post">
+                            <div class="row">
+                                <legend><span><b>Info</b></span></legend>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Code<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                    <input asp-for="Code" class="form-control" value="@Model.Code" readonly />
+                                    <span asp-validation-for="Code" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Name<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                    <input asp-for="Name" class="form-control" value="@Model.Name" required />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Chart Of Account<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                    <select asp-for="ChartOfAccount" id="ChartOfAccount" class="form-control" asp-items="ViewBag.COAList"></select>
+                                    <span asp-validation-for="ChartOfAccount" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-12 control-label col-form-label">Remark</label>
+                                    <input asp-for="Remark" class="form-control" value="@Model.Remark" />
+                                    <span asp-validation-for="Remark" class="text-danger"></span>
+                                </div>
+                                <div class="col-sm-12">
+                                    <center>
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input" asp-for="Status">Active
+                                        </label>
+                                    </center>
+                                </div>
+
+                                <legend><span><b>Contact</b></span></legend>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Registration Number</label>
+                                    <input asp-for="RegistrationNumber" class="form-control" value="@Model.RegistrationNumber" />
+                                    <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Contact Person</label>
+                                    <input asp-for="ContactPerson" class="form-control" value="@Model.ContactPerson" />
+                                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="col-sm-12 control-label col-form-label">Address</label>
+                                    <input asp-for="Address1" class="form-control" value="@Model.Address1" style="margin-bottom:5px" />
+                                    <span asp-validation-for="Address1" class="text-danger"></span>
+                                    <input asp-for="Address2" class="form-control" value="@Model.Address2" style="margin-bottom:5px" />
+                                    <span asp-validation-for="Address2" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Postcode</label>
+                                    <input asp-for="PostCode" class="form-control" value="@Model.PostCode" />
+                                    <span asp-validation-for="PostCode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">City</label>
+                                    <input asp-for="City" class="form-control" value="@Model.City" />
+                                    <span asp-validation-for="City" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">State</label>
+                                    <select class="form-control" id="StateId" asp-for="State" asp-items="ViewBag.stateList" value="@Model.State"></select>
+                                    <span asp-validation-for="State" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Country</label>
+                                    <select class="form-control" id="CountryId" asp-for="Country" asp-items="ViewBag.countryList" value="@Model.Country"></select>
+                                    <span asp-validation-for="Country" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Phone</label>
+                                    <input asp-for="PhoneNumber" class="form-control" value="@Model.PhoneNumber" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Fax</label>
+                                    <input asp-for="Fax" class="form-control" value="@Model.Fax" />
+                                    <span asp-validation-for="Fax" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Email<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                    <input asp-for="Email" type="email" class="form-control" value="@Model.Email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">WebSite<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                    <input asp-for="Website" class="form-control" value="@Model.Website" />
+                                    <span asp-validation-for="Website" class="text-danger"></span>
+                                </div>
+
+                                <legend><span><b>Tax</b></span></legend>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Tax Code</label>
+                                    <select class="form-control" id="TaxCode" asp-for="TaxCode" asp-items="ViewBag.TaxList"></select>
+                                    <span asp-validation-for="TaxCode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Tax Number</label>
+                                    <input asp-for="TaxNumber" class="form-control" value="@Model.TaxNumber" />
+                                    <span asp-validation-for="TaxNumber" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-12 control-label col-form-label">Tax Expiry</label>
+                                    <input asp-for="TaxExpiryDate" class="single-daterange form-control" type="text" value="@Model.TaxExpiryDate" />
+                                    <span asp-validation-for="TaxExpiryDate" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <div class="btn-container text-center">
+                                <div class="form-group">
+                                    <input type="submit" id="submitEditSupplier" value="Save" class="btn btn-primary btn-fix-width" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    $(".select2").select2();
+
+    $('#Active').change(function () {
+        if (this.checked) {
+            $('#status').val(true);
+        } else {
+            $('#status').val(false);
+        }
+    });
+
+    $('.text-danger').on('DOMSubtreeModified', function () {
+        var span_Text = document.getElementById("Code-error").innerText;
+        if (span_Text == "Code Already Exist!") {
+            $("#submitEditSupplier").attr("disabled", true)
+            $("#submitEditSupplier").removeClass("btn btn-primary btn-fix-width");
+            $("#submitEditSupplier").addClass("btn btn-secondary btn-fix-width");
+        } else {
+            $("#submitEditSupplier").attr("disabled", false)
+            $("#submitEditSupplier").removeClass("btn btn-secondary btn-fix-width");
+            $("#submitEditSupplier").addClass("btn btn-primary btn-fix-width");
+        }
+    })
+    </script>
+}

@@ -1,0 +1,190 @@
+﻿@model FixedModules.Models.Setup
+
+@{
+    ViewData["Title"] = "Company_Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-i">
+    <div class="content-box">
+        <div class="element-wrapper">
+            <h6 class="element-header">
+                Depreciation Method
+            </h6>
+            <div class="element-box">
+                <h5 class="form-header">
+                    Please Define a Depreciation Method For Your Company
+                </h5>
+                <form id="company" name="company" asp-action="Create">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label">Straight Line Monthly Utilize Life</label>
+                            <table>
+                                <tr>
+                                    <td style="width:50px"><input onclick="checkM()" id="checkbox_1" type="checkbox" name="selected" value="1"></td>
+                                    <td>
+                                        <select name="myselect" id="drop_1" class="form-control" disabled>
+                                            <option value="None" selected disabled>-- Please Select --</option>
+                                            <option value="Years">Years</option>
+                                            <option value="Months">Months</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Straight Line Daily Utilize Life</label>
+                            <table>
+                                <tr>
+                                    <td style="width:50px"><input onclick="checkD()" id="checkbox_2" type="checkbox" name="selected" value="1"></td>
+                                    <td>
+                                        <select name="myselect2" id="drop_2" class="form-control" disabled>
+                                            <option value="None"selected disabled>-- Please Select --</option>
+                                            <option value="Years">Years</option>
+                                            <option value="Months">Months</option>
+                                            <option value="Days">Days</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Double Reducing Balance Utilize Life</label>
+                            <table>
+                                <tr>
+                                    <td style="width:50px"><input onclick="checkRB()" id="checkbox_3" type="checkbox" name="selected" value="1"></td>
+                                    <td>
+                                        <select name="myselect3" id="drop_3" class="form-control" disabled>
+                                            <option value="None" selected disabled>-- Please Select --</option>
+                                            <option value="Years">Years</option>
+                                            <option value="Months">Months</option>
+                                            <option value="Days">Days</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input id="submitBtn" type="submit" value="Save Changes" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+                </div>
+
+                <br /><br />
+
+            </div>
+
+@section Scripts {
+
+    <script>
+
+         var ul = '@ViewBag.ul';
+         var value = '@ViewBag.value';
+         var id = '@ViewBag.id';
+
+        $(document).ready(function () {
+            if (ul === 'd') {
+                $('#checkbox_1').prop('checked', true);
+                $('#drop_1').prop('disabled', false);
+
+                $('#drop_1 option[value=' + value + ']').prop('selected', true);
+            } if (ul === 'm') {
+                $('#checkbox_2').prop('checked', true);
+                $('#drop_2').prop('disabled', false);
+
+                $('#drop_2 option[value=' + value + ']').prop('selected', true);
+            } if (ul === 'rb') {
+                $('#checkbox_3').prop('checked', true);
+                $('#drop_3').prop('disabled', false);
+
+                $('#drop_3 option[value=' + value + ']').prop('selected', true);
+            }
+        }); 
+
+        $('#submitBtn').click(function (e) {
+            let ft = $('#checkbox_1').prop('checked');
+            let st = $('#checkbox_2').prop('checked');
+            let tt = $('#checkbox_3').prop('checked');
+            
+            let ftv = $('#checkbox_1').prop('checked') && $('#drop_1').val() != null;
+            let stv = $('#checkbox_2').prop('checked') && $('#drop_2').val() != null;
+            let ttv = $('#checkbox_3').prop('checked') && $('#drop_3').val() != null;
+
+            let isSelected = ft || st || tt;
+            if (!isSelected) {
+                alert('Please check at least one checkbox');
+                e.preventDefault();
+                return false;
+            } 
+
+            let isDropSelect = ftv || stv || ttv;
+            if (!isDropSelect) {
+                alert('Please select the utilize method');
+                e.preventDefault();
+                return false;
+            } 
+
+        });
+
+        function checkM() {
+            if ($('#checkbox_1').prop('checked')) {
+                $('#checkbox_2').prop('checked', false);
+                $('#checkbox_3').prop('checked', false);
+
+                $('#drop_1').prop('disabled', false);
+                $('#drop_2').prop('disabled', true);
+                $('#drop_3').prop('disabled', true);
+
+                $('#drop_2 option[value="None"]').prop('selected', true);
+                $('#drop_3 option[value="None"]').prop('selected', true);
+            } else {
+                $('#drop_1').prop('disabled', true);
+                $('#drop_1 option[value="None"]').prop('selected', true);
+            }
+        } 
+
+        function checkD() {
+            if ($('#checkbox_2').prop('checked')) {
+                $('#checkbox_1').prop('checked', false);
+                $('#checkbox_3').prop('checked', false);
+
+                $('#drop_1').prop('disabled', true);
+                $('#drop_2').prop('disabled', false);
+                $('#drop_3').prop('disabled', true);
+
+                $('#drop_1 option[value="None"]').prop('selected', true);
+                $('#drop_3 option[value="None"]').prop('selected', true);
+            } else {
+                $('#drop_2').prop('disabled', true);
+                $('#drop_2 option[value="None"]').prop('selected', true);
+            }          
+        }
+
+        function checkRB() {
+            if ($('#checkbox_3').prop('checked')) {
+                $('#checkbox_1').prop('checked', false);
+                $('#checkbox_2').prop('checked', false);
+
+                $('#drop_1').prop('disabled', true);
+                $('#drop_2').prop('disabled', true);
+                $('#drop_3').prop('disabled', false);
+
+                $('#drop_1 option[value="None"]').prop('selected', true);
+                $('#drop_2 option[value="None"]').prop('selected', true);
+            } else {
+                $('#drop_3').prop('disabled', true);
+                $('#drop_3 option[value="None"]').prop('selected', true);
+            }
+        }
+
+        /****************************************
+         *       Basic Table                   *
+         ****************************************/
+        $('#zero_config').dataTable({
+            "bAutoWidth": false
+        });
+    </script>
+}

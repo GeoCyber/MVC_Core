@@ -1,0 +1,1218 @@
+﻿@model FixedModules.Models.Fixed_Asset_Register
+
+@{ ViewData["Title"] = "Department-Create";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="~/css/DropButton.css" rel="stylesheet" />
+
+<style>
+
+    .select2 {
+        font-weight: 300;
+        width: 100% !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 40px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        line-height: 38px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 40px;
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        width: 20px;
+    }
+
+    .table th {
+        background: #0073ff;
+        color: #fff;
+    }
+
+    .table thead th {
+        background: #0073ff;
+        color: #000;
+    }
+
+    .wt-th {
+        width: 160px;
+    }
+
+        .wt-th .dropbtn {
+            min-width: 105px;
+            color: white;
+        }
+
+    .pd_0 {
+        padding: 0px;
+    }
+
+    .mbt {
+        margin-bottom: 15px;
+        margin-top: 15px;
+    }
+
+    .link {
+        background: #007bff;
+        text-align: right;
+        padding-right: 8px;
+        margin-bottom: 5px;
+    }
+
+        .link i {
+            background: #60a9f7;
+            width: 20px;
+            text-align: center;
+            color: #fff;
+            font-size: 12px;
+            height: 20px;
+            top: 0px;
+            line-height: 20px;
+            margin-bottom: 4px;
+        }
+
+        .link span {
+            color: #fff;
+            text-align: left;
+            float: left;
+            padding-left: 10px;
+        }
+
+    .col-form-label {
+        padding-top: calc(.375rem + 1px);
+        padding-bottom: calc(.375rem + 1px);
+        margin-bottom: 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
+
+<body>
+    <div class="content-i">
+        <div class="content-box">
+            <div class="element-wrapper">
+                <h6 class="element-header">
+                    Fixed Asset Register
+                </h6>
+                <div class="element-box" id="searchData" style="display: none; padding: 3px; margin: 5px">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div>
+
+                                <div class="triangle-topleft"></div>
+
+
+                                <div class="card-body">
+
+                                    <div class="row" style=" max-width: 600px; margin: 0 auto;">
+                                        <div class="col-sm-12">
+                                            <div class="form-group row">
+                                                <label class="col-sm-12 control-label col-form-label">Asset Code</label>
+                                                <div class="col-sm-12">
+                                                    <input autocomplete="off" class="form-control" id="searchCode" name="Code" type="text" value="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-12 control-label col-form-label">Asset Name</label>
+                                                <div class="col-sm-12">
+                                                    <input autocomplete="off" class="form-control" id="searchName" name="Name" type="text" value="">
+                                                </div>
+                                            </div>
+                                            @*<div class="form-group row">
+                                                    <label class="col-sm-12 control-label col-form-label">Purchase Date</label>
+                                                    <div class="col-sm-12">
+                                                        <input class="form-control" id="PurchaseDate" name="PurchaseDate" type="datetime" value="">
+                                                    </div>
+                                                </div>*@
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="btn-container text-center" style="padding-bottom: 10px;">
+                                    <button onclick="searchItem()" type="submit" class="btn btn-primary btn-fix-width" id="btn-search">Search</button>
+                                    <button onclick="closebutton()" class="btn btn-outline-primary btn-fix-width close-filter" id="btn-close">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="element-box">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <input class="btn box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Back" onclick="location.href='@Url.Action("Index", "Master_AllModule")'" />
+                                <input class="btn border" id="btnExport" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Preview" />
+                                @*<button class="box btn-primary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Exportmodal" data-toggle="modal"> Asset Refrence</button>*@
+                                <button id="searchButton" onclick="toggleSearch()" class="btn box search-filter btn-outline-primary" style="border-radius:5px; cursor:pointer; margin-left:1%">
+                                    <i class="mdi mdi-file-find"></i><span class="">Asset Refrence</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="hidedatatable" class="table-responsive">
+                        @if (ViewBag.error == "Code exists")
+                        {
+                            @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                        }
+                        <table id="zero_config1" class="table table-bordered table-lg table-v2 table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.AssetCode)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.AssetName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PurchaseDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DepreciationStartDate)
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="tableItems1">
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    @if (ViewBag.error == "Code exists")
+                    {
+                        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                    }
+                    <div class="card-body z-depth-1" id="editform">
+                        <div class="detailContainer">
+                            @*<form asp-action="Edit" id="pdfgenerate" method="post" enctype='multipart/form-data'>*@
+                            <form method="post" enctype='multipart/form-data' id="myform" onsubmit="FormSubmit(this)">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="CreationStatus" />
+                                <input type="hidden" asp-for="Id" />
+                                <input type="hidden" asp-for="CreatedBy" />
+                                <input type="hidden" asp-for="CreationTimeStamp" />
+                                <ul id="accordion" class="accordion">
+                                    <li>
+                                        <div class="link"><span>HEADER INFO</span><i onclick="hidedata()" class="fa fa-chevron-down"></i></div>
+                                        <ul id="headerinfo" class="submenu">
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetCode)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="AssetCode" autocomplete="off" class="form-control" readonly />
+                                                            <span asp-validation-for="AssetCode" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetName)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="AssetName" autocomplete="off" class="form-control" required />
+                                                            <span asp-validation-for="AssetName" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetType)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <select asp-for="AssetType" onchange="ChooseNondepreciation(this)" class="select2 form-control" asp-items="@Model.asset_type"></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetCategory)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <select asp-for="AssetCategory" class="select2 form-control" onchange="calculation()">
+                                                                @foreach (var item in Model.asset_Category)
+                                                                {
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetModel)</label>
+                                                        <div class="col-sm-12">
+                                                            <select asp-for="AssetModel" class="select2 form-control">
+                                                                <option></option>
+                                                                @foreach (var item in Model.asset_model)
+                                                                {
+
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetBrand)</label>
+                                                        <div class="col-sm-12">
+                                                            <select asp-for="AssetBrand" class="select2 form-control">
+                                                                <option></option>
+                                                                @foreach (var item in Model.asset_brand)
+                                                                {
+
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Remarks)</label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="Remarks" class="form-control" autocomplete="off" type="text" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="link"><span>PURCHASE INFO</span><i onclick="hidedata1()" class="fa fa-chevron-down"></i></div>
+                                        <ul id="purchaseinfo" class="submenu">
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.SupplierID)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            @*<select asp-for="SupplierID" class="form-control" asp-items="@Model.StaticList"></select>*@
+                                                            <select asp-for="SupplierID" class="select2 form-control">
+                                                                @foreach (var item in Model.supplier)
+                                                                {
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.PurchaseDate)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input type="date" asp-for="PurchaseDate" autocomplete="off" class="form-control" />
+                                                            <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.InvoiceNumber)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="InvoiceNumber" autocomplete="off" class="form-control" />
+                                                            <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.TotalUnit)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input type="number" asp-for="TotalUnit" onchange="calculation()" autocomplete="off" class="form-control" required />
+                                                            <span asp-validation-for="TotalUnit" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.UnitPrice)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input type="number" asp-for="UnitPrice" onchange="calculation()" autocomplete="off" class="form-control" required />
+                                                            <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.CapitalizeAmount)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="CapitalizeAmount" autocomplete="off" class="form-control" readonly />
+                                                            <span asp-validation-for="CapitalizeAmount" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="link"><span>DEPRECIATION INFO</span><i onclick="hidedata2()" class="fa fa-chevron-down"></i></div>
+                                        <ul id="depreinfo" class="submenu">
+                                            <div class="row" id="depreInfo">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DepreciationStartDate)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input type="date" asp-for="DepreciationStartDate" autocomplete="off" onchange="calculation()" class="form-control" />
+                                                            <span asp-validation-for="DepreciationStartDate" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.ResidualAmount)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="ResidualAmount" onchange="calculation()" autocomplete="off" class="form-control" />
+                                                            <span asp-validation-for="ResidualAmount" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.NetBookValue)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="NetBookValue" autocomplete="off" class="form-control" />
+                                                            <span asp-validation-for="NetBookValue" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="link"><span>DEPRECIATION METHOD</span><i onclick="hidedata3()" class="fa fa-chevron-down"></i></div>
+                                        <ul id="depremethod" class="submenu">
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.UtilizeLife)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="UtilizeLife" autocomplete="off" class="form-control" readonly />
+                                                            <span asp-validation-for="UtilizeLife" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DepreciationpercentagePer)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="DepreciationpercentagePer" autocomplete="off" class="form-control" readonly />
+                                                            <span asp-validation-for="DepreciationpercentagePer" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DepreciationEndDate)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input type="date" asp-for="DepreciationEndDate" autocomplete="off" class="form-control" readonly />
+                                                            <span asp-validation-for="DepreciationEndDate" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="link"><span>ACCOUNT INFO</span><i onclick="hidedata4()" class="fa fa-chevron-down"></i></div>
+                                        <ul id="accntinfo" class="submenu">
+                                            <div class="row" id="accountInfo">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.FixedAssetAccountID)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            @*<select asp-for="FixedAssetAccountID" class="form-control" asp-items="@Model.StaticList"></select>*@
+                                                            <select asp-for="FixedAssetAccountID" class="select2 form-control">
+                                                                @foreach (var item in Model.fixed_asset_account)
+                                                                {
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.PL_DepreciationAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            @*<select asp-for="PL_DepreciationAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
+                                                            <select asp-for="PL_DepreciationAccount" class="select2 form-control">
+                                                                @foreach (var item in Model.pl_description_account)
+                                                                {
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.PS_DepreciationAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            @*<select asp-for="PS_DepreciationAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
+                                                            <select asp-for="PS_DepreciationAccount" class="select2 form-control">
+                                                                @foreach (var item in Model.bs_description_account)
+                                                                {
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DisposalGainAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            @*<select asp-for="DisposalGainAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
+                                                            <select asp-for="DisposalGainAccount" class="select2 form-control">
+                                                                @foreach (var item in Model.disposal_gain_account)
+                                                                {
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DisposalLossAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            @*<select asp-for="DisposalLossAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
+                                                            <select asp-for="DisposalLossAccount" class="select2 form-control">
+                                                                @foreach (var item in Model.disposal_loss_account)
+                                                                {
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.writeOfAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            @*<select asp-for="writeOfAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
+                                                            <select asp-for="writeOfAccount" class="select2 form-control">
+                                                                @foreach (var item in Model.write_off_account)
+                                                                {
+                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="link"><span>ADJUSTMENT</span><i onclick="hidedata5()" class="fa fa-chevron-down"></i></div>
+                                        <ul id="adjustmnt" class="submenu">
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Adjustment_CapitalizeAmount)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="Adjustment_CapitalizeAmount" autocomplete="off" class="form-control" readonly />
+                                                            <span asp-validation-for="Adjustment_CapitalizeAmount" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Adjustment_ResidualAmount)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="Adjustment_ResidualAmount" autocomplete="off" class="form-control" readonly />
+                                                            <span asp-validation-for="Adjustment_ResidualAmount" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Adjustment_UtilizeLifeInMonths)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            @*@foreach (var item in Model.utilize_life)
+                                                                            {
+                                                                <input asp-for="Adjustment_UtilizeLifeInMonths" autocomplete="off" value="@item" class="form-control" readonly />
+                                                                                <span asp-validation-for="Adjustment_UtilizeLifeInMonths" class="text-danger"></span>}*@
+                                                            <input asp-for="Adjustment_UtilizeLifeInMonths" autocomplete="off" class="form-control" readonly />
+                                                            <span asp-validation-for="Adjustment_UtilizeLifeInMonths" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="link"><span>ATTACHMENT</span><i onclick="hidedata6()" class="fa fa-chevron-down"></i></div>
+                                        <ul id="attachmnt" class="submenu">
+                                            <div class="row">
+
+                                                <div class="col-sm-12">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Attachment)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <textarea asp-for="Attachment" class="form-control ckeditor"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @if (Model.AttchmentPath != "" && Model.AttchmentPath != null)
+                                                {
+                                                    <a href="@Model.AttchmentPath">@Model.AttchmentPath</a>}
+
+
+                                                <div class="col-sm-12">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Attachment)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <div class="col-sm-12">
+                                                            <input asp-for="AttachmentFile" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="link"><span>ASSET ANALYSIS</span><i onclick="hidedata7()" class="fa fa-chevron-down"></i></div>
+                                        <ul id="assetanalysis" class="submenu">
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>@Html.DisplayNameFor(a => a.AssetSubCode)</th>
+                                                                    <th>@Html.DisplayNameFor(a => a.RegistrationNumber)</th>
+                                                                    <th>@Html.DisplayNameFor(a => a.SerialNumber)</th>
+                                                                    <th>@Html.DisplayNameFor(a => a.Department)</th>
+                                                                    <th>@Html.DisplayNameFor(a => a.Location)</th>
+                                                                    <th>@Html.DisplayNameFor(a => a.UnitPrice)</th>
+                                                                    <th>@Html.DisplayNameFor(a => a.AllocationValue)</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="bindmultiplerows">
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </ul>
+                                    </li>
+                                    @*<li>
+                                            <div class="link"><i class="fa fa-chevron-down"></i></div>
+                                            <ul class="submenu">
+                                                jhkjhk
+                                            </ul>
+                                        </li>*@
+                                </ul>
+
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <center>
+                                            <label>Active</label>
+                                            <input asp-for="Status" class="m-1" />
+                                        </center>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+
+
+                                <div class="btn-container text-center">
+
+                                    <div class="dropdown btn btn-primary btn-fix-width wt-th">
+                                        <button class="dropbtn" disabled>Save <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                                        <div class="dropdown-content wt-th">
+                                            <ul>
+                                                <li style="margin-top:2px"><input type="button" onclick="Submit(2)" value="Update" class="btn btn-primary" style="width: 100%;" /></li>
+                                                <li style="margin-top:2px"><input type="button" onclick="Submit(3)" value="Update & Post" class="btn btn-primary" style="width: 100%;" /></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <button onclick="deletebutton()" class="mr-2 mb-0 btn btn-danger wt-th" type="button">Delete</button>
+
+
+                                </div>
+
+
+                            </form>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script src="~/Scripts/Edit.js"></script>
+
+<script>
+
+    function BindForms() {
+
+        var count = @Model.MultiFormData.Count();
+        var assetcode = $("#AssetCode").val();
+        $.ajax({
+            url: "/Master_AllModule/DynamicRowCreationEdit",
+            type: "POST",
+            data: { "FixedRegisterid": $("#Id").val(), "rowcount": count, "asssubcode": assetcode, regis: "", serial: "", depart: "", loc: "", unit: "", allocation: "" },
+            success: function (data) {
+                $("#bindmultiplerows").html(data);
+            },
+            error: function () {
+            }
+        });
+    }
+
+    BindForms();
+
+
+
+        
+        function deletebutton() {
+            location.reload();
+
+        }
+
+
+
+        function hidedata() {
+            $("#headerinfo").toggle();
+
+        }
+        function hidedata1() {
+            $("#purchaseinfo").toggle();
+        }
+        function hidedata2() {
+            $("#depreinfo").toggle();
+        }
+        function hidedata3() {
+            $("#depremethod").toggle();
+        }
+        function hidedata4() {
+            $("#accntinfo").toggle();
+        }
+        function hidedata5() {
+            $("#adjustmnt").toggle();
+        }
+        function hidedata6() {
+            $("#attachmnt").toggle();
+        }
+        function hidedata7() {
+            $("#assetanalysis").toggle();
+        }
+
+
+        function calculation() {
+
+
+
+           var id = $("#AssetCategory option:selected").val();
+
+
+
+
+
+
+
+
+            var html = "";
+            html += "<tr>";
+
+            html += "<td></td>";
+            html += "<td></td>";
+            html += "<td></td>";
+            html += "<td>Please wait while updating rows .....</td>";
+            html += "<td></td>";
+            html += "<td></td>";
+            html += "<td></td>";
+
+            html += "</tr>";
+
+
+            $("#bindmultiplerows").html(html);
+
+
+
+
+
+
+            $.ajax({
+                url: "/Master_AllModule/FillAssetSubCode",
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                    $("#AssetCode").val(data);
+
+                    var assetsubcode = "";
+                    for (var i = 1; i <= $("#TotalUnit").val(); i++) {
+                        assetsubcode += data + "-" + i + ",";
+                    }
+                    $("#AssetSubCode").val(assetsubcode);
+                },
+                error: function () {
+                }
+            });
+
+
+
+            $.ajax({
+                url: "/Master_AllModule/Fillutilizelife",
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                    debugger;
+                    $("#UtilizeLife").val(data);
+                    $("#Adjustment_UtilizeLifeInMonths").val(data);
+                },
+                error: function () {
+                }
+            });
+
+
+            var asssubcode = $("#AssetCode").val();
+            var registrationno = $("#RegistrationNumber").val();
+            var serialno = $("#SerialNumber").val();
+            var departmnt = $("#Department").val();
+            var location = $("#Location").val();
+            var unitprc = $("#UnitPrice").val();
+            var allocationval = $("#AllocationValue").val();
+            var total = $("#TotalUnit").val();
+            if (total == 0) total = 1;
+
+
+
+
+
+            var assetcode = $("#AssetCode").val();
+            var unit = $("#TotalUnit").val();
+            var price = $("#UnitPrice").val();
+            var capitalizeamt = parseInt(unit * price);
+            $("#CapitalizeAmount").val(capitalizeamt);
+            $("#Adjustment_CapitalizeAmount").val(capitalizeamt);
+            var capitalizeAmot = $("#CapitalizeAmount").val();
+            var residualamt = $("#ResidualAmount").val();
+            $("#Adjustment_ResidualAmount").val(residualamt);
+
+            var netval = capitalizeAmot - residualamt;
+            $("#NetBookValue").val(netval);
+
+            var unitprice = capitalizeamt / unit;
+            $("#priceunit").val(unitprice);
+            var allocationvalue = netval / unit;
+            $("#AllocationValue").val(allocationvalue);
+
+
+            var assetcode = $("#AssetCode").val();
+            var assetsubcode = "";
+            for (var i = 1; i <= unit; i++) {
+                assetsubcode += assetcode + "-" + i + ",";
+            }
+            $("#AssetSubCode").val(assetsubcode);
+
+
+
+
+
+
+        var utliselife = '@TempData["utilifelife"]';
+        var depreciationstartdate = $("#DepreciationStartDate").val();
+        var utilife = $("#UtilizeLife").val();
+        var datesplit = depreciationstartdate.split("-");
+        var date1 = datesplit[0];
+        var date2 = datesplit[1];
+        var date3 = datesplit[2];
+        if (utliselife == "Years") {
+
+            var result1 = (parseInt(date1) + parseInt(utilife)) + "-" + date2 + "-" + date3;
+            $("#DepreciationEndDate").val(result1);
+
+        }
+        else if (utliselife == "Months") {
+
+            var result2 = date1 + "-" + date2 + "-" + date3;
+            var month = addMonths(new Date(result2), utilife);
+            $("#DepreciationEndDate").val(month);
+
+        }
+        else {
+            $.ajax({
+                url: "/Master_AllModule/Filldate",
+                type: "POST",
+                data: { id: utilife, date: depreciationstartdate },
+                success: function (data) {
+                    debugger;
+                    $("#DepreciationEndDate").val(data);
+                },
+                error: function () {
+                }
+            });
+
+        }
+
+        function addMonths(date, months) {
+
+            var d = date.getDate();
+            date.setMonth(date.getMonth() + +months);
+            if (date.getDate() != d) {
+                date.setDate(0);
+            }
+            var datenew = new Date(date),
+                mnth = ("0" + (datenew.getMonth() + 1)).slice(-2),
+                day = ("0" + datenew.getDate()).slice(-2);
+            return [datenew.getFullYear(), mnth, day].join("-");
+        }
+
+        var utliselife = '@TempData["utilifelife"]';
+        var utilife = $("#UtilizeLife").val();
+        var Enddate = $("#DepreciationEndDate").val();
+        var startdate = $("#DepreciationStartDate").val();
+        var data = parseInt(utilife);
+        var reducingbal = '@TempData["reducingbalance"]';
+        var dailyutilizelife = '@TempData["DailyUL"]';
+        var Monthlyutilizelife = '@TempData["MonthlyUL"]';
+
+            debugger;
+        if (reducingbal == "True") {
+
+            if (utliselife == "Years") {
+
+                var result = ((100 / data) *2);
+                $("#DepreciationpercentagePer").val(result);
+            }
+            if (utliselife == "Days") {
+
+                var result = (100 / data) * 2;
+                $("#DepreciationpercentagePer").val(result);
+            }
+            if (utliselife == "Months") {
+
+                var result = (100 / data) * 2;
+                $("#DepreciationpercentagePer").val(result);
+
+            }
+
+
+        }
+
+         else if (dailyutilizelife == "True") {
+
+
+            $.ajax({
+                url: "/Master_AllModule/CalculateDate",
+                type: "POST",
+                data: { enddate: Enddate, startdte: startdate },
+                success: function (data) {
+
+                    if (utliselife == "Years") {
+
+                        var result = 100 / data;
+                            $("#DepreciationpercentagePer").val(result);
+                    }
+                    if (utliselife == "Days") {
+                        var result = 100 / data;
+                        $("#DepreciationpercentagePer").val(result);
+                    }
+                    if (utliselife == "Months") {
+
+                        var result = 100 / data;
+                        $("#DepreciationpercentagePer").val(result);
+
+                    }
+
+
+
+
+
+                },
+                error: function () {
+                }
+            });
+
+
+
+
+        }
+        else {
+
+            if (utliselife == "Years") {
+
+                var result = (100 / data);
+                $("#DepreciationpercentagePer").val(result);
+            }
+
+            if (utliselife == "Months") {
+
+                var result = (100 / data);
+                $("#DepreciationpercentagePer").val(result);
+
+            }
+
+
+            }
+
+
+
+
+            var assetcode = $("#AssetCode").val();
+            $.ajax({
+                url: "/Master_AllModule/DynamicRowCreationEdit",
+                type: "POST",
+                data: { "FixedRegisterid": $("#Id").val(), "rowcount": $("#TotalUnit").val(), "asssubcode": assetcode, "registrationno":"" , "serial":"" , "depart":"" , "loc": "", "unit": unitprice, "allocation": allocationvalue },
+                success: function (data) {
+                    $("#bindmultiplerows").html(data);
+                },
+                error: function () {
+                }
+            });
+
+
+
+
+        }
+
+
+        function ChooseNondepreciation(e) {
+
+            var asserttype = $("#AssetType").val();
+
+            if (asserttype == '0') {
+                $("#depreInfo").hide();
+                $("#accountInfo").hide();
+            }
+            else {
+                $("#depreInfo").show();
+                $("#accountInfo").show();
+            }
+        }
+
+
+        $("input[type=text]").on("keypress", function (e) {
+            if (e.which === 32 && !this.value.length)
+                e.preventDefault();
+        });
+
+        $('.text-danger').on('DOMSubtreeModified', function () {
+            var span_Text = document.getElementById("Code-error").innerText;
+            if (span_Text == "Code Already Exist!") {
+                $("#submit").attr("disabled", true)
+                $("#submit").removeClass("btn btn-primary btn-fix-width");
+                $("#submit").addClass("btn btn-secondary btn-fix-width");
+            } else {
+                $("#submit").attr("disabled", false)
+                $("#submit").removeClass("btn btn-secondary btn-fix-width");
+                $("#submit").addClass("btn btn-primary btn-fix-width");
+            }
+        })
+
+        $("body").on("click", "#btnExport", function () {
+            html2canvas($('#pdfgenerate')[0], {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 1200
+                        }]
+                    };
+                    //pdfMake.createPdf(docDefinition).print("preview.pdf");
+                    pdfMake.createPdf(docDefinition).open({}, window);
+
+                }
+            });
+        });
+
+        $('#zero_config1').dataTable({
+            "bAutoWidth": false,
+            "searching": false
+        });
+
+        var table = $('#zero_config1').dataTable();
+        var tableD = $('#zero_config1').DataTable();
+
+    $(document).ready(function () {
+        var unit = $("#AssetType").val();
+        if (unit == "Non-Depreciation") {
+
+            $("#depreInfo").hide();
+            $("#accountInfo").hide();
+        }
+
+            $("#zero_config1").hide();
+            $("#hidedatatable").hide();
+            var DELAY = 700, clicks = 0, timer = null;
+            $("#tableItems1").on("click", 'tr', function (e) {
+                var row = tableD.row(this).node();
+                var id = $(this).attr("id");
+                //var value = $("#tableItems1").attr("id");
+                debugger;
+                    clicks++; //count clicks
+
+                    if (clicks === 1) {
+
+                        timer = setTimeout(function () {
+
+                            var row = tableD.row(this).node();
+                            if (row == null) {
+                                //var id = $(this).attr("id");
+                                var iseditable = $(this).attr("editable");
+                                if (iseditable == 3) alert("Data is Posted Cannot be Edited");
+                                else window.location.href = "/Master_AllModule/Assetrefrence?CreditTermid=" + id;
+                            } else {
+
+                               // var id = (tableD.row(this).node()).id;
+                                var iseditable = $(row).attr("editable");
+
+
+                                if (iseditable == 3) alert("Data is Posted Cannot be Edited");
+                                else window.location.href = "/Master_AllModule/Assetrefrence?CreditTermid=" + id;
+                            }
+                                         //perform single-click action
+                            clicks = 0; //after action performed, reset counter
+
+                        }, DELAY);
+
+                    } else {
+
+                        clearTimeout(timer); //prevent single-click action
+                        window.location.href = "/Master_AllModule/Index";//perform double-click action
+                        clicks = 0; //after action performed, reset counter
+                    }
+
+                })
+                    .on("dblclick", function (e) {
+                        e.preventDefault(); //cancel system double-click event
+                    });
+
+        //$.ajax({
+        //    url: "/Master_AllModule/DynamicRowCreation",
+        //    type: "POST",
+        //    data: { "rowcount": 1, "asssubcode": "", regis: "", serial: "", depart: "", loc: "", unit: "", allocation: "" },
+        //    success: function (data) {
+        //        debugger;
+        //        $("#bindmultiplerows").html(data);
+        //    },
+        //    error: function () {
+        //    }
+        //});
+
+
+    });
+
+
+
+
+        function searchItem() {
+
+            let code = $('#searchData #searchCode').val();
+            let name = $('#searchData #searchName').val();
+            var data = new FormData();
+            data.append("Code", code);
+            data.append("Name", name);
+            $.ajax({
+                url: "/Master_AllModule/SearchFixedAssetRegister",
+                type: 'POST',
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    debugger;
+                    //table.fnClearTable();
+                    var html = "";
+
+                    $.each(data, function (index, record) {
+                        html += '<tr id=' + record.id + ' editable=' + record.creationStatus + '>';
+                        html += '<td>' + record.assetCode + '</td>';
+                        html += '<td>' + record.assetName + '</td>';
+                        html += '<td>' + record.purchaseDate + '</td>';
+                        html += '<td>' + record.depreciationStartDate + '</td>';
+                        html += "</tr>";
+                    });
+
+                    $("#tableItems1").html(html);
+                },
+                error: function () {
+                    alert("Server error. Please contact your adminisrator!");
+                }
+            });
+
+
+        }
+
+        function toggleSearch() {
+
+            $("#searchData").show();
+            $("#zero_config1").show();
+            $("#searchButton").hide();
+            $("#editform").hide();
+            $("#hidedatatable").show();
+
+            //var search = document.getElementById("searchData");
+            //var searchBtn = document.getElementById("searchButton");
+            //var searchBtn1 = document.getElementById("pdfgenerate");
+            //var searchBtn2 = document.getElementById("zero_config1");
+            //var searchBtn3 = document.getElementById("disply1");
+
+            //if (search.style.display === "none") {
+            //    search.style.display = "block";
+            //    searchBtn.style.display = "none";
+            //    searchBtn1.style.display = "none";
+
+            //}
+            //else {
+
+            //    search.style.display = "none";
+
+            //    searchBtn.style.display = "block";
+            //    searchBtn1.style.display = "block";
+            //    searchBtn2.style.display = "none";
+
+
+            //}
+        }
+        function closebutton() {
+
+            $("#searchData").hide();
+            $("#zero_config1").hide();
+            $("#hidedatatable").hide();
+            $("#editform").show();
+            $("#searchButton").show();
+
+
+        }
+
+
+
+</script>
+
+}

@@ -1,0 +1,390 @@
+﻿
+@model FixedModules.ViewModels.FixedAssetViewModel
+@{ ViewData["Title"] = "Purchases Invoice";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+<style>
+    #searchData .rotated {
+        width: 100%;
+        color: white;
+        margin: 0 auto;
+        background: #398fea;
+        text-align: center;
+    }
+
+    tbody tr:hover {
+        cursor: pointer;
+    }
+</style>
+
+<style type="text/css" media="only screen and (min-width: 1050px)">
+    #searchData .triangle-topleft {
+        width: 0;
+        height: 0;
+        border-top: 90px solid #398fea;
+        border-right: 90px solid transparent;
+        position: absolute;
+    }
+
+    #searchData .rotated {
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        width: 120px;
+        color: white;
+        font-weight: bold;
+        background-color: #398fea;
+        text-align: center;
+        position: absolute;
+        margin-top: 26px;
+        margin-left: -30px;
+        background: transparent;
+    }
+</style>
+
+<div class="content-i">
+    <div class="content-box">
+        <div class="element-wrapper">
+            <h6 class="element-header">
+                Credit Term
+            </h6>
+            <div class="element-box" id="searchData" style="display: none; padding: 3px; margin: 5px">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div>
+
+                            <div class="triangle-topleft"></div>
+                            <div class="rotated">Filters</div>
+
+                            <div class="card-body">
+
+                                <div class="row" style=" max-width: 600px; margin: 0 auto;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Code</label>
+                                            <div class="col-sm-12">
+                                                <input autocomplete="off" class="form-control" id="searchCode" name="Code" type="text" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Name</label>
+                                            <div class="col-sm-12">
+                                                <input autocomplete="off" class="form-control" id="searchName" name="Name" type="text" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Purchase Date</label>
+                                            <div class="col-sm-12">
+                                                <input class="form-control" id="searchPurchaseDate" name="PurchaseDate" type="date" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">AssetCategory<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+
+                                                <select class="form-control" id="assetCategory">
+                                                    <option value="0" selected>- ALL -</option>
+                                                    @foreach (var item in Model.asset_Category)
+                                                    {
+                                                <option value="@item.Id">@item.Code-@item.Name</option>
+}
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Status<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+
+                                                <select class="form-control" id="status" asp-items="@Model.static_list">
+                                                    <option value="0" selected>- ALL -</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">AssetType<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <select class="form-control" id="assettype" asp-items="@Model.asset_type">
+                                                    <option value="0" selected>- ALL -</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="btn-container text-center" style="padding-bottom: 10px;">
+                                <button onclick="searchItem()" type="submit" class="btn btn-primary btn-fix-width" id="btn-search">Search</button>
+                                <button onclick="toggleSearch()" class="btn btn-outline-primary btn-fix-width close-filter" id="btn-close">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="element-box">
+                <div class="row">
+
+
+                    <input class="box btn-primary card-hover card-sm" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Create" onclick="location.href='@Url.Action("Create", "Master_AllModule")'" />
+                    <button class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Exportmodal" data-toggle="modal"> Export</button>
+                    <button class="box btn-outline-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Importmodal" data-toggle="modal"> Import</button>
+                    <button id="searchButton" onclick="toggleSearch()" class="box search-filter btn-outline-primary" style="border-radius:5px; cursor:pointer; margin-left:1%">
+                        <i class="mdi mdi-file-find"></i><span class="">Search</span>
+                    </button>
+                </div>
+                <br>
+
+                <div class="table-responsive">
+                    @if (ViewBag.error == "Code exists")
+                    {
+        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+    }
+                    <table id="zero_config" class="table table-bordered table-lg table-v2 table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    AssetCode
+                                </th>
+                                <th>
+                                    AssetName
+                                </th>
+                                <th>
+                                    PurchaseDate
+                                </th>
+                                <th>
+                                    AssetCategory
+                                </th>
+                                <th>
+                                    StatusValue
+                                </th>
+                                <th>
+                                    AssetType
+                                </th>
+                                <th>
+                                    CreatedBy
+                                </th>
+                                <th id="action">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableItems">
+                            @foreach (var item in Model.Fixed_Asset_Registers)
+                            {
+                <tr id="@item.Id" editable="@item.CreationStatus">
+                    <th>
+                        @item.AssetCode
+                    </th>
+                    <th>
+                        @item.AssetName
+                    </th>
+                    <th>
+                        @item.PurchaseDate
+                    </th>
+                    <th>
+                        @item.AssetCategory
+                    </th>
+                    <th>
+                        @item.StatusValue
+                    </th>
+                    <th>
+                        @item.AssetType
+                    </th>
+                    <th>
+                        @item.CreatedBy
+                    </th>
+
+
+                    <th id="action">
+                        <a title="Delete" class="text-danger ml-2" href="@Url.Action("Delete","Master_AllModule",new {id=item.Id} )"><i class="fa fa-trash"></i></a>
+                    </th>
+
+                </tr>
+}
+                        </tbody>
+                    </table>
+                </div>
+
+                <br /><br />
+            </div>
+
+
+
+
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Exportmodal" role="dialog" tabindex="-1">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                                Export
+                            </h5>
+                            <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <p>
+                                Please click on Export to download All Inovoices<br>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            @using (Html.BeginForm("Export", "Master_AllModule", FormMethod.Post))
+                            {
+                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" type="submit" value="Export"> Export</button>}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal" role="dialog" tabindex="-1">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form asp-action="Import" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    Import
+                                </h5>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Please select your updated csv file and click on import.<br>If you do not have the csv format, you may download it from here.
+                                    <a href="~/files/FixedAssets.csv" class="btn btn-dark btn-sm">Download</a>
+                                </p>
+                                <div class="form-group row">
+                                    <label class="col-sm-1 text-left control-label col-form-label">File</label>
+                                    <div class="col-sm-11">
+                                        <input type="file" id="importfilesetting" name="importfilesetting" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" type="submit" value="Create"> Import</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+
+        $('#zero_config').dataTable({
+            "bAutoWidth": false,
+            "searching": false
+        });
+
+        var table = $('#zero_config').dataTable();
+        var tableD = $('#zero_config').DataTable();
+
+        $(document).ready(function () {
+            $('#tableItems').on('click', 'tr', function () {
+
+
+                var row = tableD.row(this).node();
+                if (row == null) {
+                    var id = $(this).attr("id");
+                    var iseditable = $(this).attr("editable");
+
+
+                    if (iseditable == 3) alert("Data is Posted Cannot be Edited");
+                    else window.location.href = "/Master_AllModule/Edit?CreditTermid=" + id;
+                } else {
+
+                    var id = (tableD.row(this).node()).id;
+                    var iseditable = $(row).attr("editable");
+
+
+                    if (iseditable == 3) alert("Data is Posted Cannot be Edited");
+                    else window.location.href = "/Master_AllModule/Edit?CreditTermid=" + id;
+                }
+
+
+
+
+            });
+        });
+
+
+
+
+        function searchItem() {
+            //$("#action1").hide();
+            $("#action").hide();
+            let code = $('#searchData #searchCode').val();
+            let name = $('#searchData #searchName').val();
+            let date = $('#searchData #searchPurchaseDate').val();
+            let category = $('#searchData #assetCategory').val();
+            let status = $('#searchData #status').val();
+            let type = $('#searchData #assettype').val();
+
+
+
+
+            var data = new FormData();
+            data.append("Code", code);
+            data.append("Name", name);
+            data.append("Date", date);
+            data.append("Category", category);
+            data.append("Status", status);
+            data.append("Type", type);
+
+
+
+            $.ajax({
+                url: "/Master_AllModule/SearchFixedAssetRegister",
+                type: 'POST',
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    table.fnClearTable();
+                    var html = "";
+
+                    $.each(data, function (index, record) {
+                        html += '<tr id=' + record.id + ' editable=' + record.creationStatus + '>';
+                        html += '<td>' + record.assetCode + '</td>';
+                        html += '<td>' + record.assetName + '</td>';
+                        html += '<td>' + record.purchaseDate + '</td>';
+                        html += '<td>' + record.assetCategory + '</td>';
+                        html += '<td>' + record.statusValue + '</td>';
+                        html += '<td>' + record.assetType + '</td>';
+                        html += '<td>' + record.createdBy + '</td>';
+                        html += "</tr>";
+                    });
+
+                    $("#tableItems").html(html);
+                },
+                error: function () {
+                    alert("Server error. Please contact your adminisrator!");
+                }
+            });
+
+
+        }
+
+        function toggleSearch() {
+            $("#action").show();
+            //$("#action1").show();
+           
+            var search = document.getElementById("searchData");
+            var searchBtn = document.getElementById("searchButton");
+            if (search.style.display === "none") {
+                search.style.display = "block";
+                searchBtn.style.display = "none";
+            } else {
+                search.style.display = "none";
+                searchBtn.style.display = "block";
+            }
+        }
+
+
+    </script>
+}

@@ -1,0 +1,327 @@
+﻿@model FixedModules.Models.UserData
+
+@{
+    ViewData["Title"] = "User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #searchData .rotated {
+        width: 100%;
+        color: white;
+        margin: 0 auto;
+        background: #398fea;
+        text-align: center;
+    }
+
+    tbody tr:hover {
+        cursor: pointer;
+    }
+</style>
+
+<style type="text/css" media="only screen and (min-width: 1050px)">
+    #searchData .triangle-topleft {
+        width: 0;
+        height: 0;
+        border-top: 90px solid #398fea;
+        border-right: 90px solid transparent;
+        position: absolute;
+    }
+
+    #searchData .rotated {
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        width: 120px;
+        color: white;
+        font-weight: bold;
+        background-color: #398fea;
+        text-align: center;
+        position: absolute;
+        margin-top: 26px;
+        margin-left: -30px;
+        background: transparent;
+    }
+</style>
+
+<div class="content-i">
+    <div class="content-box">
+        <div class="element-wrapper">
+            <div class="element-box" id="searchData" style="display: none; padding: 3px; margin: 5px">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div>
+
+                            <div class="triangle-topleft"></div>
+                            <div class="rotated">Filters</div>
+
+                            <div class="card-body">
+
+                                <div class="row" style=" max-width: 600px; margin: 0 auto;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Email</label>
+                                            <div class="col-sm-12">
+                                                <input autocomplete="off" class="form-control" id="searchEmail" name="Email" type="text" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="btn-container text-center" style="padding-bottom: 10px;">
+                                <button onclick="searchItem()" type="submit" class="btn btn-primary btn-fix-width" id="btn-search">Search</button>
+                                <button onclick="toggleSearch()" class="btn btn-outline-primary btn-fix-width close-filter" id="btn-close">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="element-box">
+                <div class="row">
+                    <input class="box btn-primary card-hover card-sm" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Invite" onclick="location.href='@Url.Action("Invite", "User_Management")'" />
+                    <button class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Importmodal" data-toggle="modal"> History</button>
+
+                    <button id="searchButton" onclick="toggleSearch()" class="box search-filter btn-outline-primary" style="border-radius:5px; cursor:pointer; margin-left:1%">
+                        <i class="mdi mdi-file-find"></i><span class="">Search</span>
+                    </button>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-sm-6 col-xxxl-6">
+                        <div class="element-wrapper">
+                            <h6 class="element-header">
+                                Users
+                            </h6>
+                            <div class="element-box">
+                                <div class="table-responsive col-sm-12">
+                                    @if (ViewBag.error == "Code exists")
+                                    {
+                                        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                                    }
+                                    <table id="zero_config" class="table table-bordered table-lg table-v2 table-striped" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Email
+                                                </th>
+                                                <th>
+                                                    Roles
+                                                </th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableItems">
+                                            @foreach (UserViewModel user in Model.PUsers.Where(x => x.EmailConfirmed == true))
+                                            {
+                                            <tr id="@user.Id">
+                                                <td> @Html.DisplayFor(modelItem => user.Email)</td>
+                                                <td>
+                                                    @foreach (PUserRoles role in Model.PUserRoles.Where(m => m.UserId == user.Id))
+                                                    {
+                                                        <span class="badge bg-primary" style="color: white;">@Model.PRoles.First(m => m.Id.Equals(role.RoleId)).Name</span>
+                                                    }
+                                                </td>
+                                                <td style="width:1%;white-space:nowrap">
+                                                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@user.Id">
+                                                        <span class="fa fa-trash-alt"></span> Delete
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xxxl-6">
+                        <div class="element-wrapper">
+                            <h6 class="element-header">
+                                Invited Users
+                            </h6>
+                            <div class="element-box">
+                                <div class="table-responsive col-sm-12">
+                                    @if (ViewBag.error == "Code exists")
+                                                        {
+                                                            @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                                                        }
+                                    <table id="zero_config1" class="table table-bordered table-lg table-v2 table-striped" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Email
+                                                </th>
+                                                <th>
+                                                    Roles
+                                                </th>
+                                                <th>Action</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableItems1">
+                                            @foreach (UserViewModel user in Model.PUsers.Where(x => x.IsInvited == true && x.EmailConfirmed == false))
+                                            {
+                                            <tr id="@user.Id">
+                                                <td> @Html.DisplayFor(modelItem => user.Email)</td>
+                                                <td>
+                                                    @foreach (PUserRoles role in Model.PUserRoles.Where(m => m.UserId == user.Id))
+                                                    {
+                                                        <span class="badge bg-primary" style="color: white;">@Model.PRoles.First(m => m.Id.Equals(role.RoleId)).Name</span>
+                                                    }
+                                                </td>
+                                                <td style="width:1%;white-space:nowrap">
+                                                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@user.Id">
+                                                        <span class="fa fa-trash-alt"></span> Delete
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal" role="dialog" tabindex="-1">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form action="User_Management/Invite" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">
+                                            User Access History
+                                        </h5>
+                                        <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Below are the list of emails that have access to this company before
+                                        </p>
+                                        <div class="table-responsive">
+                                            <!--------------------
+                                            START - Basic Table
+                                            -------------------->
+                                            <table class="table table-lightborder">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Email
+                                                        </th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (UserViewModel user in Model.PUsers)
+                                                    {
+                                                        <tr id="@user.Id">
+                                                            <td> @Html.DisplayFor(modelItem => user.Email)</td>
+                                                        
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                            <!--------------------
+                                            END - Basic Table
+                                            -------------------->
+                                        </div>
+
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section Scripts {
+
+        <script>
+            /****************************************
+             *       Basic Table                   *
+             ****************************************/
+
+            $('#zero_config').dataTable({
+                "bAutoWidth": false,
+                "searching": false
+            });
+
+            var table = $('#zero_config').dataTable();
+            var tableD = $('#zero_config').DataTable();
+
+            $(document).ready(function () {
+                $('#tableItems').on('click', 'tr', function () {
+                    var id = (table.row(this).node()).id;
+                    window.location.href += "/InviteUser/" + id;
+                });
+            });
+
+            $('#zero_config1').dataTable({
+                "bAutoWidth": false,
+                "searching": false
+            });
+
+            var Invtable = $('#zero_config1').dataTable();
+            var InvtableD = $('#zero_config1').DataTable();
+
+            $(document).ready(function () {
+                $('#tableItems1').on('click', 'tr', function () {
+                    var id = (InvtableD.row(this).node()).id;
+                    window.location.href += "/InviteUser/" + id;
+                });
+            });
+
+            function searchItem() {
+                let email = $('#searchData #searchEmail').val();
+                let url = "User_Management/Search?&Email=" + email;
+                Invtable.fnClearTable();
+                table.fnClearTable();
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        for (let i = 0; i < data.length; i++) {
+                            let item = [data[i]['email'], data[i]['email'], ''];
+                            let isInv = data[i]['isInvited'];
+                            let isComEmail = data[i]['emailConfirmed'];
+
+                            if (isInv == true && isComEmail == false) {
+                                InvtableD.row.add(item).node().id = data[i]['id'];
+                            }
+                            else if (isComEmail == true) {
+                                tableD.row.add(item).node().id = data[i]['id'];
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("Server error. Please contact your adminisrator!");
+                    }
+                });
+
+                InvtableD.draw();
+                tableD.draw();
+            }
+
+            function toggleSearch() {
+                var search = document.getElementById("searchData");
+                var searchBtn = document.getElementById("searchButton");
+                if (search.style.display === "none") {
+                    search.style.display = "block";
+                    searchBtn.style.display = "none";
+                } else {
+                    search.style.display = "none";
+                    searchBtn.style.display = "block";
+                }
+            };
+
+             $(".select2").select2();
+
+
+        </script>
+    }
