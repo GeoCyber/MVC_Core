@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Volumes/MyStore/Collection Code/Visual Studio Solution/MVC_Core/MVC_Core.csproj": {}
+    "/Volumes/MyStore/Collection Code/MVC_Core/MVC_Core.csproj": {}
   },
   "projects": {
-    "/Volumes/MyStore/Collection Code/Visual Studio Solution/MVC_Core/MVC_Core.csproj": {
+    "/Volumes/MyStore/Collection Code/MVC_Core/MVC_Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Volumes/MyStore/Collection Code/Visual Studio Solution/MVC_Core/MVC_Core.csproj",
+        "projectUniqueName": "/Volumes/MyStore/Collection Code/MVC_Core/MVC_Core.csproj",
         "projectName": "MVC_Core",
-        "projectPath": "/Volumes/MyStore/Collection Code/Visual Studio Solution/MVC_Core/MVC_Core.csproj",
+        "projectPath": "/Volumes/MyStore/Collection Code/MVC_Core/MVC_Core.csproj",
         "packagesPath": "/Users/allauddin/.nuget/packages/",
-        "outputPath": "/Volumes/MyStore/Collection Code/Visual Studio Solution/MVC_Core/obj/",
+        "outputPath": "/Volumes/MyStore/Collection Code/MVC_Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/allauddin/.config/NuGet/NuGet.Config"
@@ -44,7 +44,7 @@
             },
             "Microsoft.AspNetCore.Identity": {
               "target": "Package",
-              "version": "[1.1.0, )"
+              "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
@@ -52,11 +52,11 @@
             },
             "Microsoft.AspNetCore.Identity.UI": {
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[5.0.5, )"
             },
             "Microsoft.AspNetCore.Mvc.DataAnnotations": {
               "target": "Package",
-              "version": "[1.0.0, )"
+              "version": "[2.2.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -68,7 +68,7 @@
             },
             "Microsoft.Extensions.Http": {
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[5.0.0, )"
             },
             "ObjectsComparer": {
               "target": "Package",

@@ -18,14 +18,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Remote.Linq.Newtonsoft.Json" Version="6.3.0" />
     <PackageReference Include="reCAPTCHA.AspNetCore" Version="3.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.5" />
     <PackageReference Include="ObjectsComparer" Version="1.4.1" />
     <PackageReference Include="MailKit" Version="2.11.1" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\css\site.css" />
