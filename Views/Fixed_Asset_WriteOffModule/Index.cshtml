@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FixedModules.Models.FixedAssetMDepreciation>
+﻿@model FixedAssets.ViewModels.FixedModuleViewModel
 @{ ViewData["Title"] = "Purchases Invoice";
     Layout = "~/Views/Shared/_Layout.cshtml"; }
 <style>
@@ -60,43 +60,37 @@
 
                             <div class="card-body">
 
-                                <div class="row" style=" max-width: 600px; margin: 0 auto;">
-                                    <div class="col-sm-12">
-                                        <div class="form-group row">
-                                            <label class="col-sm-12 control-label col-form-label">Code</label>
+                                <div style=" max-width: 600px; margin: 0 auto;">
+                                    <div class="col-sm-12 row">
+
+                                        <div class="form-group col-md-6">
+                                            <label class="col-sm-12 control-label col-form-label">Transaction Start Date</label>
                                             <div class="col-sm-12">
-                                                <input autocomplete="off" class="form-control" id="searchCode" name="Code" type="text" value="">
+                                                <input class="form-control" id="startDate" name="PurchaseDate" type="date" value="" placeholder="Starting At">
+
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-12 control-label col-form-label">Name</label>
+                                        <div class="form-group col-md-6">
+                                            <label class="col-sm-12 control-label col-form-label">Transaction End Date</label>
                                             <div class="col-sm-12">
-                                                <input autocomplete="off" class="form-control" id="searchName" name="Name" type="text" value="">
+                                                <input class="form-control" id="endDate" name="PurchaseDate" type="date" value="" placeholder="Ending At">
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-12 control-label col-form-label">Transaction Date</label>
-                                            <div class="col-sm-12">
-                                                <input class="form-control" id="startDate" name="PurchaseDate" type="datetime" value="" placeholder="Starting At">
-                                                <div class="col-sm-12">
-                                                    <input class="form-control" id="endDate" name="PurchaseDate" type="datetime" value="" placeholder="Ending At">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
                                             <label class="col-sm-12 control-label col-form-label">Document Number</label>
                                             <div class="col-sm-12">
-                                                <select class="form-control" id="searchStatus" name="SelectedActiveId">
+                                                <select class="form-control select2" id="searchStatus" name="SelectedActiveId" onchange="HideTextBox(this);">
                                                     <option value="-1" selected>- No Filter -</option>
                                                     <option value="1">Multiple</option>
                                                     <option value="0">Range</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
-
+                                        <div class="form-group col-sm-6">
                                             <label class="col-sm-12 control-label col-form-label">Active</label><div class="col-sm-12" data-select2-id="">
-                                                <select class="form-control" id="searchStatus" name="SelectedActiveId">
+                                                <select class="form-control select2" id="searchStatus1" name="SelectedActiveId">
                                                     <option value="-1" selected>- ALL -</option>
                                                     <option value="1">Draft</option>
                                                     <option value="0">Save</option>
@@ -105,24 +99,64 @@
                                                 </select>
                                             </div>
                                         </div>
-
-
-                                        @*<div class="form-group row">
-                                                <label class="col-sm-12 control-label col-form-label">Purchase Date</label>
-                                                <div class="col-sm-12">
-                                                    <input class="form-control" id="PurchaseDate" name="PurchaseDate" type="datetime" value="">
-                                                </div>
-                                            </div>*@
                                     </div>
 
+                                    <div id="multiple" class="col-sm-6" style="display:none">
+                                        <div class="form-group">
+
+                                            <select class="form-control select2">
+                                                <option selected disabled>Select</option>
+                                                @foreach (var item in Model.fixedAssetWriteOff)
+                                                {
+                                                    <option value="@item.Id">@item.DocumentCode-@item.Id</option>
+
+                                                }
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div id="rangeFrom" class="col-sm-3" style="display:none">
+                                            <div class="form-group">
+
+                                                <select id="rangeFrom" class="form-control select2">
+                                                    <option selected disabled>From</option>
+                                                    @foreach (var item in Model.fixedAssetWriteOff)
+                                                    {
+                                                        <option value="@item.Id">@item.DocumentCode-@item.Id</option>
+
+                                                    }
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div id="rangeTo" class="form-group" style="display:none">
+
+                                                <select class="form-control select2">
+                                                    <option selected disabled>To</option>
+                                                    @foreach (var item in Model.fixedAssetWriteOff)
+                                                    {
+                                                        <option value="@item.Id">@item.DocumentCode-@item.Id</option>
+
+                                                    }
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
-                            <div class="clearfix"></div>
-                            <div class="btn-container text-center" style="padding-bottom: 10px;">
-                                <button onclick="searchItem()" type="submit" class="btn btn-primary btn-fix-width" id="btn-search">Search</button>
-                                <button onclick="toggleSearch()" class="btn btn-outline-primary btn-fix-width close-filter" id="btn-close">Close</button>
-                            </div>
+
                         </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="btn-container text-center" style="padding-bottom: 10px;">
+                        <button onclick="searchItem()" type="submit" class="btn btn-primary btn-fix-width" id="btn-search">Search</button>
+                        <button onclick="toggleSearch()" class="btn btn-outline-primary btn-fix-width close-filter" id="btn-close">Close</button>
+                    </div>
+                </div>
                     </div>
                 </div>
             </div>

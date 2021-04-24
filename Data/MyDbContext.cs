@@ -4,6 +4,10 @@ using FixedModules.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FixedModules.Data
 {
@@ -42,15 +46,21 @@ namespace FixedModules.Data
         public DbSet<PUserRoles> PUserRoles { get; set; }
         public DbSet<AuditTrail> AuditTrail { get; set; }
         public DbSet<AuditTrailTemp> AuditTrailTemp { get; set; }
+        public DbSet<AllModuleFormSub> AllModuleFormSub { get; set; }
+        public DbSet<FixedAssetRegisterAttachment> FixedAssetRegisterAttachment { get; set; }
+        public DbSet<MonthlyDepreciationSubForm> monthlyDepreciationSubForms { get; set; }
+        public DbSet<FixedAssetWriteOffSubForm> FixedAssetWriteOffSubForm { get; set; }
+
 
 
         #region AdditionalTables
-       
+
 
         public DbSet<Fixed_Asset_Register> FixedAssetRegisters { get; set; }
         public DbSet<FixedAssetMDepreciation> FixedAssetMDepreciation { get; set; }
         public DbSet<FixedAssetWriteOff> FixedAssetWriteOff { get; set; }
         public DbSet<FixedAssetDisposal> FixedAssetDisposal { get; set; }
+        public DbSet<FixedAssetTransfer> FixedAssetTransfer { get; set; }
         //public DbSet<FixedAssetWriteOff> FixedAssetWriteOff { get; set; }
        
         #endregion
@@ -100,6 +110,15 @@ namespace FixedModules.Data
 
             });
         }
+        //public DbSet<FixedAssetWriteOff> FixedAssetWriteOff { get; set; }
+ 
+        public DbSet<Format> Format { get; set; }
+        //public DbSet<FixedAssetWriteOff> FixedAssetWriteOff { get; set; }
+ 
+        public DbSet<FixedAssets.Models.FixedAssetProfileEditor> FixedAssetProfileEditor { get; set; }
+        //public DbSet<FixedAssetWriteOff> FixedAssetWriteOff { get; set; }
+       
+  
        
 
     }

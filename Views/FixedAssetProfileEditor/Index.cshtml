@@ -1,0 +1,239 @@
+﻿@model IEnumerable<FixedAssets.Models.FixedAssetProfileEditor>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetModel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetBrand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remarks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InvoiceNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalUnit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CapitalizeAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DepreciationStartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResidualAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NetBookValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UtilizeLife)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DepreciationpercentagePer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DepreciationEndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FixedAssetAccountID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PL_DepreciationAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PS_DepreciationAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DisposalGainAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DisposalLossAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.writeOfAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetSubCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegistrationNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SerialNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Asset_UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AllocationValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssetCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssetName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssetType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssetCategory)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssetModel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssetBrand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransactionDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remarks)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InvoiceNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalUnit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CapitalizeAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepreciationStartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResidualAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NetBookValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UtilizeLife)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepreciationpercentagePer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepreciationEndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FixedAssetAccountID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PL_DepreciationAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PS_DepreciationAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisposalGainAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisposalLossAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.writeOfAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssetSubCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegistrationNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SerialNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Asset_UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AllocationValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationStatus)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

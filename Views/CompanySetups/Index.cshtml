@@ -87,15 +87,15 @@
 
         $(document).ready(function () {
             if (ul === 'd') {
-                $('#checkbox_1').prop('checked', true);
-                $('#drop_1').prop('disabled', false);
-
-                $('#drop_1 option[value=' + value + ']').prop('selected', true);
-            } if (ul === 'm') {
                 $('#checkbox_2').prop('checked', true);
                 $('#drop_2').prop('disabled', false);
 
                 $('#drop_2 option[value=' + value + ']').prop('selected', true);
+            } if (ul === 'm') {
+                $('#checkbox_1').prop('checked', true);
+                $('#drop_1').prop('disabled', false);
+
+                $('#drop_1 option[value=' + value + ']').prop('selected', true);
             } if (ul === 'rb') {
                 $('#checkbox_3').prop('checked', true);
                 $('#drop_3').prop('disabled', false);

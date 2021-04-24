@@ -4,10 +4,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml"; }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <link href="~/css/DropButton.css" rel="stylesheet" />
 <!-- Select2 CSS -->
 
 <style>
+
+    .lcss {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-right: 15px;
+        height: 40px;
+    }
+
     table th {
         background: #0073ff;
         color: #fff;
@@ -89,6 +99,22 @@
         font-size: 14px;
         line-height: 1.5;
     }
+
+    .hdcd {
+        background: #007bff;
+    }
+
+        .hdcd h1 {
+            font-size: 14px;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+    .center {
+        text-align: center;
+        display: block;
+    }
 </style>
 
 
@@ -104,9 +130,51 @@
                 <h6 class="element-header">
                     Fixed Asset Register
                 </h6>
+                <div class="element-box" id="searchData" style="display: none; padding: 3px; margin: 5px">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div>
+
+                                <div class="triangle-topleft"></div>
 
 
-                @*<button class="box btn-outline-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Importmodal" data-toggle="modal"> Import</button>*@
+                                <div class="card-body">
+
+                                    <div class="row" style=" max-width: 600px; margin: 0 auto;">
+                                        <div class="col-sm-12">
+                                            <div class="form-group row">
+                                                <label class="col-sm-12 control-label col-form-label">Asset Code</label>
+                                                <div class="col-sm-12">
+                                                    <input autocomplete="off" class="form-control" id="searchCode" name="Code" type="text" value="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-12 control-label col-form-label">Asset Name</label>
+                                                <div class="col-sm-12">
+                                                    <input autocomplete="off" class="form-control" id="searchName" name="Name" type="text" value="">
+                                                </div>
+                                            </div>
+                                            @*<div class="form-group row">
+                                        <label class="col-sm-12 control-label col-form-label">Purchase Date</label>
+                                        <div class="col-sm-12">
+                                            <input class="form-control" id="PurchaseDate" name="PurchaseDate" type="datetime" value="">
+                                        </div>
+                                    </div>*@
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="btn-container text-center" style="padding-bottom: 10px;">
+                                    <button onclick="searchItem()" type="submit" class="btn btn-primary btn-fix-width" id="btn-search">Search</button>
+                                    <button onclick="closebutton()" class="btn btn-outline-primary btn-fix-width close-filter" id="btn-close">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
 
                 <div class="element-box">
 
@@ -114,8 +182,38 @@
                         <div class="col-md-12">
                             <div class="card-body text-right">
                                 <input class="btn btn-primary" type="button" value="Back" onclick="location.href='@Url.Action("Index", "Master_AllModule")'" />
+                                <button id="searchButton" onclick="toggleSearch()" class="btn box search-filter btn-outline-primary" style="border-radius:5px; cursor:pointer; margin-left:1%">
+                                    <i class="mdi mdi-file-find"></i><span class="">Asset Refrence</span>
+                                </button>
                             </div>
                         </div>
+                    </div>
+                    <div id="hidedatatable" class="table-responsive">
+                        @if (ViewBag.error == "Code exists")
+                        {
+                            @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                        }
+                        <table id="zero_config1" class="table table-bordered table-lg table-v2 table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.AssetCode)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.AssetName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PurchaseDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DepreciationStartDate)
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="tableItems1">
+                            </tbody>
+                        </table>
                     </div>
 
                     @if (ViewBag.error == "Code exists")
@@ -129,10 +227,16 @@
                                 @*@Html.AntiForgeryToken()*@
                                 <input type="hidden" asp-for="CreationStatus" />
                                 <input type="hidden" asp-for="Id" />
+                                <input type="hidden" asp-for="savepopupdata" />
+                                <input type="hidden" asp-for="savepopupdata1" />
+                                <input type="hidden" asp-for="savepopupdata2" />
+                                <input type="hidden" asp-for="savepopupdata3" />
+                                <input type="hidden" asp-for="savepopupdata4" />
+                                <input type="hidden" asp-for="savepopupdata5" />
 
                                 <ul id="accordion" class="accordion">
                                     <li>
-                                        <div class="link"><span>HEADER INFO</span><i onclick="hidedata()" class="fa fa-chevron-down"></i></div>
+                                        <div class="link" onclick="hidedata()"><span>HEADER INFO</span><i class="fa fa-chevron-down"></i></div>
                                         <ul id="headerinfo" class="submenu">
                                             <div class="row">
                                                 <div class="col-sm-4">
@@ -159,7 +263,7 @@
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetType)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
                                                             <div class="form-group">
-                                                                <select class="form-control select2" name="state" asp-for="AssetType" onchange="ChooseNondepreciation(this)" asp-items="@Model.asset_type">
+                                                                <select class="form-control select2" asp-for="AssetType" onchange="ChooseNondepreciation(this)" asp-items="@Model.asset_type" required>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -171,7 +275,8 @@
                                                         <div class="col-sm-12">
                                                             <div class="form-group">
 
-                                                                <select asp-for="AssetCategory" class="form-control select2" onchange="calculation()">
+                                                                <select asp-for="AssetCategory" class="form-control select2" onchange="cal()" required>
+                                                                    <option selected disabled>Select</option>
                                                                     @foreach (var item in Model.asset_Category)
                                                                     {
                                                                         <option value="@item.Id">@item.Code-@item.Name</option>
@@ -189,7 +294,7 @@
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetModel)</label>
                                                         <div class="col-sm-12">
                                                             <select asp-for="AssetModel" class="select2 form-control">
-                                                                <option></option>
+                                                                <option selected disabled>Select</option>
                                                                 @foreach (var item in Model.asset_model)
                                                                 {
 
@@ -205,7 +310,7 @@
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetBrand)</label>
                                                         <div class="col-sm-12">
                                                             <select asp-for="AssetBrand" class="select2 form-control">
-                                                                <option></option>
+                                                                <option selected disabled>Select</option>
                                                                 @foreach (var item in Model.asset_brand)
                                                                 {
 
@@ -228,7 +333,7 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <div class="link"><span>PURCHASE INFO</span><i onclick="hidedata1()" class="fa fa-chevron-down"></i></div>
+                                        <div class="link" onclick="hidedata1()"><span>PURCHASE INFO</span><i class="fa fa-chevron-down"></i></div>
                                         <ul id="purchaseinfo" class="submenu">
                                             <div class="row">
                                                 <div class="col-sm-4">
@@ -283,7 +388,7 @@
                                                     <div class="form-group row">
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.UnitPrice)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
-                                                            <input type="number" onchange="calculation()" value="0.00" min="0" asp-for="UnitPrice" autocomplete="off" class="form-control" />
+                                                            <input type="number" onchange="calculation()" value="0.00" min="0" asp-for="UnitPrice" autocomplete="off" class="form-control" required />
                                                             <span asp-validation-for="UnitPrice" class="text-danger"></span>
                                                         </div>
                                                     </div>
@@ -302,14 +407,14 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <div class="link"><span>DEPRECIATION INFO</span><i onclick="hidedata2()" class="fa fa-chevron-down"></i></div>
+                                        <div class="link" onclick="hidedata2()"><span>DEPRECIATION INFO</span><i class="fa fa-chevron-down"></i></div>
                                         <ul id="depreinfo" class="submenu">
                                             <div class="row" id="depreInfo">
                                                 <div class="col-sm-4">
                                                     <div class="form-group row">
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DepreciationStartDate)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
-                                                            <input type="date" asp-for="DepreciationStartDate" autocomplete="off" onchange="calculation()" class="form-control" />
+                                                            <input type="date" asp-for="DepreciationStartDate" autocomplete="off" onchange="cal()" class="form-control" />
                                                             <span asp-validation-for="DepreciationStartDate" class="text-danger"></span>
                                                         </div>
                                                     </div>
@@ -336,12 +441,12 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <div class="link"><span>DEPRECIATION METHOD</span><i onclick="hidedata3()" class="fa fa-chevron-down"></i></div>
+                                        <div class="link" onclick="hidedata3()"><span>DEPRECIATION METHOD</span><i class="fa fa-chevron-down"></i></div>
                                         <ul id="depremethod" class="submenu">
                                             <div class="row">
                                                 <div class="col-sm-4">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.UtilizeLife)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.UtilizeLife)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span> <small id="lblUtilizeReg"></small></label>
                                                         <div class="col-sm-12">
                                                             @*@foreach (var item in Model.utilize_life)
                                                     {
@@ -355,7 +460,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DepreciationpercentagePer)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
+                                                        <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DepreciationpercentagePer)<span class="value-mandatory"><i class="mdi mdi-value"></i></span> <small id="lblUtilizeRegDep"></small></label>
                                                         <div class="col-sm-12">
                                                             <input asp-for="DepreciationpercentagePer" autocomplete="off" class="form-control" readonly />
                                                             <span asp-validation-for="DepreciationpercentagePer" class="text-danger"></span>
@@ -375,7 +480,7 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <div class="link"><span>ACCOUNT INFO</span><i onclick="hidedata4()" class="fa fa-chevron-down"></i></div>
+                                        <div class="link" onclick="hidedata4()"><span>ACCOUNT INFO</span><i class="fa fa-chevron-down"></i></div>
                                         <ul id="accntinfo" class="submenu">
                                             <div class="row" id="accountInfo">
 
@@ -385,13 +490,20 @@
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.FixedAssetAccountID)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
                                                             @*<select asp-for="FixedAssetAccountID" class="form-control" asp-items="@Model.StaticList"></select>*@
-                                                            <select asp-for="FixedAssetAccountID" class="select2 form-control">
+
+                                                            <select asp-for="FixedAssetAccountID" class="select2 select_old form-control" onchange="AnalysisCode('FixedAssetAccountID')">
+                                                                <option selected disabled>Select</option>
                                                                 @foreach (var item in Model.fixed_asset_account)
                                                                 {
                                                                     <option value="@item.Id">@item.Code-@item.Name</option>
 
                                                                 }
                                                             </select>
+                                                            <div class="showpopup1 input-group-append">
+                                                                <span class="input-group-text fs-xl lcss">
+                                                                    <i class="fa fa-lightbulb-o" data-target="#Importmodal" data-toggle="modal"></i>
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -400,13 +512,19 @@
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.PL_DepreciationAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
                                                             @*<select asp-for="PL_DepreciationAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
-                                                            <select asp-for="PL_DepreciationAccount" class="select2 form-control">
+                                                            <select asp-for="PL_DepreciationAccount" class="select2 form-control" onchange="AnalysisCode('PL_DepreciationAccount')">
+                                                                <option selected disabled>Select</option>
                                                                 @foreach (var item in Model.pl_description_account)
                                                                 {
                                                                     <option value="@item.Id">@item.Code-@item.Name</option>
 
                                                                 }
                                                             </select>
+                                                            <div class="showpopup2 input-group-append">
+                                                                <span class="input-group-text fs-xl lcss">
+                                                                    <i class="fa fa-lightbulb-o" data-target="#Importmodal1" data-toggle="modal"></i>
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -415,13 +533,19 @@
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.PS_DepreciationAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
                                                             @*<select asp-for="PS_DepreciationAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
-                                                            <select asp-for="PS_DepreciationAccount" class="select2 form-control">
+                                                            <select asp-for="PS_DepreciationAccount" class="select2 form-control" onchange="AnalysisCode('PS_DepreciationAccount')">
+                                                                <option selected disabled>Select</option>
                                                                 @foreach (var item in Model.bs_description_account)
                                                                 {
                                                                     <option value="@item.Id">@item.Code-@item.Name</option>
 
                                                                 }
                                                             </select>
+                                                            <div class="showpopup3 input-group-append">
+                                                                <span class="input-group-text fs-xl lcss">
+                                                                    <i class="fa fa-lightbulb-o" data-target="#Importmodal2" data-toggle="modal"></i>
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -431,13 +555,19 @@
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DisposalGainAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
                                                             @*<select asp-for="DisposalGainAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
-                                                            <select asp-for="DisposalGainAccount" class="select2 form-control">
+                                                            <select asp-for="DisposalGainAccount" class="select2 form-control" onchange="AnalysisCode('DisposalGainAccount')">
+                                                                <option selected disabled>Select</option>
                                                                 @foreach (var item in Model.disposal_gain_account)
                                                                 {
                                                                     <option value="@item.Id">@item.Code-@item.Name</option>
 
                                                                 }
                                                             </select>
+                                                            <div class="showpopup4 input-group-append">
+                                                                <span class="input-group-text fs-xl lcss">
+                                                                    <i class="fa fa-lightbulb-o" data-target="#Importmodal3" data-toggle="modal"></i>
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -446,13 +576,19 @@
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.DisposalLossAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
                                                             @*<select asp-for="DisposalLossAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
-                                                            <select asp-for="DisposalLossAccount" class="select2 form-control">
+                                                            <select asp-for="DisposalLossAccount" class="select2 form-control" onchange="AnalysisCode('DisposalLossAccount')">
+                                                                <option selected disabled>Select</option>
                                                                 @foreach (var item in Model.disposal_loss_account)
                                                                 {
                                                                     <option value="@item.Id">@item.Code-@item.Name</option>
 
                                                                 }
                                                             </select>
+                                                            <div class="showpopup5 input-group-append">
+                                                                <span class="input-group-text fs-xl lcss">
+                                                                    <i class="fa fa-lightbulb-o" data-target="#Importmodal4" data-toggle="modal"></i>
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -461,13 +597,19 @@
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.writeOfAccount)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
                                                             @*<select asp-for="writeOfAccount" class="form-control" asp-items="@Model.StaticList"></select>*@
-                                                            <select asp-for="writeOfAccount" class="select2 form-control">
+                                                            <select asp-for="writeOfAccount" class="select2 form-control" onchange="AnalysisCode('writeOfAccount')">
+                                                                <option selected disabled>Select</option>
                                                                 @foreach (var item in Model.write_off_account)
                                                                 {
                                                                     <option value="@item.Id">@item.Code-@item.Name</option>
 
                                                                 }
                                                             </select>
+                                                            <div class="showpopup6 input-group-append">
+                                                                <span class="input-group-text fs-xl lcss">
+                                                                    <i class="fa fa-lightbulb-o" data-target="#Importmodal5" data-toggle="modal"></i>
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -476,7 +618,7 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <div class="link"><span>ADJUSTMENT</span><i onclick="hidedata5()" class="fa fa-chevron-down"></i></div>
+                                        <div class="link" onclick="hidedata5()"><span>ADJUSTMENT</span><i class="fa fa-chevron-down"></i></div>
                                         <ul id="adjustmnt" class="submenu">
                                             <div class="row">
                                                 <div class="col-sm-4">
@@ -517,7 +659,7 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <div class="link"><span>ATTACHMENT</span><i onclick="hidedata6()" class="fa fa-chevron-down"></i></div>
+                                        <div class="link" onclick="hidedata6()"><span>ATTACHMENT</span><i class="fa fa-chevron-down"></i></div>
                                         <ul id="attachmnt" class="submenu">
                                             <div class="row">
 
@@ -525,7 +667,7 @@
                                                     <div class="form-group row">
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Attachment)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
-                                                            <textarea asp-for="Attachment" class="form-control ckeditor"></textarea>
+                                                            <textarea id="Attachment" asp-for="Attachment" class="form-control"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -539,7 +681,7 @@
                                                     <div class="form-group row">
                                                         <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.Attachment)<span class="value-mandatory"><i class="mdi mdi-value"></i></span></label>
                                                         <div class="col-sm-12">
-                                                            <input asp-for="AttachmentFile" class="form-control" />
+                                                            <input class="form-control" name="files" multiple="multiple" type="file" onchange="getPath();"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -549,7 +691,7 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <div class="link"><span>ASSET ANALYSIS</span><i onclick="hidedata7()" class="fa fa-chevron-down"></i></div>
+                                        <div class="link" onclick="hidedata7()"><span>ASSET ANALYSIS</span><i class="fa fa-chevron-down"></i></div>
                                         <ul id="assetanalysis" class="submenu">
                                             <div class="row">
 
@@ -568,63 +710,6 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="bindmultiplerows">
-                                                                <!--<tr>
-                                                    <td>
-                                                        <div class="col-sm-12 pd_0">
-                                                            <input asp-for="AssetSubCode" autocomplete="off" class="form-control" readonly />
-                                                            <span asp-validation-for="AssetSubCode" class="text-danger"></span>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="col-sm-12 pd_0">
-                                                            <input asp-for="RegistrationNumber" autocomplete="off" class="form-control" />
-                                                            <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="col-sm-12 pd_0">
-                                                            <input asp-for="SerialNumber" autocomplete="off" class="form-control" />
-                                                            <span asp-validation-for="SerialNumber" class="text-danger"></span>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <div class="col-sm-12 pd_0">-->
-                                                                @*<select asp-for="Department" class="form-control" asp-items="@Model.StaticList"></select>*@
-                                                                <!--<select asp-for="Department" class="select2 form-control">
-                                                                @foreach (var item in Model.department_master)
-                                                                {
-                                                                    <option value="@item.Id">@item.Code-@item.Name</option>
-
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <div class="col-sm-12 pd_0">-->
-                                                                @*<select asp-for="Location" class="form-control" asp-items="@Model.StaticList"></select>*@
-                                                                <!--<select asp-for="Location" class="select2 form-control">
-                                                                    @foreach (var item in Model.asset_location_master)
-                                                                    {
-                                                                        <option value="@item.Id">@item.Code-@item.Name</option>
-
-                                                                    }
-                                                                </select>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-right">
-                                                            <div class="col-sm-12 pd_0">
-                                                                <input id="priceunit" asp-for="UnitPrice" autocomplete="off" class="form-control" readonly value="1" />
-                                                                <span asp-validation-for="UnitPrice" class="text-danger"></span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-right">
-                                                            <div class="col-sm-12 pd_0">
-                                                                <input asp-for="AllocationValue" autocomplete="off" class="form-control" readonly />
-                                                                <span asp-validation-for="AllocationValue" class="text-danger"></span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>-->
-
                                                             </tbody>
                                                         </table>
 
@@ -672,37 +757,135 @@
 
 
                 </div>
-                @*<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal" role="dialog" tabindex="-1">
+                <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal" role="dialog" tabindex="-1">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <form asp-action="Import" method="POST" class="form-horizontal" enctype="multipart/form-data">
-                                <div class="modal-header">
-                           
-                                    <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
-                                </div>
-                                <div class="modal-body">
-                               
-                                    <div class="form-group row">
-                                        <label class="col-sm-1 text-left control-label col-form-label">Analysis Code</label>
-                                        <div class="col-sm-11">
-                                            <select class="form-control select2">
-                                                @foreach (var item in Model.analysis_Codes)
-                                                {
-                                                    <option value="@item.Id">@item.Code-@item.Name</option>
 
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
-                                    <button class="btn btn-primary" type="submit" value="Create"> Import</button>
-                                </div>
-                            </form>
+                            <div class="modal-header hdcd">
+                                <h1>Customer Analysis Code</h1>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                            </div>
+                            <div class="modal-body" id="Analaysiscodedata">
+
+
+                            </div>
+
+                            <div class="modal-footer center">
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" data-dismiss="modal" onclick="fixassetdata()" value="Create"> Save</button>
+                            </div>
+
                         </div>
                     </div>
-                </div>*@
+                </div>
+
+                <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal1" role="dialog" tabindex="-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header hdcd">
+                                <h1>Customer Analysis Code</h1>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                            </div>
+                            <div class="modal-body" id="Analaysiscodedata1">
+
+
+                            </div>
+
+                            <div class="modal-footer center">
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" data-dismiss="modal" onclick="fixassetdata1()" value="Create"> Save</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal2" role="dialog" tabindex="-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header hdcd">
+                                <h1>Customer Analysis Code</h1>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                            </div>
+                            <div class="modal-body" id="Analaysiscodedata2">
+
+
+                            </div>
+
+                            <div class="modal-footer center">
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" data-dismiss="modal" onclick="fixassetdata2()" value="Create"> Save</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal3" role="dialog" tabindex="-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header hdcd">
+                                <h1>Customer Analysis Code</h1>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                            </div>
+                            <div class="modal-body" id="Analaysiscodedata3">
+
+
+                            </div>
+
+                            <div class="modal-footer center">
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" data-dismiss="modal" onclick="fixassetdata3()" value="Create"> Save</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal4" role="dialog" tabindex="-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header hdcd">
+                                <h1>Customer Analysis Code</h1>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                            </div>
+                            <div class="modal-body" id="Analaysiscodedata4">
+
+
+                            </div>
+
+                            <div class="modal-footer center">
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" data-dismiss="modal" onclick="fixassetdata4()" value="Create"> Save</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal5" role="dialog" tabindex="-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header hdcd">
+                                <h1>Customer Analysis Code</h1>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                            </div>
+                            <div class="modal-body" id="Analaysiscodedata5">
+
+
+                            </div>
+
+                            <div class="modal-footer center">
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-primary" data-dismiss="modal" onclick="fixassetdata5()" value="Create"> Save</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -718,9 +901,22 @@
 
 
     $(document).ready(function () {
+
         $("#depreInfo").hide();
         $("#accountInfo").hide();
+        $(".showpopup1").hide();
+        $(".showpopup2").hide();
+        $(".showpopup3").hide();
+        $(".showpopup4").hide();
+        $(".showpopup5").hide();
+        $(".showpopup6").hide();
 
+        $.get("../../CompanySetups/GetUtilizeVal", function (data) {
+            if (data != "" || data != null) {
+                $("small[id='lblUtilizeReg']").text("[" + data + "]");
+                $("small[id='lblUtilizeRegDep']").text("[" + data + "]");
+            } 
+        });
 
         $.ajax({
             url: "/Master_AllModule/DynamicRowCreation",
@@ -733,6 +929,20 @@
             }
         });
 
+        //var utilife = $("#UtilizeLife").val();
+
+        //$.ajax({
+
+        //    url: "/Master_AllModule/Filldate",
+        //    type: "POST",
+        //    data: { id: utilife, date: depreciationstartdate },
+        //    success: function (data) {
+        //        $("#DepreciationEndDate").val(data);
+        //    },
+        //    error: function () {
+
+        //    }
+        //});
     });
 
 
@@ -761,167 +971,9 @@
         $("#bindmultiplerows").html(html);
 
 
-        $.ajax({
-            url: "/Master_AllModule/FillAssetSubCode",
-            type: "POST",
-            data: { id: id },
-            success: function (data) {
-                $("#AssetCode").val(data);
+    
 
-                var assetsubcode = "";
-                for (var i = 1; i <= $("#TotalUnit").val(); i++) {
-                    assetsubcode += data + "-" + i + ",";
-                }
-                $("#AssetSubCode").val(assetsubcode);
-            },
-            error: function () {
-            }
-        });
-
-        var utliselife = '@TempData["utilifelife"]';
-        var depreciationstartdate = $("#DepreciationStartDate").val();
-        var utilife = $("#UtilizeLife").val();
-        var datesplit = depreciationstartdate.split("-");
-        var date1 = datesplit[0];
-        var date2 = datesplit[1];
-        var date3 = datesplit[2];
-        if (utliselife == "Years") {
-
-            var result1 = (parseInt(date1) + parseInt(utilife)) + "-" + date2 + "-" + date3;
-            $("#DepreciationEndDate").val(result1);
-
-        }
-        else if (utliselife == "Months") {
-
-            var result2 = date1 + "-" + date2 + "-" + date3;
-            var month = addMonths(new Date(result2), utilife);
-            $("#DepreciationEndDate").val(month);
-
-        }
-        else {
-            $.ajax({
-                url: "/Master_AllModule/Filldate",
-                type: "POST",
-                data: { id: utilife, date: depreciationstartdate },
-                success: function (data) {
-                    $("#DepreciationEndDate").val(data);
-                },
-                error: function () {
-                }
-            });
-
-        }
-
-        function addMonths(date, months) {
-            var d = date.getDate();
-            date.setMonth(date.getMonth() + +months);
-            if (date.getDate() != d) {
-                date.setDate(0);
-            }
-            var datenew = new Date(date),
-                mnth = ("0" + (datenew.getMonth() + 1)).slice(-2),
-                day = ("0" + datenew.getDate()).slice(-2);
-            return [datenew.getFullYear(), mnth, day].join("-");
-        }
-
-        var utliselife = '@TempData["utilifelife"]';
-        var utilife = $("#UtilizeLife").val();
-        var Enddate = $("#DepreciationEndDate").val();
-        var startdate = $("#DepreciationStartDate").val();
-        var data = parseInt(utilife);
-        var reducingbal = '@TempData["reducingbalance"]';
-        var dailyutilizelife = '@TempData["DailyUL"]';
-        var Monthlyutilizelife = '@TempData["MonthlyUL"]';
-
-        if (reducingbal == "True") {
-
-            if (utliselife == "Years") {
-
-                var result = ((100 / data) *2);
-                $("#DepreciationpercentagePer").val(result);
-            }
-            if (utliselife == "Days") {
-
-                var result = (100 / data) * 2;
-                $("#DepreciationpercentagePer").val(result);
-            }
-            if (utliselife == "Months") {
-
-                var result = (100 / data) * 2;
-                $("#DepreciationpercentagePer").val(result);
-
-            }
-
-
-        }
-
-         else if (dailyutilizelife == "True") {
-
-
-            $.ajax({
-                url: "/Master_AllModule/CalculateDate",
-                type: "POST",
-                data: { enddate: Enddate, startdte: startdate },
-                success: function (data) {
-
-                    if (utliselife == "Years") {
-
-                        var result = 100 / data;
-                            $("#DepreciationpercentagePer").val(result);
-                    }
-                    if (utliselife == "Days") {
-                        var result = 100 / data;
-                        $("#DepreciationpercentagePer").val(result);
-                    }
-                    if (utliselife == "Months") {
-
-                        var result = 100 / data;
-                        $("#DepreciationpercentagePer").val(result);
-
-                    }
-                },
-                error: function () {
-                }
-            });
-
-
-
-
-        }
-        else {
-
-            if (utliselife == "Years") {
-
-                var result = (100 / data);
-                $("#DepreciationpercentagePer").val(result);
-            }
-
-            if (utliselife == "Months") {
-
-                var result = (100 / data);
-                $("#DepreciationpercentagePer").val(result);
-
-            }
-
-
-        }
-
-
-        $.ajax({
-            url: "/Master_AllModule/Fillutilizelife",
-            type: "POST",
-            data: { id: id },
-            success: function (data) {
-                $("#UtilizeLife").val(data);
-                $("#Adjustment_UtilizeLifeInMonths").val(data);
-            },
-            error: function () {
-            }
-        });
-
-
-
-
+     
 
         var asssubcode =  $("#AssetCode").val();
         var registrationno = $("#RegistrationNumber").val();
@@ -940,7 +992,8 @@
 
         var unit = $("#TotalUnit").val();
         var price = $("#UnitPrice").val();
-        var capitalizeamt = parseInt(unit * price);
+        //var capitalizeamt = parseInt(unit * price);
+        var capitalizeamt = unit * price;
         $("#CapitalizeAmount").val(capitalizeamt);
         $("#Adjustment_CapitalizeAmount").val(capitalizeamt);
         var capitalizeAmot = $("#CapitalizeAmount").val();
@@ -969,6 +1022,229 @@
 
     }
 
+    function cal() {
+        var id = $("#AssetCategory option:selected").val();
+        var reducingbal = '@TempData["reducingbalance"]';
+        var dailyutilizelife = '@TempData["DailyUL"]';
+        var Monthlyutilizelife = '@TempData["MonthlyUL"]';
+        var utliselife = '@TempData["utilifelife"]';
+        var depreciationstartdate = $("#DepreciationStartDate").val();
+        var datesplit = depreciationstartdate.split("-");
+        var date1 = datesplit[0];
+        var date2 = datesplit[1];
+        var date3 = datesplit[2];
+
+        $.ajax({
+            url: "/Master_AllModule/FillAssetSubCode",
+            type: "POST",
+            data: { id: id },
+            success: function (data) {
+                $("#AssetCode").val(data);
+
+                var assetsubcode = "";
+                for (var i = 1; i <= $("#TotalUnit").val(); i++) {
+                    assetsubcode += data + "-" + i + ",";
+                }
+                $("#AssetSubCode").val(assetsubcode);
+            },
+            error: function () {
+            }
+        });
+
+        $.ajax({
+            url: "/Master_AllModule/Fillutilizelife",
+            type: "POST",
+            data: { id: id },
+            success: function (data) {
+
+                $("#UtilizeLife").val(data);
+
+                $("#Adjustment_UtilizeLifeInMonths").val(data);
+                if (utliselife == "Years") {
+                    var result1 = (parseInt(date1) + parseInt(data)) + "-" + date2 + "-" + date3;
+                    $("#DepreciationEndDate").val(result1);
+                }
+                else if (utliselife == "Months") {
+                    var result2 = date1 + "-" + date2 + "-" + date3;
+                    var month = addMonths(new Date(result2), data);
+                    $("#DepreciationEndDate").val(month);
+                }
+                else {
+
+                    $.ajax({
+                        url: "/Master_AllModule/Filldate",
+                        type: "POST",
+                        data: { id: data, date: depreciationstartdate },
+                        success: function (data) {
+                            $("#DepreciationEndDate").val(data);
+                        },
+                        error: function () {
+
+}
+
+                    });
+
+
+
+                }
+
+
+                if (reducingbal == "True") {
+
+
+                    if (utliselife == "Years") {
+
+
+                        var result = ((100 / data) * 2);
+
+                        $("#DepreciationpercentagePer").val(result);
+
+                    }
+
+                    if (utliselife == "Days") {
+
+
+                        var result = (100 / data) * 2;
+
+                        $("#DepreciationpercentagePer").val(result);
+
+                    }
+
+                    if (utliselife == "Months") {
+
+
+                        var result = (100 / data) * 2;
+
+                        $("#DepreciationpercentagePer").val(result);
+
+
+                    }
+
+
+
+                }
+
+
+                else if (dailyutilizelife == "True") {
+
+
+                    check1();
+
+
+
+
+                }
+
+                else {
+
+
+                    if (utliselife == "Years") {
+
+
+                        var result = (100 / data);
+
+                        $("#DepreciationpercentagePer").val(result);
+
+                    }
+
+
+                    if (utliselife == "Months") {
+
+
+
+                        var result = (100 / data);
+
+                        $("#DepreciationpercentagePer").val(result);
+
+
+                    }
+
+                }
+
+            },
+            error: function () {
+            }
+        });
+    }
+
+
+    function addMonths(date, months) {
+        var d = date.getDate();
+        date.setMonth(date.getMonth() + +months);
+        if (date.getDate() != d) {
+            date.setDate(0);
+        }
+        var datenew = new Date(date),
+            mnth = ("0" + datenew.getMonth()).slice(-2),
+            day = ("0" + datenew.getDate()).slice(-2);
+        return [datenew.getFullYear(), mnth, day].join("-");
+    }
+
+    function check1() {
+
+        var Enddate = $("#DepreciationEndDate").val();
+
+        var startdate = $("#DepreciationStartDate").val();
+
+        var utliselife = '@TempData["utilifelife"]';
+
+        $.ajax({
+
+
+            url: "/Master_AllModule/CalculateDate",
+
+            type: "POST",
+
+            data: { enddate: Enddate, startdte: startdate },
+
+
+            success: function (dataa) {
+
+
+
+                if (utliselife == "Years") {
+
+
+                    var result = 100 / dataa;
+
+                    $("#DepreciationpercentagePer").val(result);
+
+                }
+
+                if (utliselife == "Days") {
+
+                    var result = 100 / dataa;
+
+                    $("#DepreciationpercentagePer").val(result);
+
+                }
+
+                if (utliselife == "Months") {
+
+
+                    var result = 100 / dataa;
+
+                    $("#DepreciationpercentagePer").val(result);
+
+
+                }
+
+
+            },
+
+
+            error: function () {
+
+
+
+            }
+
+
+        });
+
+
+
+    }
 
 
 
@@ -998,13 +1274,167 @@
         $("#assetanalysis").toggle();
     }
 
+    function BindPopup(rowcount, popupdata,id) {
+
+        var html = "";
+        for (var i = 0; i < rowcount; i++) {
+            html += '<div class="form-group row">';
+            html += '<input id="rowcountvalue" type="text" style="display:none" value=' + rowcount + '>';
+            $("#rowcountvalue").val(rowcount);
+            html += '<label class="col-sm-12 text-left control-label col-form-label">Analysis Code' + parseInt(i + 1) + '</label>';
+            html += '<div class="col-sm-12">';
+            html += ' <select id="'+ id +'' + parseInt(i + 1) + '" name="AnalaysicCode' + parseInt(i + 1) + '" class="anaylisis form-control select2">';
+            $.each(popupdata, function (index, record) {
+
+                html += '<option value="' + record.id + '">' + record.code + " " + record.name+'</option>';
+            });
+            html += '</select>';
+            html += '</div>';
+            html += '</div>';
+        }
+
+        return html;
+    }
+
+    function AnalysisCode(type) {
+        var accountid = $("#FixedAssetAccountID").val();
+        var disposalid = $("#PL_DepreciationAccount").val();
+        var psid = $("#PS_DepreciationAccount").val();
+        var gainid = $("#DisposalGainAccount").val();
+        var lossid = $("#DisposalLossAccount").val();
+        var writeid = $("#writeOfAccount").val();
+        $.ajax({
+            url: "/Master_AllModule/ShowAnalysisPopup",
+            type: "POST",
+            data: { "Fixedassetid": accountid, "disposallossid": disposalid, "Psaccountid": psid, "Disposalgainid": gainid, "Disposalossid": lossid, "Writeoffid": writeid },
+            success: function (data) {
+
+                switch (type) {
+                    case "FixedAssetAccountID":
+                        $("#Analaysiscodedata").html(BindPopup(data.data.length, data.popupvalues,"drop1"));
+                        if (data.data.length == 0) $(".showpopup1").hide();
+                        else $(".showpopup1").show();
+                        $("Importmodal").show();
+                        break;
+                    case "PL_DepreciationAccount":
+                        $("#Analaysiscodedata1").html(BindPopup(data.accouninfo.length, data.popupvalues1,"drop2"));
+                        if (data.accouninfo.length == 0) $(".showpopup2").hide()
+                        else $(".showpopup2").show();
+                         $("Importmodal1").show();
+                        break;
+                    case "PS_DepreciationAccount":
+                        $("#Analaysiscodedata2").html(BindPopup(data.psaccount.length, data.popupvalues2,"drop3"));
+                        if (data.psaccount.length == 0) $(".showpopup3").hide()
+                        else $(".showpopup3").show();
+                         $("Importmodal2").show();
+                        break;
+                    case "DisposalGainAccount":
+                        $("#Analaysiscodedata3").html(BindPopup(data.disposalgain.length, data.popupvalues3,"drop4"));
+                        if (data.disposalgain.length == 0) $(".showpopup4").hide()
+                        else $(".showpopup4").show();
+                         $("Importmodal3").show();
+                        break;
+                    case "DisposalLossAccount":
+                        $("#Analaysiscodedata4").html(BindPopup(data.disposalloss.length, data.popupvalues4,"drop5"));
+                        if (data.disposalloss.length == 0) $(".showpopup5").hide()
+                        else $(".showpopup5").show();
+                         $("Importmodal4").show();
+                        break;
+                    case "writeOfAccount":
+                        $("#Analaysiscodedata5").html(BindPopup(data.writeoff.length, data.popupvalues5,"drop6"));
+                        if (data.writeoff.length == 0) $(".showpopup6").hide()
+                        else $(".showpopup6").show();
+                         $("Importmodal5").show();
+                        break;
+                    default:
+                }
 
 
-    //function toggleSearch() {
 
-    //    $("#searchData11").show();
-    //}
 
+
+            },
+            error: function () {
+            }
+        });
+
+
+    }
+
+    function fixassetdata() {
+
+
+        var rowcount = $("#rowcountvalue").val();
+            var dataarray1 = [];
+            for (var i = 0; i < rowcount; i++) {
+                var data = "#drop1" + (i + 1);
+                var anaylisvalue = $(data).val();
+                dataarray1.push(anaylisvalue);
+            }
+        $("#savepopupdata").val(dataarray1);
+        //$("#rowcountvalue").val(0);
+
+    }
+    function fixassetdata1() {
+        debugger;
+        var rowcount = $("#rowcountvalue").val();
+           var dataarray2 = [];
+            for (var i = 0; i < rowcount; i++) {
+                var data = "#drop2" + (i + 1);
+                var anaylisvalue = $(data).val();
+                dataarray2.push(anaylisvalue);
+            }
+        $("#savepopupdata1").val(dataarray2);
+
+    }
+    function fixassetdata2() {
+        debugger;
+        var rowcount = $("#rowcountvalue").val();
+        var dataarray3 = [];
+        for (var i = 0; i < rowcount; i++) {
+            var data = "#drop3" + (i + 1);
+            var anaylisvalue = $(data).val();
+            dataarray3.push(anaylisvalue);
+        }
+        $("#savepopupdata2").val(dataarray3);
+
+    }
+    function fixassetdata3() {
+        debugger;
+        var rowcount = $("#rowcountvalue").val();
+        var dataarray4 = [];
+        for (var i = 0; i < rowcount; i++) {
+            var data = "#drop4" + (i + 1);
+            var anaylisvalue = $(data).val();
+            dataarray4.push(anaylisvalue);
+        }
+        $("#savepopupdata3").val(dataarray4);
+
+    }
+    function fixassetdata4() {
+        debugger;
+        var rowcount = $("#rowcountvalue").val();
+        var dataarray5 = [];
+        for (var i = 0; i < rowcount; i++) {
+            var data = "#drop5" + (i + 1);
+            var anaylisvalue = $(data).val();
+            dataarray5.push(anaylisvalue);
+        }
+        $("#savepopupdata4").val(dataarray5);
+
+    }
+    function fixassetdata5() {
+        debugger;
+        var rowcount = $("#rowcountvalue").val();
+        var dataarray6 = [];
+        for (var i = 0; i < rowcount; i++) {
+            var data = "#drop6" + (i + 1);
+            var anaylisvalue = $(data).val();
+            dataarray6.push(anaylisvalue);
+        }
+        $("#savepopupdata5").val(dataarray6);
+
+    }
 
 
     function ChooseNondepreciation(e) {
@@ -1024,8 +1454,6 @@
     $("#startDate").datepicker().datepicker("setDate", new Date());
     $("#endDate").datepicker().datepicker("setDate", new Date());
 
-    
-
     $("input[type=text]").on("keypress", function (e) {
         if (e.which === 32 && !this.value.length)
             e.preventDefault();
@@ -1042,7 +1470,85 @@
             $("#submit").removeClass("btn btn-secondary btn-fix-width");
             $("#submit").addClass("btn btn-primary btn-fix-width");
         }
-    })
+    });
+
+      function toggleSearch() {
+
+            $("#searchData").show();
+            $("#zero_config1").show();
+            $("#searchButton").hide();
+            $("#myform").hide();
+            $("#hidedatatable").show();
+
+
+        }
+        function closebutton() {
+
+            $("#searchData").hide();
+            $("#zero_config1").hide();
+            $("#hidedatatable").hide();
+            $("#myform").show();
+            $("#searchButton").show();
+
+
+    };
+
+     $(document).ready(function () {
+        var unit = $("#AssetType").val();
+
+        AnalysisCode('FixedAssetAccountID');
+        AnalysisCode('PL_DepreciationAccount');
+        AnalysisCode('PS_DepreciationAccount');
+        AnalysisCode('DisposalGainAccount');
+        AnalysisCode('DisposalLossAccount');
+        AnalysisCode('writeOfAccount');
+        
+        if (unit == "Non-Depreciation") {
+
+            $("#depreInfo").hide();
+            $("#accountInfo").hide();a
+        }
+        $("#zero_config1").hide();
+        $("#hidedatatable").hide();
+        
+     });
+
+    function getPath() {
+    var imagesPreview = function(input, element) {
+var txt ="";
+  if (input.files) {
+    for (const file of input.files) {
+      var filename = file.name;
+           
+           $("#Attachment").val(filename);
+
+      append(file, filename, element);
+    }
+
+    
+  }
+};
+
+const append = function(file, filename, element) {
+  const reader = new FileReader();
+  $(reader).load(function(e) {
+    $(element).append(
+    
+      
+      '<p>' + filename + '</p>'
+      
+    );
+   
+  })
+  reader.readAsDataURL(file);
+  
+}
+
+$('#images').on('change', function(e) {
+ var as = imagesPreview(this, '.data-image');
+});
+
+}
 </script>
 }
 

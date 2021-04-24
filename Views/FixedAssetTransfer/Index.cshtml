@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FixedAssets.Models.FixedAssetWriteOff>
+﻿@model FixedAssets.ViewModels.FixedModuleViewModel
 @{ ViewData["Title"] = "Purchases Invoice";
     Layout = "~/Views/Shared/_Layout.cshtml"; }
 <style>
@@ -62,26 +62,21 @@
 
                                 <div class="row" style=" max-width: 600px; margin: 0 auto;">
                                     <div class="col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-6 control-label col-form-label">Code</label>
-                                                <input autocomplete="off" class="form-control" id="searchCode" name="Code" type="text" value="">
-                                            <label class="col-sm-6 control-label col-form-label">Name</label>
-                                                <input autocomplete="off" class="form-control" id="searchName" name="Name" type="text" value="">
-                                        </div>
+
                                         <div class="form-group row">
                                             <label class="col-sm-6 control-label col-form-label">Transaction Date</label>
-                                           
-                                                <input class="form-control" id="startDate" name="PurchaseDate" type="datetime" value="" placeholder="Starting At">
-                                                    <input class="form-control" id="endDate" name="PurchaseDate" type="datetime" value="" placeholder="Ending At">
+
+                                            <input class="form-control" id="startDate" name="PurchaseDate" type="datetime" value="" placeholder="Starting At">
+                                            <input class="form-control" id="endDate" name="PurchaseDate" type="datetime" value="" placeholder="Ending At">
                                             <label class="col-sm-12 control-label col-form-label">Document Number</label>
-                                                <select class="form-control" id="searchDoc" name="SelectedActiveId">
-                                                    <option value="-1" selected>- No Filter -</option>
-                                                    <option value="1">Multiple</option>
-                                                    <option value="0">Range</option>
-                                                </select>
+                                            <select class="form-control" id="searchDoc" name="SelectedActiveId">
+                                                <option value="-1" selected>- No Filter -</option>
+                                                <option value="1">Multiple</option>
+                                                <option value="0">Range</option>
+                                            </select>
                                         </div>
-                                            @*<div class="col-sm-12 row">
-                                             
+                                        @*<div class="col-sm-12 row">
+
                                                 <select class="form-control" id="test" name="SelectedActiveId">
                                                     <option value="-1" selected>- No Filter -</option>
 
@@ -94,46 +89,46 @@
                                                     <option value="-1" selected>- No Filter -</option>
                                                 </select>
                                             </div>*@
-                                        </div>
-                                        <div class="col-sm-6">
-                                         
-                                                <label class="col-sm-12 control-label col-form-label">Active</label><div class="col-sm-12" data-select2-id="">
-                                                    <select class="form-control" id="searchStatus" name="SelectedActiveId">
-                                                        <option value="-1" selected>- ALL -</option>
-                                                        <option value="1">Draft</option>
-                                                        <option value="0">Save</option>
-                                                        <option value="2">Post</option>
-                                                        <option value="3">Void</option>
-                                                    </select>
-                                                </div>
-                                                </div>
-                                            
-
-                                            @*<div class="form-group row">
-                <label class="col-sm-12 control-label col-form-label">Purchase Date</label>
-                <div class="col-sm-12">
-                    <input class="form-control" id="PurchaseDate" name="PurchaseDate" type="datetime" value="">
-                </div>
-            </div>*@
-                                        </div>
-
                                     </div>
+                                    <div class="col-sm-6">
+
+                                        <label class="col-sm-12 control-label col-form-label">Active</label><div class="col-sm-12" data-select2-id="">
+                                            <select class="form-control" id="searchStatus" name="SelectedActiveId">
+                                                <option value="-1" selected>- ALL -</option>
+                                                <option value="1">Draft</option>
+                                                <option value="0">Save</option>
+                                                <option value="2">Post</option>
+                                                <option value="3">Void</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    @*<div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">Purchase Date</label>
+                                            <div class="col-sm-12">
+                                                <input class="form-control" id="PurchaseDate" name="PurchaseDate" type="datetime" value="">
+                                            </div>
+                                        </div>*@
+                                </div>
+
                             </div>
-                            <div class="clearfix"></div>
-                            <div class="btn-container text-center" style="padding-bottom: 10px;">
-                                <button onclick="searchItem()" type="submit" class="btn btn-primary btn-fix-width" id="btn-search">Search</button>
-                                <button onclick="toggleSearch()" class="btn btn-outline-primary btn-fix-width close-filter" id="btn-close">Close</button>
-                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="btn-container text-center" style="padding-bottom: 10px;">
+                            <button onclick="searchItem()" type="submit" class="btn btn-primary btn-fix-width" id="btn-search">Search</button>
+                            <button onclick="toggleSearch()" class="btn btn-outline-primary btn-fix-width close-filter" id="btn-close">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="element-box">
                 <div class="row">
 
 
 
-                    <input class="box btn-primary card-hover card-sm" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Create" onclick="location.href='@Url.Action("Create", "FixedAssetWriteOff")'" />
+                    <input class="box btn-primary card-hover card-sm" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Create" onclick="location.href='@Url.Action("Create", "FixedAssetTransfer")'" />
                     <button class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="" data-toggle="modal"> Listing</button>
 
                     <button id="searchButton" onclick="toggleSearch()" class="box search-filter btn-outline-primary" style="border-radius:5px; cursor:pointer; margin-left:1%">
@@ -151,22 +146,22 @@
                         <thead>
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.TransDate)
+                                    Transaction Date
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.DocumentCode)
+                                    Document Code
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Status)
+                                    Status
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.CreatedBy)
+                                    Created By
                                 </th>
 
                             </tr>
                         </thead>
                         <tbody id="tableItems">
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.fixedAssetTransfer)
                             {
                                 <tr id="@item.Id" editable="@item.Id">
                                     <th>
@@ -176,7 +171,7 @@
                                         @item.DocumentCode
                                     </th>
                                     <th>
-                                        @item.Status
+                                        @item.CreationStatus
                                     </th>
 
                                     <th>
@@ -192,64 +187,61 @@
 
                 <br /><br />
             </div>
+        </div>
 
+        <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Exportmodal" role="dialog" tabindex="-1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Export
+                        </h5>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
+                    </div>
+                    <div class="modal-body">
 
+                        <p>
+                            Please click on Export to download All Inovoices<br>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        @using (Html.BeginForm("Export", "Master_AllModule", FormMethod.Post))
+                        {
+                            <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                            <button class="btn btn-primary" type="submit" value="Export"> Export</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
 
-
-            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Exportmodal" role="dialog" tabindex="-1">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
+        <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal" role="dialog" tabindex="-1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form asp-action="Import" method="POST" class="form-horizontal" enctype="multipart/form-data">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">
-                                Export
+                                Import
                             </h5>
                             <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
                         </div>
                         <div class="modal-body">
-
                             <p>
-                                Please click on Export to download All Inovoices<br>
+                                Please select your updated csv file and click on import.<br>If you do not have the csv format, you may download it from here.
+                                <a href="~/files/FixedAssets.csv" class="btn btn-dark btn-sm">Download</a>
                             </p>
-                        </div>
-                        <div class="modal-footer">
-                            @using (Html.BeginForm("Export", "Master_AllModule", FormMethod.Post))
-                            {
-                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
-                                <button class="btn btn-primary" type="submit" value="Export"> Export</button>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade bd-example-modal-lg" id="Importmodal" role="dialog" tabindex="-1">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <form asp-action="Import" method="POST" class="form-horizontal" enctype="multipart/form-data">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">
-                                    Import
-                                </h5>
-                                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"> &times;</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <p>
-                                    Please select your updated csv file and click on import.<br>If you do not have the csv format, you may download it from here.
-                                    <a href="~/files/FixedAssets.csv" class="btn btn-dark btn-sm">Download</a>
-                                </p>
-                                <div class="form-group row">
-                                    <label class="col-sm-1 text-left control-label col-form-label">File</label>
-                                    <div class="col-sm-11">
-                                        <input type="file" id="importfilesetting" name="importfilesetting" class="form-control">
-                                    </div>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-left control-label col-form-label">File</label>
+                                <div class="col-sm-11">
+                                    <input type="file" id="importfilesetting" name="importfilesetting" class="form-control">
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
-                                <button class="btn btn-primary" type="submit" value="Create"> Import</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                            <button class="btn btn-primary" type="submit" value="Create"> Import</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -277,7 +269,7 @@
                 debugger;
 
                 if (iseditable == 3) alert("Data is Posted Cannot be Edited");
-                else window.location.href = "/Master_AllModule/Edit?CreditTermid=" + id;
+                else window.location.href = "/FixedAssetTransfer/Edit?id=" + id;
 
 
 
@@ -309,14 +301,22 @@
         }
 
         function searchItem() {
+            debugger;
+            $("#action").hide();
+            let startdate = $('#searchData #startDate').val();
+            let enddate = $('#searchData #endDate').val();
+            let DocNumber = $('#searchData #searchStatus').val();
+            let status = $('#searchData #searchStatus1').val();
 
-            let code = $('#searchData #searchCode').val();
-            let name = $('#searchData #searchName').val();
             var data = new FormData();
-            data.append("Code", code);
-            data.append("Name", name);
+            data.append("StartDat", startdate);
+            data.append("EndDat", enddate);
+            data.append("DocNumber", DocNumber);
+            data.append("Stats", status);
+
+
             $.ajax({
-                url: "/Master_AllModule/SearchFixedAssetRegister",
+                url: "/FixedAssetMDepreciation/SearchFixedAssetMDepreciation",
                 type: 'POST',
                 data: data,
                 processData: false,
@@ -327,17 +327,16 @@
 
                     $.each(data, function (index, record) {
                         html += '<tr id=' + record.id + ' editable=' + record.creationStatus + '>';
-                        html += '<td>' + record.assetCode + '</td>';
-                        html += '<td>' + record.assetName + '</td>';
-                        html += '<td>' + record.purchaseDate + '</td>';
-                        html += '<td>' + record.assetCategory + '</td>';
-                        html += '<td>' + record.statusValue + '</td>';
-                        html += '<td>' + record.assetType + '</td>';
-                        html += '<td>' + record.createdBy + '</td>';
+
+                        html += '<td>' + record.transDate + '</td>';
+                        html += '<td>' + record.documentCode + '</td>';
+                        html += '<td>' + record.status + '</td>';
+
                         html += "</tr>";
                     });
 
                     $("#tableItems").html(html);
+                    debugger;
                 },
                 error: function () {
                     alert("Server error. Please contact your adminisrator!");

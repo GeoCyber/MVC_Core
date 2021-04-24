@@ -1,0 +1,105 @@
+﻿@model FixedAssets.Models.Format
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Format</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DateFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TimeFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TimeFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FAMonthDepreciationFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FAMonthDepreciationFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FAWriteOffFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FAWriteOffFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FADisposalFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FADisposalFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FATransferFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FATransferFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FAProfileEditorFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FAProfileEditorFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FARelavueFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FARelavueFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FAAdjustmentFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FAAdjustmentFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FAReversalFormat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FAReversalFormat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Createdby)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Createdby)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedDatetime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreatedDatetime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedBy)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedBy)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedDatetime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedDatetime)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

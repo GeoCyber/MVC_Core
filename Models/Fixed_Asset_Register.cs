@@ -68,11 +68,11 @@ namespace FixedModules.Models
 		public string NetBookValue { get; set; }
 
 
-		[DisplayName("Utilize Life [Years/Months/Date]")]
+		[DisplayName("Utilize Life")]
 		
 		public string UtilizeLife { get; set; }
 
-		[DisplayName("Depreciation Percentage Per [Years/Months/Date]")]
+		[DisplayName("Depreciation Percentage Per")]
 		public string DepreciationpercentagePer { get; set; }
 
 		[DisplayName("Depreciation End Date")]
@@ -147,7 +147,9 @@ namespace FixedModules.Models
 		public List<SelectListItem> StaticList { get; set; }
 
 		[NotMapped]
-		public IFormFile AttachmentFile { get; set; }
+		public List<IFormFile> AttachmentFile { get; set; }
+		[NotMapped]
+		public List<FixedAssetRegisterAttachment> FixedAssetRegisterAttachment { get; set; }
 		[NotMapped]
 
 		public List<Fixed_Asset_Register> Fixed_Asset_Registers { get; set; }
@@ -194,6 +196,25 @@ namespace FixedModules.Models
 		public List<AnalysisCode> analysis_Codes { get; set; }
 
 
+		[NotMapped]
+
+		public string[] savepopupdata{ get; set; }
+		[NotMapped]
+
+		public string[] savepopupdata1 { get; set; }
+		[NotMapped]
+
+		public string[] savepopupdata2 { get; set; }
+		[NotMapped]
+
+		public string[] savepopupdata3 { get; set; }
+		[NotMapped]
+
+		public string[] savepopupdata4 { get; set; }
+		[NotMapped]
+
+		public string[] savepopupdata5 { get; set; }
+		
 
 	}
 }

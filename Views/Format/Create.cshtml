@@ -1,0 +1,98 @@
+﻿@model FixedAssets.Models.Format
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Format</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DateFormat" class="control-label"></label>
+                <input asp-for="DateFormat" class="form-control" />
+                <span asp-validation-for="DateFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeFormat" class="control-label"></label>
+                <input asp-for="TimeFormat" class="form-control" />
+                <span asp-validation-for="TimeFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FAMonthDepreciationFormat" class="control-label"></label>
+                <input asp-for="FAMonthDepreciationFormat" class="form-control" />
+                <span asp-validation-for="FAMonthDepreciationFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FAWriteOffFormat" class="control-label"></label>
+                <input asp-for="FAWriteOffFormat" class="form-control" />
+                <span asp-validation-for="FAWriteOffFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FADisposalFormat" class="control-label"></label>
+                <input asp-for="FADisposalFormat" class="form-control" />
+                <span asp-validation-for="FADisposalFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FATransferFormat" class="control-label"></label>
+                <input asp-for="FATransferFormat" class="form-control" />
+                <span asp-validation-for="FATransferFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FAProfileEditorFormat" class="control-label"></label>
+                <input asp-for="FAProfileEditorFormat" class="form-control" />
+                <span asp-validation-for="FAProfileEditorFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FARelavueFormat" class="control-label"></label>
+                <input asp-for="FARelavueFormat" class="form-control" />
+                <span asp-validation-for="FARelavueFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FAAdjustmentFormat" class="control-label"></label>
+                <input asp-for="FAAdjustmentFormat" class="form-control" />
+                <span asp-validation-for="FAAdjustmentFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FAReversalFormat" class="control-label"></label>
+                <input asp-for="FAReversalFormat" class="form-control" />
+                <span asp-validation-for="FAReversalFormat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Createdby" class="control-label"></label>
+                <input asp-for="Createdby" class="form-control" />
+                <span asp-validation-for="Createdby" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedDatetime" class="control-label"></label>
+                <input asp-for="CreatedDatetime" class="form-control" />
+                <span asp-validation-for="CreatedDatetime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedBy" class="control-label"></label>
+                <input asp-for="ModifiedBy" class="form-control" />
+                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedDatetime" class="control-label"></label>
+                <input asp-for="ModifiedDatetime" class="form-control" />
+                <span asp-validation-for="ModifiedDatetime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FixedModules.Models.FixedAssetMDepreciation>
+﻿@*@model IEnumerable<FixedModules.Models.FixedAssetMDepreciation>*@
+@model FixedModules.Models.FixedAssetMDepreciation
 @{ ViewData["Title"] = "Purchases Invoice";
     Layout = "~/Views/Shared/_Layout.cshtml"; }
 <style>
@@ -42,13 +43,17 @@
         margin-left: -30px;
         background: transparent;
     }
+
+    .select2-container {
+        width: 100% !important;
+    }
 </style>
 
 <div class="content-i">
     <div class="content-box">
         <div class="element-wrapper">
             <h6 class="element-header">
-                Fixed Asset Write Off
+                Fixed Asset Monthly Depreciation
             </h6>
             <div class="element-box" id="searchData" style="display: none; padding: 3px; margin: 5px">
                 <div class="row">
@@ -61,75 +66,86 @@
                             <div class="card-body">
 
                                 <div class="row" style=" max-width: 600px; margin: 0 auto;">
-                                    <div class="col-sm-12">
-                                        <div class="form-group row">
-                                            <label class="col-sm-12 control-label col-form-label">Code</label>
+                                    <div class="col-sm-12 row">
+
+                                        <div class="form-group col-md-6">
+                                            <label class="col-sm-12 control-label col-form-label">Transaction Start Date</label>
                                             <div class="col-sm-12">
-                                                <input autocomplete="off" class="form-control" id="searchCode" name="Code" type="text" value="">
+                                                <input class="form-control" id="startDate" name="PurchaseDate" type="date" value="" placeholder="Starting At">
+
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-12 control-label col-form-label">Name</label>
+                                        <div class="form-group col-md-6">
+                                            <label class="col-sm-12 control-label col-form-label">Transaction End Date</label>
                                             <div class="col-sm-12">
-                                                <input autocomplete="off" class="form-control" id="searchName" name="Name" type="text" value="">
+                                                <input class="form-control" id="endDate" name="PurchaseDate" type="date" value="" placeholder="Ending At">
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-12 control-label col-form-label">Transaction Date</label>
-                                            <div class="col-sm-12">
-                                                <input class="form-control" id="startDate" name="PurchaseDate" type="datetime" value="" placeholder="Starting At">
-                                                <div class="col-sm-12">
-                                                    <input class="form-control" id="endDate" name="PurchaseDate" type="datetime" value="" placeholder="Ending At">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
+
+                                        <div class="form-group col-md-6">
                                             <label class="col-sm-12 control-label col-form-label">Document Number</label>
                                             <div class="col-sm-12">
-                                                <select class="form-control" id="searchDoc" name="SelectedActiveId">
+                                                <select class="form-control" id="searchStatus" onchange="dynamicselector()" name="SelectedActiveId">
                                                     <option value="-1" selected>- No Filter -</option>
                                                     <option value="1">Multiple</option>
-                                                    <option value="0">Range</option>
+                                                    <option value="2">Range</option>
                                                 </select>
                                             </div>
-                                            @*<div class="col-sm-12 row">
-                                             
-                                                <select class="form-control" id="test" name="SelectedActiveId">
-                                                    <option value="-1" selected>- No Filter -</option>
+                                        </div>
+
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-12 control-label col-form-label">Active</label><div class="col-sm-12" data-select2-id="">
+                                                <select class="form-control" id="searchStatus1" name="SelectedActiveId">
+                                                    <option value="ALL" selected>- ALL -</option>
+                                                    <option value="Draft">Draft</option>
+                                                    <option value="Save">Save</option>
+                                                    <option value="Post">Post</option>
+                                                    <option value="ALL">Void</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12" id="multipleSelect">
+                                            <label class="col-sm-12 control-label col-form-label" for=""> Multiselect</label>
+                                            <div class="col-md-12">
+                                                <select class="form-control select2 " multiple="" data-select2-id="1" tabindex="-1" aria-hidden="true">
+
+                                                    @foreach (var item in Model._FixedAssetMDepreciations)
+                                                    {
+                                                        <option value="@item.Id">@item.DocumentCode</option>
+                                                    }
 
                                                 </select>
-                                                <select class="form-control" id="test1" name="SelectedActiveId">
-                                                    <option value="-1" selected>- No Filter -</option>
-                                                </select>
-                                                <label>To</label>
-                                                <select class="form-control" id="test2" name="SelectedActiveId">
-                                                    <option value="-1" selected>- No Filter -</option>
-                                                </select>
-                                            </div>*@
+
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                         
-                                                <label class="col-sm-12 control-label col-form-label">Active</label><div class="col-sm-12" data-select2-id="">
-                                                    <select class="form-control" id="searchStatus" name="SelectedActiveId">
-                                                        <option value="-1" selected>- ALL -</option>
-                                                        <option value="1">Draft</option>
-                                                        <option value="0">Save</option>
-                                                        <option value="2">Post</option>
-                                                        <option value="3">Void</option>
+                                        <div class="form-group col-sm-12" id="range">
+                                            <label class="col-sm-12 control-label col-form-label" for="">Range</label>
+                                            <div class="row" style="margin:0px !important;">
+                                                <div class="col-md-5">
+                                                    <select class="form-control range1">
+
+                                                        @foreach (var item in Model._FixedAssetMDepreciations)
+                                                        {
+                                                            <option value="@item.Id">@item.DocumentCode</option>
+                                                        }
                                                     </select>
                                                 </div>
+
+                                                <label class="col-sm-2" style="text-align:center">To</label>
+                                                <div class="col-md-5">
+                                                    <select class="form-control range2">
+
+                                                        @foreach (var item in Model._FixedAssetMDepreciations)
+                                                        {
+                                                            <option value="@item.Id">@item.DocumentCode</option>
+                                                        }
+                                                    </select>
                                                 </div>
-                                            
-
-                                            @*<div class="form-group row">
-                <label class="col-sm-12 control-label col-form-label">Purchase Date</label>
-                <div class="col-sm-12">
-                    <input class="form-control" id="PurchaseDate" name="PurchaseDate" type="datetime" value="">
-                </div>
-            </div>*@
+                                            </div>
                                         </div>
-
                                     </div>
+
+                                </div>
                             </div>
                             <div class="clearfix"></div>
                             <div class="btn-container text-center" style="padding-bottom: 10px;">
@@ -171,16 +187,17 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.Status)
                                 </th>
-                                <th>
+                                <th id="action">
                                     @Html.DisplayNameFor(model => model.CreatedBy)
                                 </th>
 
                             </tr>
                         </thead>
                         <tbody id="tableItems">
-                            @foreach (var item in Model)
+                            @foreach (var item in Model._FixedAssetMDepreciations)
                             {
-                                <tr id="@item.Id" editable="@item.Id">
+
+                                <tr id="@item.Id" editable="@item.CreationStatus">
                                     <th>
                                         @item.TransDate
                                     </th>
@@ -191,8 +208,44 @@
                                         @item.Status
                                     </th>
 
-                                    <th>
+                                    <th id="action">
                                         @item.CreatedBy
+                                    </th>
+
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <table id="zero_config2" class="table table-bordered table-lg table-v2 table-striped" style="display:none">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TransDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DocumentCode)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Status)
+                                </th>
+                               
+
+                            </tr>
+                        </thead>
+                        <tbody id="tableItems2">
+                            @foreach (var item in Model._FixedAssetMDepreciations)
+                            {
+
+                                <tr id="@item.Id" editable="@item.CreationStatus">
+                                    <th>
+                                        @item.TransDate
+                                    </th>
+                                    <th>
+                                        @item.DocumentCode
+                                    </th>
+                                    <th>
+                                        @item.Status
                                     </th>
 
 
@@ -281,6 +334,10 @@
         var tableD = $('#zero_config').DataTable();
 
         $(document).ready(function () {
+
+
+            $("#multipleSelect").hide();
+            $("#range").hide();
             $('#tableItems').on('click', 'tr', function () {
                 var row = tableD.row(this).node();
 
@@ -289,67 +346,91 @@
                 debugger;
 
                 if (iseditable == 3) alert("Data is Posted Cannot be Edited");
-                else window.location.href = "/Master_AllModule/Edit?CreditTermid=" + id;
-
-
+                else window.location.href = "/FixedAssetMDepreciation/Edit?id=" + id;
 
             });
         });
 
-          function HideTextBox(ddlId)
-        {
-        var ControlName = document.getElementById("searchDoc");
-             if(ControlName.options[ControlName.selectedIndex].value == "-1") 
-             {
-                 document.getElementById('test').style.display = 'none';
-                 document.getElementById('test1').style.display = 'none';
-                 document.getElementById('test2').style.display = 'none';
-             }
-              if(ControlName.value == "0") 
-             {
-                 document.getElementById('test').style.display = 'block';
-                 document.getElementById('test1').style.display = 'none';
-                 document.getElementById('test2').style.display = 'none';
-             }
-             else
-             {
-                  document.getElementById('test').style.display = 'none';
-                 document.getElementById('test1').style.display = 'block';
-                 document.getElementById('test2').style.display = 'block';
-               
-             }
+        function dynamicselector() {
+            debugger;
+            var data = $('#searchStatus').val();
+            if (data == 2) {
+
+                $("#multipleSelect").hide();
+                $("#range").show();
+
+            }
+            else if (data == 1) {
+
+                $("#multipleSelect").show();
+                $("#range").hide();
+
+            }
+            else {
+
+                $("#multipleSelect").hide();
+                $("#range").hide();
+
+            }
+
+
         }
 
-        function searchItem() {
 
-            let code = $('#searchData #searchCode').val();
-            let name = $('#searchData #searchName').val();
+
+
+
+        function searchItem() {
+          
+            $("#zero_config").hide();
+            $("#zero_config2").show();
+            let startdate = $('#searchData #startDate').val();
+            let enddate = $('#searchData #endDate').val();
+            let datq = $('#searchStatus').val();
+            if (datq == 1) {
+
+                var multiselect = $('#searchData .select2').val();
+            }
+           
+            if (datq==2) {
+
+                var Range1 = $('#searchData .range1').val();
+                var Range2 = $('#searchData .range2').val();
+            }
+           
+            let status = $('#searchData #searchStatus1').val();
+            
             var data = new FormData();
-            data.append("Code", code);
-            data.append("Name", name);
+            data.append("StartDat", startdate);
+            data.append("EndDat", enddate);
+            data.append("Multivalue", multiselect);
+            data.append("Rangevalue1", Range1);
+            data.append("Rangevalue2", Range2);
+            data.append("Stats", status);
+
+
             $.ajax({
-                url: "/Master_AllModule/SearchFixedAssetRegister",
+                url: "/FixedAssetMDepreciation/SearchFixedAssetMDepreciation",
                 type: 'POST',
                 data: data,
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    table.fnClearTable();
+                 
                     var html = "";
-
+                    $("#tableItems2").html("");
                     $.each(data, function (index, record) {
                         html += '<tr id=' + record.id + ' editable=' + record.creationStatus + '>';
-                        html += '<td>' + record.assetCode + '</td>';
-                        html += '<td>' + record.assetName + '</td>';
-                        html += '<td>' + record.purchaseDate + '</td>';
-                        html += '<td>' + record.assetCategory + '</td>';
-                        html += '<td>' + record.statusValue + '</td>';
-                        html += '<td>' + record.assetType + '</td>';
-                        html += '<td>' + record.createdBy + '</td>';
+
+                        html += '<td>' + record.transDate + '</td>';
+                        html += '<td>' + record.documentCode + '</td>';
+                        html += '<td>' + record.status + '</td>';
+
                         html += "</tr>";
                     });
 
-                    $("#tableItems").html(html);
+                    $("#tableItems2").html(html);
+                    debugger;
                 },
                 error: function () {
                     alert("Server error. Please contact your adminisrator!");
@@ -358,8 +439,10 @@
 
 
         }
-
         function toggleSearch() {
+
+            $("#zero_config").show();
+            $("#zero_config2").hide();
             var search = document.getElementById("searchData");
             var searchBtn = document.getElementById("searchButton");
             if (search.style.display === "none") {

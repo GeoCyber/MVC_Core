@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -91,10 +92,13 @@ namespace FixedModules.Models
         public int? AnalysisCodeIdFrom { get; set; }
         public int? AnalysisCodeIdTo { get; set; }
         public string CreatedBy { get; set; }
+        public string AnalysisName { get; set; }
         public DateTime CreatedDatetime { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDatetime { get; set; }
         public virtual ChartOfAccounts ChartOfAccount { get; set; }
+        [NotMapped]
+        public List <AnalysisCode> AnalysisCode { get; set; }
 
 
     }

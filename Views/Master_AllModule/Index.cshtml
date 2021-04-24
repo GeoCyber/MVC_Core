@@ -47,7 +47,7 @@
     <div class="content-box">
         <div class="element-wrapper">
             <h6 class="element-header">
-                Credit Term
+                Fixed Asset Register
             </h6>
             <div class="element-box" id="searchData" style="display: none; padding: 3px; margin: 5px">
                 <div class="row">
@@ -87,8 +87,8 @@
                                                     <option value="0" selected>- ALL -</option>
                                                     @foreach (var item in Model.asset_Category)
                                                     {
-                                                <option value="@item.Id">@item.Code-@item.Name</option>
-}
+                                                        <option value="@item.Id">@item.Code-@item.Name</option>
+                                                    }
 
                                                 </select>
                                             </div>
@@ -106,7 +106,7 @@
                                             <label class="col-sm-12 control-label col-form-label">AssetType<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
                                             <div class="col-sm-12">
                                                 <select class="form-control" id="assettype" asp-items="@Model.asset_type">
-                                                    <option value="0" selected>- ALL -</option>
+                                                    <option value="-1" selected>- ALL -</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -128,19 +128,22 @@
 
 
                     <input class="box btn-primary card-hover card-sm" style="border-radius:5px; cursor:pointer; margin-left:1%" type="button" value="Create" onclick="location.href='@Url.Action("Create", "Master_AllModule")'" />
-                    <button class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Exportmodal" data-toggle="modal"> Export</button>
-                    <button class="box btn-outline-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Importmodal" data-toggle="modal"> Import</button>
+                    <button class="box btn-outline-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%"> Listing</button>
                     <button id="searchButton" onclick="toggleSearch()" class="box search-filter btn-outline-primary" style="border-radius:5px; cursor:pointer; margin-left:1%">
                         <i class="mdi mdi-file-find"></i><span class="">Search</span>
                     </button>
+                    <button class="box btn-outline-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Importmodal" data-toggle="modal"> Import</button>
+                    <button class="box btn-secondary" style="border-radius:5px; cursor:pointer; margin-left:1%" data-target="#Exportmodal" data-toggle="modal"> Export</button>
+
+
                 </div>
                 <br>
 
                 <div class="table-responsive">
                     @if (ViewBag.error == "Code exists")
                     {
-        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
-    }
+                        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                    }
                     <table id="zero_config" class="table table-bordered table-lg table-v2 table-striped" style="width:100%">
                         <thead>
                             <tr>
@@ -165,7 +168,7 @@
                                 <th>
                                     CreatedBy
                                 </th>
-                                <th id="action">
+                                <th>
                                     Action
                                 </th>
                             </tr>
@@ -173,36 +176,93 @@
                         <tbody id="tableItems">
                             @foreach (var item in Model.Fixed_Asset_Registers)
                             {
-                <tr id="@item.Id" editable="@item.CreationStatus">
-                    <th>
-                        @item.AssetCode
-                    </th>
-                    <th>
-                        @item.AssetName
-                    </th>
-                    <th>
-                        @item.PurchaseDate
-                    </th>
-                    <th>
-                        @item.AssetCategory
-                    </th>
-                    <th>
-                        @item.StatusValue
-                    </th>
-                    <th>
-                        @item.AssetType
-                    </th>
-                    <th>
-                        @item.CreatedBy
-                    </th>
+                                <tr id="@item.Id" editable="@item.CreationStatus">
+                                    <th>
+                                        @item.AssetCode
+                                    </th>
+                                    <th>
+                                        @item.AssetName
+                                    </th>
+                                    <th>
+                                        @item.PurchaseDate.ToString("dd/MM/yyyy")
+                                    </th>
+                                    <th>
+                                        @item.AssetCategory
+                                    </th>
+                                    <th>
+                                        @item.StatusValue
+                                    </th>
+                                    <th>
+                                        @item.AssetType
+                                    </th>
+                                    <th>
+                                        @item.CreatedBy
+                                    </th>
 
 
-                    <th id="action">
-                        <a title="Delete" class="text-danger ml-2" href="@Url.Action("Delete","Master_AllModule",new {id=item.Id} )"><i class="fa fa-trash"></i></a>
-                    </th>
+                                    <th>
+                                        <a title="Delete" class="text-danger ml-2" href="@Url.Action("Delete","Master_AllModule",new {id=item.Id} )"><i class="fa fa-trash"></i></a>
+                                    </th>
 
-                </tr>
-}
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <table id="zero_config2" class="table table-bordered table-lg table-v2 table-striped" style="display:none">
+                        <thead>
+                            <tr>
+                                <th>
+                                    AssetCode
+                                </th>
+                                <th>
+                                    AssetName
+                                </th>
+                                <th>
+                                    PurchaseDate
+                                </th>
+                                <th>
+                                    AssetCategory
+                                </th>
+                                <th>
+                                    StatusValue
+                                </th>
+                                <th>
+                                    AssetType
+                                </th>
+                                <th>
+                                    CreatedBy
+                                </th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="tableItems2">
+                            @foreach (var item in Model.Fixed_Asset_Registers)
+                            {
+                                <tr id="@item.Id" editable="@item.CreationStatus">
+                                    <th>
+                                        @item.AssetCode
+                                    </th>
+                                    <th>
+                                        @item.AssetName
+                                    </th>
+                                    <th>
+                                        @item.PurchaseDate
+                                    </th>
+                                    <th>
+                                        @item.AssetCategory
+                                    </th>
+                                    <th>
+                                        @item.StatusValue
+                                    </th>
+                                    <th>
+                                        @item.AssetType
+                                    </th>
+                                    <th>
+                                        @item.CreatedBy
+                                    </th>
+
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -231,7 +291,7 @@
                         <div class="modal-footer">
                             @using (Html.BeginForm("Export", "Master_AllModule", FormMethod.Post))
                             {
-                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
+                                <button class="btn btn-secondary" data-dismiss="modal" type="button"> Close</button>
                                 <button class="btn btn-primary" type="submit" value="Export"> Export</button>}
                         </div>
                     </div>
@@ -294,35 +354,31 @@
                     var iseditable = $(this).attr("editable");
 
 
-                    if (iseditable == 3) alert("Data is Posted Cannot be Edited");
-                    else window.location.href = "/Master_AllModule/Edit?CreditTermid=" + id;
+                    if (iseditable == 3) $("#target input select").prop("disabled", true);
+                    window.location.href = "/Master_AllModule/Edit?CreditTermid=" + id;
                 } else {
 
                     var id = (tableD.row(this).node()).id;
                     var iseditable = $(row).attr("editable");
 
 
-                    if (iseditable == 3) alert("Data is Posted Cannot be Edited");
-                    else window.location.href = "/Master_AllModule/Edit?CreditTermid=" + id;
+                   
+                    if (iseditable == 3) $("#target input select").prop("disabled", true);
+                    window.location.href = "/Master_AllModule/Edit?CreditTermid=" + id;
                 }
-
-
-
-
             });
         });
 
-
-
-
         function searchItem() {
-            //$("#action1").hide();
-            $("#action").hide();
+         
+            $("#zero_config").hide();
+            $("#zero_config2").show();
+           
             let code = $('#searchData #searchCode').val();
             let name = $('#searchData #searchName').val();
             let date = $('#searchData #searchPurchaseDate').val();
             let category = $('#searchData #assetCategory').val();
-            let status = $('#searchData #status').val();
+            let cstatus = $('#searchData #status').val();
             let type = $('#searchData #assettype').val();
 
 
@@ -333,7 +389,7 @@
             data.append("Name", name);
             data.append("Date", date);
             data.append("Category", category);
-            data.append("Status", status);
+            data.append("CStatus", cstatus);
             data.append("Type", type);
 
 
@@ -345,9 +401,8 @@
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    table.fnClearTable();
                     var html = "";
-
+                    $("#tableItems2").html("");
                     $.each(data, function (index, record) {
                         html += '<tr id=' + record.id + ' editable=' + record.creationStatus + '>';
                         html += '<td>' + record.assetCode + '</td>';
@@ -359,8 +414,8 @@
                         html += '<td>' + record.createdBy + '</td>';
                         html += "</tr>";
                     });
-
-                    $("#tableItems").html(html);
+                   
+                    $("#tableItems2").html(html);
                 },
                 error: function () {
                     alert("Server error. Please contact your adminisrator!");
@@ -371,9 +426,10 @@
         }
 
         function toggleSearch() {
-            $("#action").show();
-            //$("#action1").show();
-           
+            $("#zero_config").show();
+            $("#zero_config2").hide();
+
+
             var search = document.getElementById("searchData");
             var searchBtn = document.getElementById("searchButton");
             if (search.style.display === "none") {

@@ -455,6 +455,7 @@
             START - Main Menu
             -------------------->
             <div class="menu-w color-scheme-dark color-style-bright menu-position-top menu-layout-compact sub-menu-style-over sub-menu-color-bright selected-menu-color-light menu-activated-on-hover menu-with-image menu-has-selected-link">
+
                 <div class="logo-w">
                     <a class="logo" href="#">
                         <div class="logo-element"></div>
@@ -462,21 +463,63 @@
                             Fixed Modules
                         </div>
                     </a>
-                </div>
-                <nav class="navbar navbar-expand-md">
-                    <div id="navbarCollapse" class="collapse navbar-collapse">
-                        <ul class="nav navbar-brand">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Company</a>
-                            <div class="dropdown-menu" asp-items="ViewBag.companies" id="companies">
-                               
+                    @*<nav class="navbar navbar-expand-md">
+                            <div id="navbarCollapse" class="collapse navbar-collapse">
+                                <ul class="nav navbar-brand">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Company</a>
+                                    <div class="dropdown-menu" asp-items="ViewBag.companies" id="companies">
+
+                                    </div>
+
+                                </ul>
+
                             </div>
+                        </nav>*@
+                    <br />
+                    @*<div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Company
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" asp-items="ViewBag.companies" id="companies">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </div>*@
+                    <ul class="main-menu">
+                        <li class=" has-sub-menu">
+                            <a href="#">
+                                @*<div class="icon-w">
+                                        <div class="os-icon os-icon-file-text"></div>
+                                    </div>*@
+                                <span>Company</span>
+                            </a>
+                            <div class="sub-menu-w">
+                                <div class="sub-menu-header">
+                                    Company
+                                </div>
+                                <div class="sub-menu-icon">
+                                    <i class="os-icon os-icon-file-text"></i>
+                                </div>
+                                <div class="sub-menu-i">
+                                    <ul class="sub-menu">
+                                        <li>
+                                            <a href="">Company 1</a>
+                                        </li>
+                                        @*<li>
+                                                <a href="">Company 2 <strong class="badge badge-danger">New</strong></a>
+                                            </li>*@
 
-                        </ul>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
 
-                    </div>
-                </nav>
+                </div>
+
                 @*@if (SignInManager.IsSignedIn(User))
-        {*@
+                    {*@
                 <div class="logged-user-w avatar-inline">
                     <div class="logged-user-i">
                         <div class="avatar-w">
@@ -526,14 +569,14 @@
                     </div>
                 </div>
 
-                <div class="menu-actions">
+                @*<div class="menu-actions">
 
 
-                </div>
+                    </div>*@
 
-                <h1 class="menu-page-header">
-                    Header
-                </h1>
+                @*<h1 class="menu-page-header">
+                        Header
+                    </h1>*@
                 <ul class="main-menu">
                     <li class="sub-header">
                         <span>Layouts</span>
@@ -553,56 +596,56 @@
                         </div>
                     </li>
 
-                    <li class="sub-header">
+                    @*<li class="sub-header">
                         <span>Options</span>
-                    </li>
+                    </li>*@
 
-                    <li class=" has-sub-menu">
-                        <a href="#">
-                            <div class="icon-w">
-                                <div class="os-icon os-icon-file-text"></div>
-                            </div>
-                            <span>Accounting</span>
-                        </a>
-                        <div class="sub-menu-w">
-                            <div class="sub-menu-header">
-                                Accounting
-                            </div>
-                            <div class="sub-menu-icon">
-                                <i class="os-icon os-icon-file-text"></i>
-                            </div>
-                            <div class="sub-menu-i">
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="">Accounting 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="">Accounting 2 <strong class="badge badge-danger">New</strong></a>
-                                    </li>
+                    @*<li class=" has-sub-menu">
+                            <a href="#">
+                                <div class="icon-w">
+                                    <div class="os-icon os-icon-file-text"></div>
+                                </div>
+                                <span>Accounting</span>
+                            </a>
+                            <div class="sub-menu-w">
+                                <div class="sub-menu-header">
+                                    Accounting
+                                </div>
+                                <div class="sub-menu-icon">
+                                    <i class="os-icon os-icon-file-text"></i>
+                                </div>
+                                <div class="sub-menu-i">
+                                    <ul class="sub-menu">
+                                        <li>
+                                            <a href="">Accounting 1</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Accounting 2 <strong class="badge badge-danger">New</strong></a>
+                                        </li>
 
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>*@
                     <li class=" has-sub-menu">
                         <a href="#">
                             <div class="icon-w">
                                 <div class="os-icon os-icon-life-buoy"></div>
                             </div>
-                            <span>Payable</span>
+                            <span>Module</span>
                         </a>
                         <div class="sub-menu-w">
                             <div class="sub-menu-header">
-                                Payable
+                                Module
                             </div>
                             <div class="sub-menu-icon">
                                 <i class="os-icon os-icon-life-buoy"></i>
                             </div>
                             <div class="sub-menu-i">
                                 <ul class="sub-menu">
-                                    <li>
+                                    @*<li>
                                         <a href="">Payable 1 <strong class="badge badge-danger">New</strong></a>
-                                    </li>
+                                    </li>*@
                                     <li>
                                         <a asp-action="Index" asp-controller="Master_AllModule">Fixed Assets Register</a>
                                     </li>
@@ -623,62 +666,36 @@
                             </div>
                         </div>
                     </li>
-                    <li class="sub-header">
+                    @*<li class="sub-header">
                         <span>Elements</span>
-                    </li>
-                    <li class=" has-sub-menu">
-                        <a href="#">
-                            <div class="icon-w">
-                                <div class="os-icon os-icon-mail"></div>
-                            </div>
-                            <span>Receivable</span>
-                        </a>
-                        <div class="sub-menu-w">
-                            <div class="sub-menu-header">
-                                Receivable
-                            </div>
-                            <div class="sub-menu-icon">
-                                <i class="os-icon os-icon-mail"></i>
-                            </div>
-                            <div class="sub-menu-i">
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="">Receivable 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="">Receivable 2</a>
-                                    </li>
+                    </li>*@
+                    @*<li class=" has-sub-menu">
+                            <a href="#">
+                                <div class="icon-w">
+                                    <div class="os-icon os-icon-mail"></div>
+                                </div>
+                                <span>Receivable</span>
+                            </a>
+                            <div class="sub-menu-w">
+                                <div class="sub-menu-header">
+                                    Receivable
+                                </div>
+                                <div class="sub-menu-icon">
+                                    <i class="os-icon os-icon-mail"></i>
+                                </div>
+                                <div class="sub-menu-i">
+                                    <ul class="sub-menu">
+                                        <li>
+                                            <a href="">Receivable 1</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Receivable 2</a>
+                                        </li>
 
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                    <li class=" has-sub-menu">
-                        <a href="#">
-                            <div class="icon-w">
-                                <div class="os-icon os-icon-users"></div>
-                            </div>
-                            <span>Reports</span>
-                        </a>
-                        <div class="sub-menu-w">
-                            <div class="sub-menu-header">
-                                Reports
-                            </div>
-                            <div class="sub-menu-icon">
-                                <i class="os-icon os-icon-users"></i>
-                            </div>
-                            <div class="sub-menu-i">
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="">Report 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="">Report 2</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
+                        </li>*@
                     <li class=" has-sub-menu">
                         <a href="#">
                             <div class="icon-w">
@@ -735,7 +752,32 @@
                             </div>
                         </div>
                     </li>
-
+                    <li class=" has-sub-menu">
+                        <a href="#">
+                            <div class="icon-w">
+                                <div class="os-icon os-icon-users"></div>
+                            </div>
+                            <span>Reports</span>
+                        </a>
+                        <div class="sub-menu-w">
+                            <div class="sub-menu-header">
+                                Reports
+                            </div>
+                            <div class="sub-menu-icon">
+                                <i class="os-icon os-icon-users"></i>
+                            </div>
+                            <div class="sub-menu-i">
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="">Report 1</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Report 2</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
                     <li class=" has-sub-menu">
                         <a href="#">
                             <div class="icon-w">
@@ -760,8 +802,8 @@
                                                 <a href="@Url.Action("Index","Companies")">Company</a>
                                             </li>
                                             @*<li>
-                                        <a href="@Url.Action("Index","Company")">Initial Data</a>
-                                    </li>*@
+                                                    <a href="@Url.Action("Index","Company")">Initial Data</a>
+                                                </li>*@
                                         </ul>
 
                                     </li>
@@ -779,6 +821,9 @@
                                     </li>
                                     <li>
                                         <a href="@Url.Action("Index","AuditTrail")">Audit Trail</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","Format")">Format</a>
                                     </li>
 
                                 </ul>
@@ -918,7 +963,7 @@
                                         <li>
                                             <a href="apps_email.html"><i class="os-icon os-icon-mail-01"></i><span>Change Password</span></a>
                                         </li>
-                                        
+
                                         <li>
                                             <a href="#"><i class="os-icon os-icon-signs-11"></i><span>Logout</span></a>
                                         </li>

@@ -18,5 +18,6 @@ namespace FixedModules.ViewModels
         public List<MasterAssetModel> asset_model  { get; set; }
         public List<MasterAssetBrand> asset_brand  { get; set; }
         public List<SelectListItem> asset_type { get; set; }
+        public List<FixedAssetMDepreciation> _documentnumber { get; set; }
     }
 }

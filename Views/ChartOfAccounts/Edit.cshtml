@@ -70,6 +70,10 @@
                     @if (Model.Id > 0)
                     {
                         <a id="pop-add-setting" data-target="#AddSettingModel" data-toggle="modal" class="btn btn-primary mdi mdi-plus-outline"> Add Rule</a>
+                        @if (ViewBag.error == "duplicate")
+                        {
+                            @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Duplicate Code.</div>");
+                        }
                         <div class="p-t-20 clearfix"></div>
                         <div id="chartofaccount-settings">
                             @{Html.ActionLink("GetSettings", "ChartOfAccounts", new { id = Model.Id });}

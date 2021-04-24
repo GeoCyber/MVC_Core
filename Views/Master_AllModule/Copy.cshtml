@@ -1,0 +1,142 @@
+﻿@model FixedModules.Models.Fixed_Asset_Register
+@{
+    ViewData["Title"] = "Copy";
+}
+
+<body>
+    <div class="content-i">
+        <div class="content-box">
+            <div class="element-wrapper">
+                <div class="element-box">
+                    @if (ViewBag.error == "Code exists")
+                    {
+                        @Html.Raw("<div class=\"alert alert-danger\" role=\"alert\">Code already exists!</div>");
+                    }
+                    <div class="card-body z-depth-1" id="editform">
+                        <a href="/Master_AllModule/Index" class="btn btn-primary" style="margin-left:95%">
+                            <span><span>Close</span></span>
+                        </a>
+                        <div class="CopyContainer">
+                            <!--Form-->
+                            <form asp-action="CreateFromCopy" method="post">
+
+                                <div class="row" id="divDb">
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetName)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                <input asp-for="AssetName" autocomplete="off" class="form-control" />
+                                                <span asp-validation-for="AssetName" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-12 control-label col-form-label">@Html.DisplayNameFor(a => a.AssetType)<span class="value-mandatory"> *<i class="mdi mdi-value"></i></span></label>
+                                            <div class="col-sm-12">
+                                                @Html.DropDownListFor(a =>a.asset_type, ViewBag.AssetType as SelectList, new { @class = "form-control"})
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        function deletebutton() {
+            location.reload();
+        }
+        function calculation() {
+            var unit = $("#TotalUnit").val();
+            var price = $("#UnitPrice").val();
+            var capitalizeamt = parseInt(unit * price);
+            $("#CapitalizeAmount").val(capitalizeamt);
+            $("#Adjustment_CapitalizeAmount").val(capitalizeamt);
+            var capitalizeAmot = $("#CapitalizeAmount").val();
+            var residualamt = $("#ResidualAmount").val();
+            $("#Adjustment_ResidualAmount").val(residualamt);
+            var netval = capitalizeAmot - residualamt;
+            $("#NetBookValue").val(netval);
+            var unitprice = capitalizeamt / unit;
+            $("#priceunit").val(unitprice);
+            var allocationvalue = netval / unit;
+            $("#AllocationValue").val(allocationvalue);
+            var assetcode = $("#AssetCode").val();
+            var assetsubcode = "";
+            for (var i = 1; i <= unit; i++) {
+                assetsubcode += assetcode + "-" + i + ",";
+            }
+            $("#AssetSubCode").val(assetsubcode);
+        }
+        function hidedata() {
+            $("#headerinfo").toggle();
+        }
+        function hidedata1() {
+            $("#purchaseinfo").toggle();
+        }
+        function hidedata2() {
+            $("#depreinfo").toggle();
+        }
+        function hidedata3() {
+            $("#depremethod").toggle();
+        }
+        function hidedata4() {
+            $("#accntinfo").toggle();
+        }
+        function hidedata5() {
+            $("#adjustmnt").toggle();
+        }
+        function hidedata6() {
+            $("#attachmnt").toggle();
+        }
+        function hidedata7() {
+            $("#assetanalysis").toggle();
+        }
+        function ChooseNondepreciation(e) {
+            debugger;
+            var asserttype = $("#AssetType").val();
+            if (asserttype == '0') {
+                $("#depreInfo").hide();
+                $("#accountInfo").hide();
+            }
+            else {
+                $("#depreInfo").show();
+                $("#accountInfo").show();
+            }
+        }
+        $("#mydate").datepicker().datepicker("setDate", new Date());
+        $("#startDate").datepicker().datepicker("setDate", new Date());
+        $("#endDate").datepicker().datepicker("setDate", new Date());
+        function Submit(id) {
+            debugger;
+            $("#CreationStatus").val(id);
+            if (id == 1) $('input[type=text]').removeAttr('required');
+        }
+        $("input[type=text]").on("keypress", function (e) {
+            if (e.which === 32 && !this.value.length)
+                e.preventDefault();
+        });
+        $('.text-danger').on('DOMSubtreeModified', function () {
+            var span_Text = document.getElementById("Code-error").innerText;
+            if (span_Text == "Code Already Exist!") {
+                $("#submit").attr("disabled", true)
+                $("#submit").removeClass("btn btn-primary btn-fix-width");
+                $("#submit").addClass("btn btn-secondary btn-fix-width");
+            } else {
+                $("#submit").attr("disabled", false)
+                $("#submit").removeClass("btn btn-secondary btn-fix-width");
+                $("#submit").addClass("btn btn-primary btn-fix-width");
+            }
+        })
+    </script>
+}

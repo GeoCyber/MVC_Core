@@ -6,7 +6,8 @@ namespace FixedAssets.Models
     {
         [Key]
 
-        public int FuckKey { get; set; }
+        public int AllmoduleKey { get; set; }
+        public int Fixed_Asset_RegisterId { get; set; }
         public string asssubcode { get; set; }
         public string registrationno { get; set; }
         public string serialno { get; set; }
