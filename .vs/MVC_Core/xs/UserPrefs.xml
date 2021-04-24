@@ -1,16 +1,25 @@
 ﻿<Properties GitUserInfo="UsingGIT" StartupConfiguration="{4C1AF3FC-3D5F-4D2E-9393-12F9C23BE020}|FixedModules">
   <MonoDevelop.Ide.ItemProperties.MVC__Core PreferredExecutionTarget="/Applications/Firefox Developer Edition.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="appsettings.json">
+  <MonoDevelop.Ide.Workbench>
     <Files>
-      <File FileName="appsettings.json" Line="1" Column="1" />
+      <File FileName="Controllers/FixedAssetProfileEditorController.cs" Line="18" Column="10" />
+      <File FileName="Data/MyDbContext.cs" Line="108" Column="49" />
+      <File FileName="Views/Master_AllModule/Index.cshtml" Line="447" Column="1" />
+      <File FileName="Views/FixedAssetProfileEditor/Index.cshtml" Line="236" Column="34" />
+      <File FileName="Program.cs" Line="16" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="MVC_Core" expanded="True">
-            <Node name="MVC_Core" expanded="True">
+            <Node name="MVC_Core" expanded="True" selected="True">
               <Node name="Dependencies" expanded="True" />
-              <Node name="appsettings.json" selected="True" />
+              <Node name="Controllers" expanded="True" />
+              <Node name="Data" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="FixedAssetProfileEditor" expanded="True" />
+                <Node name="Master_AllModule" expanded="True" />
+              </Node>
             </Node>
           </Node>
         </State>

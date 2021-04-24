@@ -128,6 +128,8 @@ namespace FixedAssets.Models
 		[DisplayName("Allocation Value")]
 		public string AllocationValue { get; set; }
 
+
+		[NotMapped]
 		public bool Status { get; set; }
 
 		[NotMapped]
