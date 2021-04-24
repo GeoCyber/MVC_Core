@@ -111,12 +111,12 @@ namespace FixedModules.Controllers
 
                     if (myselect != null)
                     {
-                        check.Daily_UL = true;
+                        check.Monthy_UL = true;
                         check.Value = myselect;
                     }
                     else if (myselect2 != null)
                     {
-                        check.Monthy_UL = true;
+                        check.Daily_UL = true;
                         check.Value = myselect2;
                     }
                     else if (myselect3 != null)
@@ -134,12 +134,12 @@ namespace FixedModules.Controllers
                     setup.CreatedDatetime = DateTime.Now.Date.ToUniversalTime();
                     if (myselect != null)
                     {
-                        setup.Daily_UL = true;
+                        setup.Monthy_UL = true;
                         setup.Value = myselect;
                     }
                     else if (myselect2 != null)
                     {
-                        setup.Monthy_UL = true;
+                        setup.Daily_UL = true;
                         setup.Value = myselect2;
                     }
                     else if (myselect3 != null)

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace FixedModules.Controllers
 {
@@ -25,11 +27,13 @@ namespace FixedModules.Controllers
         private readonly MyDbContext _context;
         private readonly IWebHostEnvironment _env;
         private readonly IImportService _import;
-        public Master_AllModuleController(MyDbContext context, IWebHostEnvironment env, IImportService import)
+        public IConfiguration Configuration { get; }
+        public Master_AllModuleController(MyDbContext context, IWebHostEnvironment env, IConfiguration _Configuration, IImportService import)
         {
             _context = context;
             _env = env;
             _import = import;
+            Configuration = _Configuration;
         }
 
 
@@ -106,28 +110,6 @@ namespace FixedModules.Controllers
             data.asset_location_master = _context.MasterAssetLocation.Where(a => a.Status == true).ToList();
             data.analysis_Codes = _context.AnalysisCode.Where(a => a.Status == true).ToList();
 
-            //data.code_format = _context.MasterAssetCategory.Select(x => x.CodeFormat).ToList();
-
-            //data.utilize_life = _context.Setup.Select(x => x.Value).ToList();
-
-            //data.code_format = _context.MasterAssetCategory.ToList();
-            //var data4 = data.code_format.Select(x => x.CodeFormat);
-
-
-            //data.asset_Category = _context.MasterAssetCategory.ToList();
-            //data.asset_model = _context.MasterAssetModel.ToList();
-            //data.asset_brand = _context.MasterAssetBrand.ToList();
-            //data.supplier = _context.Supplier.ToList();
-
-            //data.fixed_asset_account = _context.ChartOfAccounts.ToList();
-            //data.pl_description_account = _context.ChartOfAccounts.ToList();
-            //data.bs_description_account = _context.ChartOfAccounts.ToList();
-            //data.disposal_gain_account = _context.ChartOfAccounts.ToList();
-            //data.disposal_loss_account = _context.ChartOfAccounts.ToList();
-            //data.write_off_account = _context.ChartOfAccounts.ToList();
-            //data.department_master = _context.MasterDepartment.ToList();
-            //data.asset_location_master = _context.MasterAssetLocation.ToList();
-
             data.asset_type = assettypelist;
             var dateAndTime = DateTime.Now;
             data.DepreciationStartDate = dateAndTime.Date;
@@ -139,24 +121,14 @@ namespace FixedModules.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Fixed_Asset_Register model)
+        public IActionResult Create(Fixed_Asset_Register model, string chartofaccount)
         {
 
             try
             {
 
                 model.MultiFormData = JsonConvert.DeserializeObject<List<AllModuleFormSub>>(model.MultiValuesForm);
-                //Save Attachment
-                if (model.AttachmentFile != null)
-                {
-                    var pathandname = Path.Combine("Fixed_AssetAttachments", Guid.NewGuid().ToString() + model.AttachmentFile.FileName);
-                    var path = Path.Combine(_env.WebRootPath, pathandname);
-                    using (var stream = new FileStream(path, FileMode.CreateNew))
-                    {
-                        model.AttachmentFile.CopyTo(stream);
-                    }
-                    model.AttchmentPath = "/" + pathandname;
-                }
+                
 
                 model.CreatedBy = GetUserId(User);
                 model.CreationTimeStamp = DateTime.Now;
@@ -165,7 +137,7 @@ namespace FixedModules.Controllers
                 {
                     var Assetcategorydetails = _context.MasterAssetCategory.FirstOrDefault(x => x.Id == model.AssetCategory);
                     model.AssetCode = Assetcategorydetails.CodeFormat;
-                    
+
                 }
                 if (model.Id == 0) _context.FixedAssetRegisters.Add(model);
                 else _context.FixedAssetRegisters.Update(model);
@@ -180,7 +152,117 @@ namespace FixedModules.Controllers
                 {
                     model.DepreciationStartDate = model.DepreciationStartDate;
                 }
+
+                if (model.savepopupdata[0] != null)
+                {
+                    string newstring = String.Join(", ", model.savepopupdata.Select(s => s.ToString()).ToArray());
+                    string[] name = newstring.Split(",");
+                    var data = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.FixedAssetAccountID).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Name).FirstOrDefault();
+                        data[i].AnalysisName = code;
+
+                        _context.ChartOfAccountAnalysisSetting.Update(data[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                if (model.savepopupdata1[0] != null)
+                {
+                    string newstring1 = String.Join(", ", model.savepopupdata1.Select(s => s.ToString()).ToArray());
+                    string[] name1 = newstring1.Split(",");
+                    var data1 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.PL_DepreciationAccount).ToList();
+                    for (int i = 0; i < data1.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name1[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name1[i]).Select(y => y.Name).FirstOrDefault();
+                        data1[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data1[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                if (model.savepopupdata2[0] != null)
+                {
+                    string newstring2 = String.Join(", ", model.savepopupdata2.Select(s => s.ToString()).ToArray());
+                    string[] name2 = newstring2.Split(",");
+                    var data2 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.PS_DepreciationAccount).ToList();
+                    for (int i = 0; i < data2.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name2[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name2[i]).Select(y => y.Name).FirstOrDefault();
+                        data2[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data2[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                if (model.savepopupdata3[0] != null)
+                {
+                    string newstring3 = String.Join(", ", model.savepopupdata3.Select(s => s.ToString()).ToArray());
+                    string[] name3 = newstring3.Split(",");
+                    var data3 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.DisposalGainAccount).ToList();
+                    for (int i = 0; i < data3.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name3[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name3[i]).Select(y => y.Name).FirstOrDefault();
+                        data3[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data3[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                if (model.savepopupdata4[0] != null)
+                {
+
+                    string newstring4 = String.Join(", ", model.savepopupdata4.Select(s => s.ToString()).ToArray());
+                    string[] name4 = newstring4.Split(",");
+                    var data4 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.DisposalLossAccount).ToList();
+                    for (int i = 0; i < data4.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name4[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name4[i]).Select(y => y.Name).FirstOrDefault();
+                        data4[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data4[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                if (model.savepopupdata5[0] != null)
+                {
+                    string newstring5 = String.Join(", ", model.savepopupdata5.Select(s => s.ToString()).ToArray());
+                    string[] name5 = newstring5.Split(",");
+                    var data5 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.writeOfAccount).ToList();
+                    for (int i = 0; i < data5.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name5[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name5[i]).Select(y => y.Name).FirstOrDefault();
+                        data5[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data5[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                //Save Attachment
+                if (model.AttachmentFile != null)
+                {
+                    FixedAssetRegisterAttachment fixedAssetRegisterAttachment = new FixedAssetRegisterAttachment();
+
+                    foreach (var item in model.AttachmentFile)
+                    {
+                        var pathandname = Path.Combine("Fixed_AssetAttachments", Guid.NewGuid().ToString() + item.FileName);
+                        var path = Path.Combine(_env.WebRootPath, pathandname);
+                        using (var stream = new FileStream(path, FileMode.CreateNew))
+                        {
+                            item.CopyTo(stream);
+                        }
+                        fixedAssetRegisterAttachment.AttachmentPath = "/" + pathandname;
+                        fixedAssetRegisterAttachment.CreatedBy = model.CreatedBy;
+                        fixedAssetRegisterAttachment.CreatedDatetime = DateTime.UtcNow;
+                        fixedAssetRegisterAttachment.FixedAssetRegisterId = model.Id;
+                        _context.FixedAssetRegisterAttachment.Add(fixedAssetRegisterAttachment);
+                    }
+                }
+
                 _context.SaveChanges();
+
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception)
@@ -208,10 +290,10 @@ namespace FixedModules.Controllers
         {
             var data3 = Convert.ToDateTime(startdte);
             var data1 = Convert.ToDateTime(enddate);
-            var data = (data1 - data3).TotalDays;
+            var dataa = (data1 - data3).TotalDays;
 
 
-            return Json(data);
+            return Json(dataa);
 
         }
 
@@ -339,11 +421,11 @@ namespace FixedModules.Controllers
 
 
         [HttpPost]
-        public JsonResult DynamicRowCreationEdit(int FixedRegisterid,int rowcount, string asssubcode, string registrationno, string serial, string depart, string loc, string unit, string allocation)
+        public JsonResult DynamicRowCreationEdit(int FixedRegisterid, int rowcount, string asssubcode, string registrationno, string serial, string depart, string loc, string unit, string allocation)
         {
 
 
-            var data = _context.FixedAssetRegisters.Include(a => a.MultiFormData).SingleOrDefault(a=>a.Id==FixedRegisterid).MultiFormData.ToList();
+            var data = _context.FixedAssetRegisters.Include(a => a.MultiFormData).SingleOrDefault(a => a.Id == FixedRegisterid).MultiFormData.ToList();
 
 
             StringBuilder html = new StringBuilder();
@@ -405,7 +487,8 @@ namespace FixedModules.Controllers
                     html.Append($"<div class=\"col-sm-12 pd_0\"> <input name=\"RegistrationNumber{i}\" value=\"{row.registrationno}\" id=\"RegistrationNumber{i}\" autocomplete=\"off\" class=\"form-control\" /> <span asp-validation-for=\"RegistrationNumber\" class=\"text-danger\"></span></div>");
                     html.Append("</td>");
                 }
-                else {
+                else
+                {
                     html.Append("<td>");
                     html.Append($"<div class=\"col-sm-12 pd_0\"> <input name=\"RegistrationNumber{i}\" id=\"RegistrationNumber{i}\" autocomplete=\"off\" class=\"form-control\" /> <span asp-validation-for=\"RegistrationNumber\" class=\"text-danger\"></span></div>");
                     html.Append("</td>");
@@ -434,7 +517,7 @@ namespace FixedModules.Controllers
                 }
 
 
-                
+
                 #endregion
 
                 #region TD4
@@ -497,12 +580,104 @@ namespace FixedModules.Controllers
 
         }
 
+        [HttpPost]
+        public JsonResult ShowAnalysisPopup(int Fixedassetid, int disposallossid, int Psaccountid, int Disposalgainid, int Disposalossid, int Writeoffid)
+        {
+            List<ChartOfAccountAnalysisSetting> chartOfAccountAnalysisSettings = new List<ChartOfAccountAnalysisSetting>();
+            List<ChartOfAccountAnalysisSetting> chartOfAccountAnalysisSettings1 = new List<ChartOfAccountAnalysisSetting>();
+            List<ChartOfAccountAnalysisSetting> chartOfAccountAnalysisSettings2 = new List<ChartOfAccountAnalysisSetting>();
+            List<ChartOfAccountAnalysisSetting> chartOfAccountAnalysisSettings3 = new List<ChartOfAccountAnalysisSetting>();
+            List<ChartOfAccountAnalysisSetting> chartOfAccountAnalysisSettings4 = new List<ChartOfAccountAnalysisSetting>();
+            List<ChartOfAccountAnalysisSetting> chartOfAccountAnalysisSettings5 = new List<ChartOfAccountAnalysisSetting>();
+            List<AnalysisCode> analysisCodes = new List<AnalysisCode>();
+            List<AnalysisCode> analysisCodes1 = new List<AnalysisCode>();
+            List<AnalysisCode> analysisCodes2 = new List<AnalysisCode>();
+            List<AnalysisCode> analysisCodes3 = new List<AnalysisCode>();
+            List<AnalysisCode> analysisCodes4 = new List<AnalysisCode>();
+            List<AnalysisCode> analysisCodes5 = new List<AnalysisCode>();
+
+            try
+            {
+                var data = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == Fixedassetid).ToList();
+                foreach (var COAitems in data)
+                {
+                    chartOfAccountAnalysisSettings.Add(COAitems);
+                    foreach (var ACitem in _context.AnalysisCode.Where(x => x.AnalysisNumber == COAitems.AnalysisNumber && x.Status == true))
+                    {
+                        analysisCodes.Add(ACitem);
+                        COAitems.AnalysisCode = analysisCodes;
+                    }
+                }
+                var data2 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == disposallossid).ToList();
+                foreach (var COAitems in data)
+                {
+                    chartOfAccountAnalysisSettings1.Add(COAitems);
+                    foreach (var ACitem in _context.AnalysisCode.Where(x => x.AnalysisNumber == COAitems.AnalysisNumber && x.Status == true))
+                    {
+                        analysisCodes1.Add(ACitem);
+                        COAitems.AnalysisCode = analysisCodes1;
+                    }
+                }
+                var data3 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == Psaccountid).ToList();
+                foreach (var COAitems in data)
+                {
+                    chartOfAccountAnalysisSettings2.Add(COAitems);
+                    foreach (var ACitem in _context.AnalysisCode.Where(x => x.AnalysisNumber == COAitems.AnalysisNumber && x.Status == true))
+                    {
+                        analysisCodes2.Add(ACitem);
+                        COAitems.AnalysisCode = analysisCodes2;
+                    }
+                }
+                var data4 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == Disposalgainid).ToList();
+                foreach (var COAitems in data)
+                {
+                    chartOfAccountAnalysisSettings3.Add(COAitems);
+                    foreach (var ACitem in _context.AnalysisCode.Where(x => x.AnalysisNumber == COAitems.AnalysisNumber && x.Status == true))
+                    {
+                        analysisCodes3.Add(ACitem);
+                        COAitems.AnalysisCode = analysisCodes3;
+                    }
+                }
+                var data5 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == Disposalossid).ToList();
+                foreach (var COAitems in data)
+                {
+                    chartOfAccountAnalysisSettings4.Add(COAitems);
+                    foreach (var ACitem in _context.AnalysisCode.Where(x => x.AnalysisNumber == COAitems.AnalysisNumber && x.Status == true))
+                    {
+                        analysisCodes4.Add(ACitem);
+                        COAitems.AnalysisCode = analysisCodes4;
+                    }
+                }
+                var data6 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == Writeoffid).ToList();
+                foreach (var COAitems in data)
+                {
+                    chartOfAccountAnalysisSettings5.Add(COAitems);
+                    foreach (var ACitem in _context.AnalysisCode.Where(x => x.AnalysisNumber == COAitems.AnalysisNumber && x.Status == true))
+                    {
+                        analysisCodes5.Add(ACitem);
+                        COAitems.AnalysisCode = analysisCodes5;
+                    }
+                }
+
+
+
+
+                return Json(new { data = data.Select(x => x.AnalysisNumber).ToList(), accouninfo = data2.Select(x => x.AnalysisNumber).ToList(), psaccount = data3.Select(x => x.AnalysisNumber).ToList(), disposalgain = data4.Select(x => x.AnalysisNumber).ToList(), disposalloss = data5.Select(x => x.AnalysisNumber).ToList(), writeoff = data6.Select(x => x.AnalysisNumber).ToList(), popupvalues =  chartOfAccountAnalysisSettings, popupvalues1 = chartOfAccountAnalysisSettings1, popupvalues2 = chartOfAccountAnalysisSettings2, popupvalues3 = chartOfAccountAnalysisSettings3, popupvalues4 = chartOfAccountAnalysisSettings4, popupvalues5 = chartOfAccountAnalysisSettings5 });
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
 
         public IActionResult Edit(int CreditTermid)
         {
             try
             {
-                var data = _context.FixedAssetRegisters.Include(a=>a.MultiFormData).FirstOrDefault(a => a.Id == CreditTermid);
+
+                var data = _context.FixedAssetRegisters.Include(a => a.MultiFormData).FirstOrDefault(a => a.Id == CreditTermid);
                 var assettypelist = new List<SelectListItem>
 
                 {
@@ -529,6 +704,9 @@ namespace FixedModules.Controllers
                 data.department_master = _context.MasterDepartment.Where(a => a.Status == true).ToList();
                 data.asset_location_master = _context.MasterAssetLocation.Where(a => a.Status == true).ToList();
 
+
+
+
                 return View(data);
             }
             catch (Exception)
@@ -539,7 +717,94 @@ namespace FixedModules.Controllers
 
         }
 
+        [HttpGet]
+        public JsonResult GetSelected(string Mode, int id)
+        {
 
+            try
+            {
+                var data = _context.FixedAssetRegisters.FirstOrDefault(a=>a.Id==id);
+                string selected = "";
+                switch (Mode)
+                {
+                    case "FixedAssetAccountID":
+                        if (data.FixedAssetAccountID!=0)
+                        {
+                            selected = _context.ChartOfAccountAnalysisSetting.FirstOrDefault(x => x.ChartOfAccountId == data.FixedAssetAccountID).AnalysisName;
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                      
+                    case "PL_DepreciationAccount":
+                        if (data.PL_DepreciationAccount!=0)
+                        {
+                            selected = _context.ChartOfAccountAnalysisSetting.FirstOrDefault(x => x.ChartOfAccountId == data.PL_DepreciationAccount).AnalysisName;
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    case "PS_DepreciationAccount":
+                        if (data.PS_DepreciationAccount!=0)
+                        {
+                            selected = _context.ChartOfAccountAnalysisSetting.FirstOrDefault(x => x.ChartOfAccountId == data.PS_DepreciationAccount).AnalysisName;
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                       
+                    case "DisposalGainAccount":
+                        if (data.DisposalGainAccount!=0)
+                        {
+                            selected = _context.ChartOfAccountAnalysisSetting.FirstOrDefault(x => x.ChartOfAccountId == data.DisposalGainAccount).AnalysisName;
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                       
+                    case "DisposalLossAccount":
+                        if (data.DisposalLossAccount!=0)
+                        {
+                            selected = _context.ChartOfAccountAnalysisSetting.FirstOrDefault(x => x.ChartOfAccountId == data.DisposalLossAccount).AnalysisName;
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                     
+                    case "writeOfAccount":
+                        if (data.writeOfAccount!=0)
+                        {
+                            selected = _context.ChartOfAccountAnalysisSetting.FirstOrDefault(x => x.ChartOfAccountId == data.writeOfAccount).AnalysisName;
+                            break;
+
+                        }
+                       else
+                        {
+                            break;
+                        }
+                    default:
+                        selected = "";
+                        break;
+                }
+                return Json(selected);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
 
         [HttpPost]
         public IActionResult Edit(Fixed_Asset_Register model)
@@ -547,57 +812,179 @@ namespace FixedModules.Controllers
 
             try
             {
+
+
+
                 var data = _context.FixedAssetRegisters.Include(a => a.MultiFormData).FirstOrDefault(a => a.Id == model.Id);
                 _context.RemoveRange(data.MultiFormData);
                 _context.SaveChanges();
 
+
+
+                data.AssetCode = model.AssetCode;
+                data.AssetName = model.AssetName;
+                data.AssetType = model.AssetType;
+
+
+                data.AssetCategory = model.AssetCategory;
+                data.AssetModel = model.AssetModel;
+                data.Remarks = model.Remarks;
+                data.SupplierID = model.SupplierID;
+                data.PurchaseDate = model.PurchaseDate;
+                data.InvoiceNumber = model.InvoiceNumber;
+                data.TotalUnit = model.TotalUnit;
+                data.UnitPrice = model.UnitPrice;
+                data.CapitalizeAmount = model.CapitalizeAmount;
+                data.DepreciationStartDate = model.DepreciationStartDate;
+                data.ResidualAmount = model.ResidualAmount;
+                data.NetBookValue = model.NetBookValue;
+                data.UtilizeLife = model.UtilizeLife;
+                data.DepreciationpercentagePer = model.DepreciationpercentagePer;
+                data.DepreciationEndDate = model.DepreciationEndDate;
+                data.FixedAssetAccountID = model.FixedAssetAccountID;
+                data.PL_DepreciationAccount = model.PL_DepreciationAccount;
+                data.PS_DepreciationAccount = model.PS_DepreciationAccount;
+                data.DisposalGainAccount = model.DisposalGainAccount;
+                data.DisposalLossAccount = model.DisposalLossAccount;
+                data.writeOfAccount = model.writeOfAccount;
+                data.Adjustment_CapitalizeAmount = model.Adjustment_CapitalizeAmount;
+                data.Adjustment_ResidualAmount = model.Adjustment_ResidualAmount;
+                data.Adjustment_UtilizeLifeInMonths = model.Adjustment_UtilizeLifeInMonths;
+                data.Attachment = model.Attachment;
+                data.AssetSubCode = model.AssetSubCode;
+                data.RegistrationNumber = model.RegistrationNumber;
+                data.SerialNumber = model.SerialNumber;
+                data.Department = model.Department;
+                data.Location = model.Location;
+                data.Asset_UnitPrice = model.Asset_UnitPrice;
+                data.AllocationValue = model.AllocationValue;
+                data.Status = model.Status;
+                data.FixedAssetRegisterAttachment = _context.FixedAssetRegisterAttachment.Where(x => x.FixedAssetRegisterId == data.Id).ToList();
+                data.AttchmentPath = model.AttchmentPath;
+                data.CreationStatus = model.CreationStatus;
+
                 //Update Attachment
-                model.MultiFormData = JsonConvert.DeserializeObject<List<AllModuleFormSub>>(model.MultiValuesForm);
                 if (model.AttachmentFile != null)
                 {
-                    var pathandname = Path.Combine("Fixed_AssetAttachments", Guid.NewGuid().ToString() + model.AttachmentFile.FileName);
-                    var path = Path.Combine(_env.WebRootPath, pathandname);
-                    using (var stream = new FileStream(path, FileMode.CreateNew))
+                    FixedAssetRegisterAttachment fixedAssetRegisterAttachment = new FixedAssetRegisterAttachment();
+
+                    foreach (var item in model.AttachmentFile)
                     {
-                        model.AttachmentFile.CopyTo(stream);
+                        var pathandname = Path.Combine("Fixed_AssetAttachments", Guid.NewGuid().ToString() + item.FileName);
+                        var path = Path.Combine(_env.WebRootPath, pathandname);
+                        using (var stream = new FileStream(path, FileMode.CreateNew))
+                        {
+                            item.CopyTo(stream);
+                        }
+                        fixedAssetRegisterAttachment.AttachmentPath = "/" + pathandname;
+                        fixedAssetRegisterAttachment.CreatedBy = model.CreatedBy;
+                        fixedAssetRegisterAttachment.CreatedDatetime = DateTime.UtcNow;
+                        fixedAssetRegisterAttachment.FixedAssetRegisterId = model.Id;
+                        _context.FixedAssetRegisterAttachment.Add(fixedAssetRegisterAttachment);
                     }
-                    model.AttchmentPath = "/" + pathandname;
                 }
-
-
-
-                model.ModifiedBy = GetUserId(User);
-                model.ModificationTimeStamp = DateTime.Now;
-
-                if (model.CreationStatus == 1) model.AssetCode = "";
+                data.ModifiedBy = GetUserId(User);
+                data.ModificationTimeStamp = DateTime.Now;
+                if (data.CreationStatus == 1) data.AssetCode = "";
                 else
                 {
-                    var Assetcategorydetails = _context.MasterAssetCategory.FirstOrDefault(x => x.Id == model.AssetCategory);
-                    model.AssetCode = Assetcategorydetails.CodeFormat;
+                    var Assetcategorydetails = _context.MasterAssetCategory.FirstOrDefault(x => x.Id == data.AssetCategory);
+                    data.AssetCode = Assetcategorydetails.CodeFormat;
                 }
+                data.MultiFormData = model.MultiFormData;
 
-                //model._FixedAssetList = _context.FixedAssetRegisters.ToList();
-                //_context.FixedAssetRegisters.Update(model);
-                //_context.SaveChanges();
-
-
-                var local = _context.Set<Fixed_Asset_Register>().Local.FirstOrDefault(entry => entry.Id.Equals(model.Id));
-
-                // check if local is not null 
-                if (local != null)
+                if (model.savepopupdata[0] != null)
                 {
-                    // detach
-                    _context.Entry(local).State = EntityState.Detached;
+                    string newstring = String.Join(", ", model.savepopupdata.Select(s => s.ToString()).ToArray());
+                    string[] name = newstring.Split(",");
+                    var dataa = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.FixedAssetAccountID).ToList();
+                    for (int i = 0; i < dataa.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Name).FirstOrDefault();
+                        dataa[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(dataa[i]);
+                        _context.SaveChanges();
+                    }
                 }
-                // set Modified flag in your entrysss
-                _context.Entry(model).State = EntityState.Modified;
-                _context.FixedAssetRegisters.Update(model);
-                // save 
-                _context.SaveChanges();
+                if (model.savepopupdata1[0] != null)
+                {
+                    string newstring1 = String.Join(", ", model.savepopupdata1.Select(s => s.ToString()).ToArray());
+                    string[] name1 = newstring1.Split(",");
+                    var data1 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.PL_DepreciationAccount).ToList();
+                    for (int i = 0; i < data1.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name1[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name1[i]).Select(y => y.Name).FirstOrDefault();
+                        data1[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data1[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                if (model.savepopupdata2[0] != null)
+                {
+                    string newstring2 = String.Join(", ", model.savepopupdata2.Select(s => s.ToString()).ToArray());
+                    string[] name2 = newstring2.Split(",");
+                    var data2 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.PS_DepreciationAccount).ToList();
+                    for (int i = 0; i < data2.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name2[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name2[i]).Select(y => y.Name).FirstOrDefault();
+                        data2[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data2[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                if (model.savepopupdata3[0] != null)
+                {
 
+                    string newstring3 = String.Join(", ", model.savepopupdata3.Select(s => s.ToString()).ToArray());
+                    string[] name3 = newstring3.Split(",");
+                    var data3 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.DisposalGainAccount).ToList();
+                    for (int i = 0; i < data3.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name3[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name3[i]).Select(y => y.Name).FirstOrDefault();
+                        data3[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data3[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                if (model.savepopupdata4[0] != null)
+                {
+
+                    string newstring4 = String.Join(", ", model.savepopupdata4.Select(s => s.ToString()).ToArray());
+                    string[] name4 = newstring4.Split(",");
+                    var data4 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.DisposalLossAccount).ToList();
+                    for (int i = 0; i < data4.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name4[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name4[i]).Select(y => y.Name).FirstOrDefault();
+                        data4[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data4[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                if (model.savepopupdata5[0] != null)
+                {
+                    string newstring5 = String.Join(", ", model.savepopupdata5.Select(s => s.ToString()).ToArray());
+                    string[] name5 = newstring5.Split(",");
+                    var data5 = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == model.writeOfAccount).ToList();
+                    for (int i = 0; i < data5.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name5[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name5[i]).Select(y => y.Name).FirstOrDefault();
+                        data5[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data5[i]);
+                        _context.SaveChanges();
+                    }
+                }
+
+                _context.FixedAssetRegisters.Update(data);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
@@ -607,7 +994,7 @@ namespace FixedModules.Controllers
         #region Search
 
         [HttpPost]
-        public List<Fixed_Asset_Register> SearchFixedAssetRegister(string code, string name, DateTime date, int category, bool status, int type)
+        public List<Fixed_Asset_Register> SearchFixedAssetRegister(string code, string name, DateTime date, int category, short cstatus, int type)
         {
             try
             {
@@ -622,13 +1009,13 @@ namespace FixedModules.Controllers
                 if (code != null) codefilter = new Func<Fixed_Asset_Register, bool>(a => a.AssetCode == code);
                 if (name != null) namefilter = new Func<Fixed_Asset_Register, bool>(a => a.AssetName.ToLower().Contains(name.ToLower()));
 
-                if (date != null) datefilter = new Func<Fixed_Asset_Register, bool>(a => a.PurchaseDate == date);
-                if (category != 0) datefilter = new Func<Fixed_Asset_Register, bool>(a => a.AssetCategory == category);
-                if (status) datefilter = new Func<Fixed_Asset_Register, bool>(a => a.Status == status);
-                if (type != 0) datefilter = new Func<Fixed_Asset_Register, bool>(a => a.AssetType == type);
+                if (date != DateTime.MinValue) datefilter = new Func<Fixed_Asset_Register, bool>(a => a.PurchaseDate == date);
+                if (category != 0) categoryfilter = new Func<Fixed_Asset_Register, bool>(a => a.AssetCategory == category);
+                if (cstatus != 0) statusfilter = new Func<Fixed_Asset_Register, bool>(a => a.CreationStatus == cstatus);
+                if (type != -1) typefilter = new Func<Fixed_Asset_Register, bool>(a => a.AssetType == type);
 
-
-                return _context.FixedAssetRegisters.Where(a => a.CreationStatus != 1).Where(namefilter).Where(codefilter).ToList();
+                //return _context.FixedAssetRegisters.Where(a => a.CreationStatus != 1).Where(namefilter).Where(codefilter).ToList();
+                return _context.FixedAssetRegisters.Where(namefilter).Where(codefilter).Where(datefilter).Where(categoryfilter).Where(statusfilter).Where(typefilter).ToList();
             }
             catch (Exception)
             {
@@ -670,12 +1057,15 @@ namespace FixedModules.Controllers
         {
             try
             {
+                //var data = _context.FixedAssetRegisters.Include(a => a.MultiFormData).FirstOrDefault(a => a.Id == model.Id);
+
+                var ch = _context.AllModuleFormSub.Where(y => y.Fixed_Asset_RegisterId == id).ToList();
                 var data = _context.FixedAssetRegisters.Find(id);
-                _context.Remove(data);
+                _context.FixedAssetRegisters.Remove(data);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
@@ -717,21 +1107,7 @@ namespace FixedModules.Controllers
                 data.asset_location_master = _context.MasterAssetLocation.Where(a => a.Status == true).ToList();
 
 
-
-                //data.asset_Category = _context.MasterAssetCategory.ToList();
-                //data.asset_model = _context.MasterAssetModel.ToList();
-                //data.asset_brand = _context.MasterAssetBrand.ToList();
-                //data.asset_type = assettypelist;
-                //data.supplier = _context.Supplier.ToList();
-                //data.fixed_asset_account = _context.ChartOfAccounts.ToList();
-                //data.pl_description_account = _context.ChartOfAccounts.ToList();
-                //data.bs_description_account = _context.ChartOfAccounts.ToList();
-                //data.disposal_gain_account = _context.ChartOfAccounts.ToList();
-                //data.disposal_loss_account = _context.ChartOfAccounts.ToList();
-                //data.write_off_account = _context.ChartOfAccounts.ToList();
-                //data.department_master = _context.MasterDepartment.ToList();
-                //data.asset_location_master = _context.MasterAssetLocation.ToList();
-                return View(data);
+                return View("Create", data);
             }
             catch (Exception)
             {
@@ -742,7 +1118,142 @@ namespace FixedModules.Controllers
         }
 
 
+        [HttpPost]
+        public IActionResult SaveFixAssetData(string[] name, int chartaccount, int pldescription, int psdescription, int disposalgain, int disposlloss, int writeaccount)
+        {
 
+            try
+            {
+                if (chartaccount != 0)
+                {
+                    var data = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == chartaccount).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Name).FirstOrDefault();
+                        data[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                else if (pldescription != 0)
+                {
+                    var data = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == pldescription).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Name).FirstOrDefault();
+                        data[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                else if (psdescription != 0)
+                {
+                    var data = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == psdescription).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Name).FirstOrDefault();
+                        data[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data[i]);
+                        _context.SaveChanges();
+                    }
+
+                }
+                else if (disposalgain != 0)
+                {
+                    var data = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == disposalgain).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Name).FirstOrDefault();
+                        data[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                else if (disposlloss != 0)
+                {
+                    var data = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == disposlloss).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Name).FirstOrDefault();
+                        data[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    var data = _context.ChartOfAccountAnalysisSetting.Where(x => x.ChartOfAccountId == writeaccount).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        var code = _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Code).FirstOrDefault() + "-" +
+                         _context.AnalysisCode.Where(x => x.Id.ToString() == name[i]).Select(y => y.Name).FirstOrDefault();
+                        data[i].AnalysisName = code;
+                        _context.ChartOfAccountAnalysisSetting.Update(data[i]);
+                        _context.SaveChanges();
+                    }
+                }
+
+
+
+            }
+            catch (Exception)
+            {
+
+                return Ok();
+            }
+            return View("");
+        }
+
+
+        public async Task<IActionResult> Copy(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            /*TODO How to get the Data From Screen*/
+
+            //Get Data
+
+
+            Fixed_Asset_Register FixedAssetRegister = await _context.FixedAssetRegisters.FindAsync(id);
+
+
+            var AssetType = new List<SelectListItem>
+            {
+                new SelectListItem {Text = "- ALL -", Value = "-1"},
+                new SelectListItem {Text = "Depreciation", Value = "1"},
+                new SelectListItem {Text = "Non-Depreciation", Value = "0"},
+            };
+            ViewData["AssetType"] = new SelectList(AssetType, "Value", "Text",Convert.ToString(FixedAssetRegister.AssetType));
+
+            //var companies = await _context.Companies.FindAsync(id);
+            //var countryList = _context.tblCountry.OrderBy(x => x.CountryId).ToList();
+            //ViewData["countryList"] = new SelectList(countryList, "CountryName", "CountryName");
+
+            //var stateList = _context.tblState.Where(x => x.CountryId == 1).ToList();
+            //ViewData["stateList"] = new SelectList(stateList, "StateName", "StateName");
+
+            //if (companies == null)
+            //{
+            //    return NotFound();
+            //}
+            //return View(companies);
+
+
+            if (FixedAssetRegister == null)
+            {
+                return NotFound();
+            }
+            return View(FixedAssetRegister);
+        }
 
     }
 }

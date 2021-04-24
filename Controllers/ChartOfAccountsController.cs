@@ -210,6 +210,13 @@ namespace FixedModules.Controllers
             {
                 return NotFound();
             }
+
+            var TempError = TempData["error"];
+            if (TempError != null)
+            {
+                ViewBag.error = TempError;
+            }
+            
             return View(chartOfAccounts);
         }
 
@@ -638,54 +645,61 @@ namespace FixedModules.Controllers
             {
                 //var chartOfAccount = _context.ChartOfAccounts.Where(x => x.Id == id).ToList();
 
-                var analysisSettings = new ChartOfAccountAnalysisSetting()
+                if (ValidateChartOfAccountAnalysisSetting(id, model) == true)
                 {
-                    ChartOfAccountId = id,
-                    AnalysisNumber = model.SelectedAnalysisNumber.Value,
-                    Enabled = true,
-                    AnalysisCodeSelectionModeId = model.MapFull ? Convert.ToInt32(AnalysisCodeSelectionMode.Full) : Convert.ToInt32(AnalysisCodeSelectionMode.Range),
-                    AnalysisCodeIdFrom = model.MapFull ? null : model.AnalysisCodeFrom,
-                    AnalysisCodeIdTo = model.MapFull ? null : model.AnalysisCodeTo,
-                    CreatedBy = _configuration.GetValue<string>("HardcodeValue:Createdby"),
-                    CreatedDatetime = DateTime.UtcNow,
-                };
-                _context.ChartOfAccountAnalysisSetting.Add(analysisSettings);
-                _context.SaveChanges();
+                    var analysisSettings = new ChartOfAccountAnalysisSetting()
+                    {
+                        ChartOfAccountId = id,
+                        AnalysisNumber = model.SelectedAnalysisNumber.Value,
+                        Enabled = true,
+                        AnalysisCodeSelectionModeId = model.MapFull ? Convert.ToInt32(AnalysisCodeSelectionMode.Full) : Convert.ToInt32(AnalysisCodeSelectionMode.Range),
+                        AnalysisCodeIdFrom = model.MapFull ? null : model.AnalysisCodeFrom,
+                        AnalysisCodeIdTo = model.MapFull ? null : model.AnalysisCodeTo,
+                        CreatedBy = _configuration.GetValue<string>("HardcodeValue:Createdby"),
+                        CreatedDatetime = DateTime.UtcNow,
+                    };
+                    _context.ChartOfAccountAnalysisSetting.Add(analysisSettings);
+                    _context.SaveChanges();
 
 
-                var AnalysisData = _context.AnalysisCode.ToList();
+                    var AnalysisData = _context.AnalysisCode.ToList();
 
-                if (model.MapFull)
-                {
-                    AnalysisData = AnalysisData.Where(x => x.AnalysisNumber == model.SelectedAnalysisNumber).ToList();
+                    if (model.MapFull)
+                    {
+                        AnalysisData = AnalysisData.Where(x => x.AnalysisNumber == model.SelectedAnalysisNumber).ToList();
+                    }
+                    else
+                    {
+                        AnalysisData = AnalysisData.Where(x => x.AnalysisNumber == model.SelectedAnalysisNumber &&
+                        (x.Id >= model.AnalysisCodeFrom && x.Id <= model.AnalysisCodeTo)).ToList();
+                    }
+
+                    foreach (var data in AnalysisData)
+                    {
+                        var analysisMap = new ChartOfAccountAnalysisSetting_Mapping()
+                        {
+                            //ChartOfAccountAnalysisSetting_Id = Convert.ToInt32(_context.ChartOfAccountAnalysisSetting
+                            //.Where(x => x.ChartOfAccountId == id)
+                            //.Select(m => new AnalysisCode()
+                            //{
+                            //    Id = m.Id
+                            //}).OrderByDescending(m => m.Id).FirstOrDefault()),
+                            ChartOfAccountAnalysisSetting_Id = _context.ChartOfAccountAnalysisSetting.OrderByDescending(m => m.Id)
+                            .Where(x => x.ChartOfAccountId == id)
+                            .Select(m => m.Id).FirstOrDefault(),
+
+                            AnalysisCode_Id = data.Id
+                        };
+
+                        _context.ChartOfAccountAnalysisSetting_Mapping.Add(analysisMap);
+                        _context.SaveChanges();
+                    }
                 }
                 else
                 {
-                    AnalysisData = AnalysisData.Where(x => x.AnalysisNumber == model.SelectedAnalysisNumber &&
-                    (x.Id >= model.AnalysisCodeFrom && x.Id <= model.AnalysisCodeTo)).ToList();
+                    TempData["error"] = "duplicate";
                 }
-
-
-                foreach (var data in AnalysisData)
-                {
-                    var analysisMap = new ChartOfAccountAnalysisSetting_Mapping()
-                    {
-                        //ChartOfAccountAnalysisSetting_Id = Convert.ToInt32(_context.ChartOfAccountAnalysisSetting
-                        //.Where(x => x.ChartOfAccountId == id)
-                        //.Select(m => new AnalysisCode()
-                        //{
-                        //    Id = m.Id
-                        //}).OrderByDescending(m => m.Id).FirstOrDefault()),
-                        ChartOfAccountAnalysisSetting_Id = _context.ChartOfAccountAnalysisSetting.OrderByDescending(m => m.Id)
-                        .Where(x => x.ChartOfAccountId == id)
-                        .Select(m => m.Id).FirstOrDefault(),
-
-                        AnalysisCode_Id = data.Id
-                    };
-
-                    _context.ChartOfAccountAnalysisSetting_Mapping.Add(analysisMap);
-                    _context.SaveChanges();
-                }
+                
             }
 
             //var insertResult = _chartOfAccountService.InsertChartOfAccountAnalysisSetting(analysisSettings);
@@ -713,8 +727,61 @@ namespace FixedModules.Controllers
             return RedirectToAction("Edit", "ChartOfAccounts", new { Id = id }); 
         }
 
-        //[Bind("SelectedAnalysisNumberEdit,MapFullEdit,AnalysisCodeFromEdit,AnalysisCodeToEdit")]
-        // [Bind("SelectedAnalysisNumber,MapFull,AnalysisCodeFrom,AnalysisCodeTo")], [FromForm] AddChartOfAccountSettingModel AddRulemodel
+        private bool ValidateChartOfAccountAnalysisSetting(int id, AddChartOfAccountSettingModel addmodel)
+        {
+            var sameAnalysisSettings = _context.ChartOfAccountAnalysisSetting
+                    .Where(x => x.AnalysisNumber == addmodel.SelectedAnalysisNumber && x.ChartOfAccountId == id);
+            //validate overlapping
+            if (addmodel.MapFull == true)
+            {
+                if (sameAnalysisSettings.Count() > 0)
+                    return false;
+            }
+            else
+            {
+                var analysisCodeFrom = addmodel.AnalysisCodeFrom;
+                var analysisCodeTo = addmodel.AnalysisCodeTo;
+
+                if (sameAnalysisSettings.Where(x => x.AnalysisCodeSelectionModeId == 1).Count() > 0)
+                    return false;
+
+                foreach (var sas in sameAnalysisSettings)
+                {
+                    if(analysisCodeFrom >= sas.AnalysisCodeIdFrom && analysisCodeFrom<=sas.AnalysisCodeIdTo)
+                    {
+                        return false;
+                    }
+
+                    if (analysisCodeTo >= sas.AnalysisCodeIdFrom && analysisCodeTo <= sas.AnalysisCodeIdTo)
+                    {
+                        return false;
+                    }
+
+                    ////1000 >= from <= 2000
+                    //if (string.Compare(sas.AnalysisCodeIdFrom, analysisCodeFrom, StringComparison.OrdinalIgnoreCase) <= 0
+                    //    && string.Compare(sas.AnalysisCodeTo.Code, analysisCodeFrom, StringComparison.OrdinalIgnoreCase) >= 0)
+                    //    return false;
+
+                    ////1000 >= to <= 2000
+                    //if (string.Compare(sas.AnalysisCodeFrom.Code, analysisCodeTo.Code, StringComparison.OrdinalIgnoreCase) <= 0
+                    //    && string.Compare(sas.AnalysisCodeTo.Code, analysisCodeTo.Code, StringComparison.OrdinalIgnoreCase) >= 0)
+                    //    return false;
+
+                    ////from >= 1000 <= to
+                    //if (string.Compare(analysisCodeFrom.Code, sas.AnalysisCodeFrom.Code, StringComparison.OrdinalIgnoreCase) <= 0
+                    //    && string.Compare(analysisCodeTo.Code, sas.AnalysisCodeFrom.Code, StringComparison.OrdinalIgnoreCase) >= 0)
+                    //    return false;
+
+                    ////from >= 2000 <= to
+                    //if (string.Compare(analysisCodeFrom.Code, sas.AnalysisCodeTo.Code, StringComparison.OrdinalIgnoreCase) <= 0
+                    //    && string.Compare(analysisCodeTo.Code, sas.AnalysisCodeTo.Code, StringComparison.OrdinalIgnoreCase) >= 0)
+                    //    return false;
+                }
+            }
+
+            return true;
+        }
+
         [HttpPost] 
         [ValidateAntiForgeryToken]
         public ActionResult EditSetting(int id, [Bind("SelectedAnalysisNumber,MapFull,AnalysisCodeFrom,AnalysisCodeTo")] AddChartOfAccountSettingModel AddRulemodel)
